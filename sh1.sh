@@ -6,5 +6,6 @@ rm -rf .svn
 svn co https://github.com/cnzd/luci-app-koolproxyR/trunk ./luci-app-koolproxyR
 rm -rf .svn
 svn co https://github.com/xiaorouji/openwrt-package/trunk ./
+rm -rf .svn
 rm README.md .gitattributes .gitignore
 exit 0
