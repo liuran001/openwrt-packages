@@ -72,6 +72,7 @@ svn co https://github.com/koshev-msk/luci-app-atinout/trunk ./luci-app-atinout
 cp -r ./luci-app-atinout/atinout ./
 svn co https://github.com/muink/luci-app-pcap-dnsproxy/branches/dev ./luci-app-pcap-dnsproxy
 svn co https://github.com/koshev-msk/3proxy-openwrt/trunk ./3proxy
+svn co https://github.com/pexcn/openwrt-chinadns-ng/tree/luci ./luci-app-chinadns-ng
 rm -rf ./*/.svn
 rm -f README.md .gitattributes .gitignore
 exit 0
