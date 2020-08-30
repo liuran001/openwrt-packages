@@ -11,8 +11,8 @@ on:
        - 'aaa'
   schedule:
     - cron: 0 0 * * *
-#  watch:
-#    types: started
+  watch:
+    types: started
 
 env:
   TZ: Asia/Shanghai
@@ -20,7 +20,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-18.04   
-#    if: github.event.repository.owner.id == github.event.sender.id
+    if: github.event.repository.owner.id == github.event.sender.id
 
 
     steps:
@@ -44,15 +44,15 @@ jobs:
         chmod +x sh1.sh
  
     - name: Upload
-     env:
-       SDK_URL: ${{ matrix.SDK_URL }}
-       GITHUB_TOKEN: ${{ secrets.TOKEN }}
-     run: |
-       cd $GITHUB_WORKSPACE
-       git init
-       git config user.name "bot"
-       git config user.email "bot@github.com"
-       git add .
-       git commit -m "$TAG$(TZ='Asia/Shanghai' date +@%Y%m%d)"
-       git push --force --quiet "https://$GITHUB_TOKEN@github.com/liuran001/openwrt-packages.git" HEAD:master
+      env:
+        SDK_URL: ${{ matrix.SDK_URL }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      run: |
+        cd $GITHUB_WORKSPACE
+        git init
+        git config user.name "bot"
+        git config user.email "bot@github.com"
+        git add .
+        git commit -m "$TAG$(TZ='Asia/Shanghai' date +@%Y%m%d)"
+        git push --force --quiet "https://$GITHUB_TOKEN@github.com/liuran001/openwrt-packages.git" HEAD:master
  
