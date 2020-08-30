@@ -1,0 +1,63 @@
+[submodule "luci-theme-argon"]
+	path = luci-theme-argon
+	url = https://github.com/jerrykuku/luci-theme-argon
+	branch = 18.06
+[submodule "luci-theme-rosy"]
+	path = luci-theme-rosy
+	url = https://github.com/rosywrt/luci-theme-rosy
+	branch = openwrt-18.06
+[submodule "luci-theme-material"]
+	path = luci-theme-material
+	url = https://github.com/LuttyYang/luci-theme-material
+[submodule "luci-theme-darkmatter"]
+	path = luci-theme-darkmatter
+	url = https://github.com/apollo-ng/luci-theme-darkmatter
+[submodule "luci-theme-netgear"]
+	path = luci-theme-netgear
+	url = https://github.com/tracemouse/luci-theme-netgear
+[submodule "luci-theme-infinityfreedom"]
+	path = luci-theme-infinityfreedom
+	url = https://github.com/xiaoqingfengATGH/luci-theme-infinityfreedom
+[submodule "luci-theme-argon-mc"]
+	path = luci-theme-argon-mc
+	url = https://github.com/sypopo/luci-theme-argon-mc
+[submodule "luci-theme-purple"]
+	path = luci-theme-purple
+	url = https://github.com/rosywrt/luci-theme-purple
+[submodule "luci-theme-tano"]
+	path = luci-theme-tano
+	url = https://github.com/tano-systems/luci-theme-tano
+[submodule "luci-theme-opentomcat"]
+	path = luci-theme-opentomcat
+	url = https://github.com/Leo-Jo-My/luci-theme-opentomcat
+[submodule "luci-theme-atmaterial-ColorIcon"]
+	path = luci-theme-atmaterial-ColorIcon
+	url = https://github.com/esirplayground/luci-theme-atmaterial-ColorIcon
+[submodule "luci-theme-argon-dark"]
+	path = luci-theme-argon-dark
+	url = https://github.com/kevin-morgan/luci-theme-argon-dark
+[submodule "luci-theme-argon-dark-mod"]
+	path = luci-theme-argon-dark-mod
+	url = https://github.com/Leo-Jo-My/luci-theme-argon-dark-mod
+[submodule "luci-theme-Butterfly"]
+	path = luci-theme-Butterfly
+	url = https://github.com/Leo-Jo-My/luci-theme-Butterfly
+[submodule "luci-theme-leo"]
+	path = luci-theme-leo
+	url = https://github.com/Leo-Jo-My/luci-theme-leo
+[submodule "luci-theme-argon-mod"]
+	path = luci-theme-argon-mod
+	url = https://github.com/Leo-Jo-My/luci-theme-argon-mod
+[submodule "luci-theme-ifit"]
+	path = luci-theme-ifit
+	url = https://github.com/kenzok8/luci-theme-ifit
+[submodule "luci-theme-argon-light-mod"]
+	path = luci-theme-argon-light-mod
+	url = https://github.com/Leo-Jo-My/luci-theme-argon-light-mod
+[submodule "luci-theme-pink"]
+	path = luci-theme-pink
+	url = https://github.com/virualv/luci-theme-pink
+[submodule "luci-theme-edge"]
+	path = luci-theme-edge
+	url = https://github.com/garypang13/luci-theme-edge
+	branch = 18.06
