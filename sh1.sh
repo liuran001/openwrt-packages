@@ -61,6 +61,13 @@ mkdir parted
 wget https://raw.githubusercontent.com/lisaac/luci-app-diskman/master/Parted.Makefile -O parted/Makefile
 svn co https://github.com/destan19/OpenAppFilter/trunk ./
 rm -rf .svn
+svn co https://github.com/4IceG/luci-app-3ginfo/trunk/luci-app-3ginfo
+svn co https://github.com/brvphoenix/luci-app-wrtbwmon/branches/old-master/luci-app-wrtbwmon
+svn co https://github.com/riverscn/openwrt-iptvhelper/trunk/iptvhelper
+svn co https://github.com/riverscn/openwrt-iptvhelper/trunk/luci-app-iptvhelper
+svn co https://github.com/brvphoenix/wrtbwmon/branches/old-master/wrtbwmon
+svn co https://github.com/KFERMercer/luci-app-tcpdump/trunk ./luci-app-tcpdump
+svn co https://github.com/tty228/luci-app-nodogsplash/trunk ./luci-app-nodogsplash
 rm -rf ./*/.svn
 rm -f README.md .gitattributes .gitignore
 exit 0
