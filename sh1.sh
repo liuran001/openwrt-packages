@@ -70,6 +70,7 @@ svn co https://github.com/KFERMercer/luci-app-tcpdump/trunk ./luci-app-tcpdump
 svn co https://github.com/tty228/luci-app-nodogsplash/trunk ./luci-app-nodogsplash
 svn co https://github.com/koshev-msk/luci-app-atinout/trunk ./luci-app-atinout
 cp -r ./luci-app-atinout/atinout ./
+svn co https://github.com/muink/luci-app-pcap-dnsproxy/branches/dev ./luci-app-pcap-dnsproxy
 rm -rf ./*/.svn
 rm -f README.md .gitattributes .gitignore
 exit 0
