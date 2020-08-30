@@ -1,0 +1,88 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2019-2020 Lienol <lawlienol@gmail.com>
+
+START=99
+
+CONFIG=brook_server
+LOG_PATH=/var/log/$CONFIG
+LOG_APP_FILE=$LOG_PATH/app.log
+
+echolog() {
+	echo -e "$(date "+%Y-%m-%d %H:%M:%S"): $1" >> $LOG_APP_FILE
+}
+
+add_rule() {
+	iptables -N BROOK-SERVER
+	iptables -I INPUT -j BROOK-SERVER
+}
+
+del_rule() {
+	iptables -D INPUT -j BROOK-SERVER 2>/dev/null
+	iptables -F BROOK-SERVER 2>/dev/null
+	iptables -X BROOK-SERVER 2>/dev/null
+}
+
+gen_include() {
+	echo '#!/bin/sh' > /var/etc/$CONFIG.include
+	extract_rules() {
+		echo "*$1"
+		iptables-save -t $1 | grep "BROOK-SERVER" | \
+		sed -e "s/^-A \(INPUT\)/-I \1 1/"
+		echo 'COMMIT'
+	}
+	cat <<-EOF >> /var/etc/$CONFIG.include
+		iptables-save -c | grep -v "BROOK-SERVER" | iptables-restore -c
+		iptables-restore -n <<-EOT
+		$(extract_rules filter)
+		EOT
+	EOF
+	return 0
+}
+
+gen_brook_config_file() {
+	config_get enable $1 enable
+	[ "$enable" = "0" ] && return 0
+	config_get remarks $1 remarks
+	config_get port $1 port
+	config_get protocol $1 protocol
+	config_get password $1 password
+	
+	/usr/bin/brook $protocol -l :$port -p $password >/dev/null 2>&1 &
+	
+	iptables -A BROOK-SERVER -p tcp --dport $port -m comment --comment "$remarks" -j ACCEPT
+	iptables -A BROOK-SERVER -p udp --dport $port -m comment --comment "$remarks" -j ACCEPT
+}
+
+start_brook_server() {
+	mkdir -p $LOG_PATH
+	touch $LOG_APP_FILE
+	add_rule
+	config_load $CONFIG
+	config_foreach gen_brook_config_file "user"
+	gen_include
+}
+
+stop_brook_server() {
+	ps -w | grep "brook server" | grep -v "grep" | awk '{print $1}' | xargs kill -9 >/dev/null 2>&1 &
+	ps -w | grep "brook ssserver" | grep -v "grep" | awk '{print $1}' | xargs kill -9 >/dev/null 2>&1 &
+	del_rule
+	rm -rf $LOG_PATH /var/etc/$CONFIG.include
+}
+
+start() {
+	enable=$(uci -q get $CONFIG.@global[0].enable)
+	if [ "$enable" = "0" ];then
+		stop_brook_server
+	else
+		start_brook_server
+	fi
+}
+
+stop() {
+	stop_brook_server
+}
+
+restart() {
+	stop
+	start
+}
