@@ -43,15 +43,13 @@ jobs:
         mkdir packages
         cd packages
         $GITHUB_WORKSPACE/sh1.sh
-    - name: Copy
-      run: |
-        [ -e $GITHUB_WORKSPACE/LICENSE ] && cp $GITHUB_WORKSPACE/LICENSE $GITHUB_WORKSPACE/packages
-        [ -e $GITHUB_WORKSPACE/README.md ] && cp $GITHUB_WORKSPACE/README.md $GITHUB_WORKSPACE/packages
- 
+
     - name: Upload
       env: 
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       run: |
+        [ -e $GITHUB_WORKSPACE/LICENSE ] && cp $GITHUB_WORKSPACE/LICENSE $GITHUB_WORKSPACE/packages
+        [ -e $GITHUB_WORKSPACE/README.md ] && cp $GITHUB_WORKSPACE/README.md $GITHUB_WORKSPACE/packages
         cd $GITHUB_WORKSPACE/packages
         git init
         git config user.name "liuran001"
