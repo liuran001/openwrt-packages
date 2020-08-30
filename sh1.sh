@@ -68,6 +68,8 @@ svn co https://github.com/riverscn/openwrt-iptvhelper/trunk/luci-app-iptvhelper
 svn co https://github.com/brvphoenix/wrtbwmon/branches/old-master/wrtbwmon
 svn co https://github.com/KFERMercer/luci-app-tcpdump/trunk ./luci-app-tcpdump
 svn co https://github.com/tty228/luci-app-nodogsplash/trunk ./luci-app-nodogsplash
+svn co https://github.com/koshev-msk/luci-app-atinout/trunk ./luci-app-atinout
+cp -r ./luci-app-atinout/atinout ./
 rm -rf ./*/.svn
 rm -f README.md .gitattributes .gitignore
 exit 0
