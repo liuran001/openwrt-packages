@@ -38,7 +38,7 @@ jobs:
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
         
-    - Clone packages
+    - name: Clone packages
       run: |
         cd $GITHUB_WORKSPACE
         chmod +x sh1.sh
