@@ -6,15 +6,17 @@
 
 
 ## 食用方式：
-1、 先cd进package目录，然后执行  
+1. 先cd进package目录，然后执行（建议云编译使用这种方式）
 ```bash
  git clone https://github.com/liuran001/openwrt-packages
 ```
-2、 或者添加下面代码到feeds.conf.default文件  
+2. 或者添加下面代码到feeds.conf.default文件（建议本地编译使用这种方式）
 ```bash
  src-git liuran001_packages https://github.com/liuran001/openwrt-packages
 ```
-我本人建议使用第一种  
-云编译也同理
+3. 先cd进package目录，然后执行
+```bash
+ svn co https://github.com/liuran001/openwrt-packages/branches/packages
+```
 
 ## 不要为了下载而Fork这个项目，而且你Fork了不修改是不能自动拉取源码的
