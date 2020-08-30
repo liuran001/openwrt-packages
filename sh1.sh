@@ -51,6 +51,7 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-adbyby-p
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-airplay2
 svn co https://github.com/xiaoqingfengATGH/luci-theme-infinityfreedom/trunk/luci-theme-infinityfreedom
 svn co https://github.com/cnzd/luci-app-koolproxyR/trunk ./luci-app-koolproxyR
+svn co https://github.com/MiRouter/luci-app-vssr-plus/trunk ./luci-app-vssr-plus
 rm -rf .svn
 rm -rf ./*/.svn
 rm -f README.md .gitattributes .gitignore
