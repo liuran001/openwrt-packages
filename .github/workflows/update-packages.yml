@@ -6,7 +6,7 @@ on:
     types: published
   push:
     branches:
-      - main
+      - update_sh
   schedule:
     - cron: 0 0 * * *
   watch:
