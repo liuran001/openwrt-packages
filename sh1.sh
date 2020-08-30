@@ -52,5 +52,6 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-airplay2
 svn co https://github.com/xiaoqingfengATGH/luci-theme-infinityfreedom/trunk/luci-theme-infinityfreedom
 svn co https://github.com/cnzd/luci-app-koolproxyR/trunk ./luci-app-koolproxyR
 rm -rf .svn
+rm -rf ./*/.svn
 rm -f README.md .gitattributes .gitignore
 exit 0
