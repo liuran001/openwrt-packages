@@ -1,0 +1,21 @@
+[Adblock Plus 1.1]
+! Checksum: 6aCLnN/FO81nfNtOMmtpVQ
+! Title: adblock-youtube-ads
+! Homepage: https://github.com/kbinani/adblock-youtube-ads
+! License: https://github.com/kbinani/adblock-youtube-ads/blob/master/LICENSE
+##.ad-container
+##.video-ads
+##.ytp-ad-progress-list
+=adunit&
+youtube.com###masthead-ad
+||doubleclick.net^
+||flashtalking.com$domain=youtube.com
+||googleadservices.com
+||googlesyndication.com^
+||s0.2mdn.net/ads
+||www.google.*/pagead$domain=youtube.com
+||www.youtube.com/[[computeEmptyGif_()]]$image
+||www.youtube.com/[[computeThumbnailUrl_(data.thumbnail)]]
+||www.youtube.com/api/stats
+||www.youtube.com/pagead
+||www.youtube.com/ptracking
