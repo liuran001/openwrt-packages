@@ -44,17 +44,6 @@ jobs:
         chmod +x sh1.sh
  
     - name: Upload
-     env:
-       SDK_URL: ${{ matrix.SDK_URL }}
-       GITHUB_TOKEN: ${{ secrets.TOKEN }}
-     run: |
-       cd $GITHUB_WORKSPACE
-       git init
-       git config user.name "bot"
-       git config user.email "bot@github.com"
-       git add .
-       git commit -m "$(TZ='Asia/Shanghai' date +@%Y%m%d)"
-       git push --force --quiet "https://$GITHUB_TOKEN@github.com/liuran001/openwrt-packages.git" HEAD:master
       env:
         SDK_URL: ${{ matrix.SDK_URL }}
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
