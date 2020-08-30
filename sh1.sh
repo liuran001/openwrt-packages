@@ -52,6 +52,14 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-airplay2
 svn co https://github.com/xiaoqingfengATGH/luci-theme-infinityfreedom/trunk/luci-theme-infinityfreedom
 svn co https://github.com/cnzd/luci-app-koolproxyR/trunk ./luci-app-koolproxyR
 svn co https://github.com/MiRouter/luci-app-vssr-plus/trunk ./luci-app-vssr-plus
+svn co https://github.com/project-openwrt/openwrt/trunk/package/ctcgfw/GoQuiet
+svn co https://github.com/project-openwrt/openwrt/trunk/package/ctcgfw/ChinaDNS
+svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
+svn co https://github.com/lisaac/luci-lib-docker/trunk/collections/luci-lib-docker
+svn co https://github.com/lisaac/luci-app-diskman/trunk ./luci-app-diskman
+mkdir parted
+wget https://raw.githubusercontent.com/lisaac/luci-app-diskman/master/Parted.Makefile -O parted/Makefile
+svn co https://github.com/destan19/OpenAppFilter/trunk ./
 rm -rf .svn
 rm -rf ./*/.svn
 rm -f README.md .gitattributes .gitignore
