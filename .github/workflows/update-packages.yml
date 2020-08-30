@@ -43,6 +43,8 @@ jobs:
         mkdir packages
         cd packages
         $GITHUB_WORKSPACE/sh1.sh
+    - name: Copy
+      run: |
         [ -e $GITHUB_WORKSPACE/LICENSE ] && cp $GITHUB_WORKSPACE/LICENSE ./LICENSE
         [ -e $GITHUB_WORKSPACE/README.md ] && cp $GITHUB_WORKSPACE/README.md ./README.md
  
