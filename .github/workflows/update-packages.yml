@@ -8,7 +8,7 @@ on:
     branches:
       - update_sh
   schedule:
-    - cron: 0 0 * * *
+    - cron: 50 7 * * *
   watch:
     types: started
 
