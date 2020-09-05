@@ -9,7 +9,7 @@ svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
 svn co https://github.com/garypang13/luci-app-eqos/trunk ./luci-app-eqos
 svn co https://github.com/project-openwrt/openwrt/branches/master/package/ctcgfw/luci-app-gost
 svn co https://github.com/jerrykuku/luci-app-jd-dailybonus/trunk ./luci-app-jd-dailybonus
-svn co https://github.com/jerrykuku/luci-theme-argon/trunk ./luci-app-argon
+svn co https://github.com/jerrykuku/luci-theme-argon/trunk ./luci-theme-argon
 svn co https://github.com/jerrykuku/luci-app-vssr/trunk ./luci-app-vssr
 svn co https://github.com/tty228/luci-app-serverchan/trunk ./luci-app-serverchan
 svn co https://github.com/fw876/helloworld/trunk ./
@@ -27,7 +27,7 @@ svn co https://github.com/kenzok8/openwrt-packages/trunk/smartdns
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-theme-argon_new
 svn co https://github.com/kenzok8/luci-theme-ifit/trunk/luci-theme-ifit
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-theme-atmaterial
-svn co https://github.com/garypang13/luci-theme-edge/trunk ./luci-app-edge
+svn co https://github.com/garypang13/luci-theme-edge/trunk ./luci-theme-edge
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-theme-opentomato
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-theme-opentomcat
 svn co https://github.com/jerrykuku/node-request/trunk ./node-request
