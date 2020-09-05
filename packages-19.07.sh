@@ -74,6 +74,20 @@ svn co https://github.com/muink/luci-app-pcap-dnsproxy/branches/dev ./luci-app-p
 svn co https://github.com/koshev-msk/3proxy-openwrt/trunk ./3proxy
 svn co https://github.com/pexcn/openwrt-chinadns-ng/branches/luci ./luci-app-chinadns-ng
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-usb-printer
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-ramfree
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-ttyd
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-unblockmusic
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-vlmcsd
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/vlmcsd
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-vsftpd
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-xlnetacc
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frpc
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/frp
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_aliyun
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_dnspod
+
+
 rm -rf ./*/.svn
 rm -f README.md .gitattributes .gitignore
 exit 0
