@@ -20,7 +20,12 @@ jobs:
     runs-on: ubuntu-18.04   
     #if: github.event.repository.owner.id == github.event.sender.id
 
-
+    name: Build ${{matrix.target}}
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [packages,packages-19.07]
+        
     steps:
     - name: Checkout
       uses: actions/checkout@main
@@ -38,11 +43,11 @@ jobs:
     - name: Clone packages
       run: |
         cd $GITHUB_WORKSPACE
-        chmod +x sh1.sh
+        chmod +x ${{matrix.target}}.sh
         rm -rf packages
         mkdir packages
         cd packages
-        $GITHUB_WORKSPACE/sh1.sh
+        $GITHUB_WORKSPACE/${{matrix.target}}.sh
 
     - name: Upload
       env: 
@@ -56,5 +61,5 @@ jobs:
         git config user.email "liuran001@126.com"
         git add .
         git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)"
-        git push --force --quiet "https://$GITHUB_TOKEN@github.com/liuran001/openwrt-packages.git" HEAD:packages
+        git push --force --quiet "https://$GITHUB_TOKEN@github.com/liuran001/openwrt-packages.git" HEAD:${{matrix.target}}
  
