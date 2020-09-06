@@ -36,8 +36,6 @@ jobs:
       run: |
         sudo -E apt-get -qq update
         sudo -E apt-get -qq install git subversion git-core wget
-        sudo -E apt-get -qq autoremove --purge
-        sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
         
     - name: Clone packages
@@ -46,7 +44,7 @@ jobs:
         chmod +x ${{matrix.target}}.sh
         git clone -b ${{matrix.target}} https://github.com/liuran001/openwrt-packages.git ${{matrix.target}}
         mkdir backup
-        cp -f ${{matrix.target}}/.git backup
+        cp -rf ${{matrix.target}}/.git backup
         rm -rf ./${{matrix.target}}
         mv -f backup/.git ${{matrix.target}}
         rm -rf backup
