@@ -92,6 +92,7 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_aliy
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_dnspod
 
 
+rm -rf ./*/.git
 rm -rf ./*/.svn
 rm -f README.md .gitattributes .gitignore
 exit 0
