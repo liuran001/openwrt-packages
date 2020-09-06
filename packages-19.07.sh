@@ -95,6 +95,7 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/frp
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_aliyun
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_dnspod
+svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-cifs-mount
 
 rm -rf ./*/.git
 rm -rf ./*/.svn
