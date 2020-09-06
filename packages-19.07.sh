@@ -5,6 +5,8 @@ svn co https://github.com/rufengsuixing/luci-app-adguardhome/trunk ./luci-app-ad
 svn co https://github.com/project-openwrt/openwrt/branches/master/package/ntlf9t/luci-app-advancedsetting
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-aliddns
 svn co https://github.com/frainzy1477/luci-app-clash/trunk ./luci-app-clash
+rm -rf luci-app-openclash
+rm -rf OpenClash
 git clone https://github.com/vernesong/OpenClash.git
 mv -f OpenClash/luci-app-openclash .
 rm -rf OpenClash
@@ -59,11 +61,14 @@ svn co https://github.com/project-openwrt/openwrt/branches/master/package/ctcgfw
 svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
 svn co https://github.com/lisaac/luci-lib-docker/trunk/collections/luci-lib-docker
 svn co https://github.com/lisaac/luci-app-diskman/trunk ./luci-app-diskman
+rm -rf parted
 mkdir parted
 wget https://raw.githubusercontent.com/lisaac/luci-app-diskman/master/Parted.Makefile -O parted/Makefile
 svn co https://github.com/destan19/OpenAppFilter/trunk ./
 rm -rf .svn
 svn co https://github.com/4IceG/luci-app-3ginfo/trunk/luci-app-3ginfo
+rm -rf luci-app-wrtbwmon
+rm -rf wrtbwmonluci
 git clone https://github.com/brvphoenix/luci-app-wrtbwmon.git wrtbwmonluci
 mv -f wrtbwmonluci/luci-app-wrtbwmon .
 rm -rf wrtbwmonluci
