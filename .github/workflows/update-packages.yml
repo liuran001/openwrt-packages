@@ -43,11 +43,6 @@ jobs:
         cd $GITHUB_WORKSPACE
         chmod +x ${{matrix.target}}.sh
         git clone -b ${{matrix.target}} https://github.com/liuran001/openwrt-packages.git ${{matrix.target}}
-        mkdir backup
-        cp -rf ${{matrix.target}}/.git backup
-        rm -rf ./${{matrix.target}}
-        mv -f backup/.git ${{matrix.target}}
-        rm -rf backup
         cd ${{matrix.target}}
         $GITHUB_WORKSPACE/${{matrix.target}}.sh
 
