@@ -62,5 +62,5 @@ jobs:
         git config user.email "liuran001@126.com"
         git add .
         git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)"
-        git push --force --quiet "https://$GITHUB_TOKEN@github.com/liuran001/openwrt-packages.git" HEAD:${{matrix.target}}
+        git push origin ${{matrix.target}}
  

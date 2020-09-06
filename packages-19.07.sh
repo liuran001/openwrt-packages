@@ -64,7 +64,9 @@ wget https://raw.githubusercontent.com/lisaac/luci-app-diskman/master/Parted.Mak
 svn co https://github.com/destan19/OpenAppFilter/trunk ./
 rm -rf .svn
 svn co https://github.com/4IceG/luci-app-3ginfo/trunk/luci-app-3ginfo
-svn co https://github.com/brvphoenix/luci-app-wrtbwmon/trunk/luci-app-wrtbwmon
+git clone https://github.com/brvphoenix/luci-app-wrtbwmon.git wrtbwmonluci
+mv -f wrtbwmonluci/luci-app-wrtbwmon .
+rm -rf wrtbwmonluci
 svn co https://github.com/riverscn/openwrt-iptvhelper/trunk/iptvhelper
 svn co https://github.com/riverscn/openwrt-iptvhelper/trunk/luci-app-iptvhelper
 svn co https://github.com/brvphoenix/wrtbwmon/trunk/wrtbwmon
@@ -89,7 +91,7 @@ svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frps
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_aliyun
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_dnspod
 
-
+rm -rf ./*/.git
 rm -rf ./*/.svn
 rm -f README.md .gitattributes .gitignore
 exit 0
