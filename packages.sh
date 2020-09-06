@@ -5,7 +5,7 @@ svn co https://github.com/rufengsuixing/luci-app-adguardhome/trunk ./luci-app-ad
 svn co https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t/luci-app-advancedsetting
 svn co https://github.com/kenzok8/openwrt-packages/trunk/luci-app-aliddns
 svn co https://github.com/frainzy1477/luci-app-clash/trunk ./luci-app-clash
-git clone https://github.com/vernesong/OpenClash
+git clone https://github.com/vernesong/OpenClash.git
 mv -rf OpenClash/luci-app-openclash .
 rm -rf OpenClash
 svn co https://github.com/garypang13/luci-app-eqos/trunk ./luci-app-eqos
