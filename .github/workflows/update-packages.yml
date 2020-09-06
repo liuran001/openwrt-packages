@@ -44,9 +44,11 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         chmod +x ${{matrix.target}}.sh
-        rm -rf packages
-        mkdir packages
-        cd packages
+        git clone -b ${{matrix.target}} https://github.com/liuran001/openwrt-packages.git ${{matrix.target}}
+        mv -f ${{matrix.target}}/.git backup
+        rm -rf ./${{matrix.target}}
+        mv backup ${{matrix.target}}/.git
+        cd ${{matrix.target}}
         $GITHUB_WORKSPACE/${{matrix.target}}.sh
 
     - name: Upload
@@ -55,8 +57,7 @@ jobs:
       run: |
         [ -e $GITHUB_WORKSPACE/LICENSE ] && cp $GITHUB_WORKSPACE/LICENSE $GITHUB_WORKSPACE/packages
         [ -e $GITHUB_WORKSPACE/README.md ] && cp $GITHUB_WORKSPACE/README.md $GITHUB_WORKSPACE/packages
-        cd $GITHUB_WORKSPACE/packages
-        git init
+        cd $GITHUB_WORKSPACE/${{matrix.target}}
         git config user.name "liuran001"
         git config user.email "liuran001@126.com"
         git add .
