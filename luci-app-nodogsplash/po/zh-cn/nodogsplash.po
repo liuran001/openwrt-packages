@@ -1,0 +1,113 @@
+msgid "WiFi portal"
+msgstr "WiFi 认证"
+
+msgid "Please close the transparent proxy of the client network (such as advertisement filtering and ssr), otherwise it will cause conflict and cause the client network to be unable to access the Internet."
+msgstr "请关闭客户端网络的透明代理（比如广告过滤和ssr），否则会引起冲突，造成客户端网络不能上网。"
+
+msgid "Base Setting"
+msgstr "基本设置"
+
+msgid "Advance Setting"
+msgstr "高级设置"
+
+msgid "Name displayed on portal page."
+msgstr "认证页中显示的名称"
+
+msgid "Equipment Disconnection Retention Authentication (sub)"
+msgstr "设备断开保留认证（分）"
+
+msgid "Time of equipment re-certification (minutes)"
+msgstr "设备重新认证时间（分）"
+
+msgid "Portal page timeout (seconds)"
+msgstr "认证页面超时（秒）"
+
+msgid "Check the authentication status interval (seconds)"
+msgstr "检查认证状态间隔（秒）"
+
+msgid "nodogsplash restart when the firewall restarts."
+msgstr "防火墙重新启动时<br/>使 nodogslash 重新启动"
+
+msgid "Open by default"
+msgstr "默认开启"
+
+msgid "WEB folder"
+msgstr "WEB 文件夹"
+
+msgid "Choose a validation method"
+msgstr "选择验证方式"
+
+msgid "Default"
+msgstr "默认"
+
+msgid "Shell Verification"
+msgstr "Shell 脚本验证"
+
+msgid "Enable Forwarding Authentication Service (FAS)"
+msgstr "转发验证服务（FAS）"
+
+msgid "Enable username/emailaddress login."
+msgstr "用户名/电子邮件地址登录"
+
+msgid "The shell script will be invoked for authentication. <br/> If you need to use it, please refer to Wiki to create scripts"
+msgstr "将调用sh脚本进行身份验证。<br/>如需使用，请参照 wiki 创建脚本"
+
+msgid "if FAS is running locally (ie fasremoteip is NOT set), port 80 cannot be used.<br/>Typical Remote Shared Hosting Example:80.Typical Locally Hosted example (ie fasremoteip not set):2080.<br/>if Enable username/emailaddress login.fasport must be set to the same value as gatewayport (default = 2050)"
+msgstr "转发到远程验证请输入 80 <br/>转发到本地页面请使用非 80、2050 的其他端口。<br/>如果需要微信验证或 php 认证页就打开这个选项。<br/>使用用户名登录时必须与默认端口号相同（默认值=2050）。"
+
+msgid "The path of login page under Web root directory,<br/>'/nodog/fas.php'<br/>If it is a user name login authentication method.<br/>'/nodogsplash_preauth/'"
+msgstr "web根目录下登录页的路径<br/>如'/nodog/fas.php'<br/>如果是用户名登录验证方式<br/>如'/nodogsplash_preauth/'"
+
+msgid "If set to ‘0’, the client token is sent to the FAS in clear text in the query string of the."
+msgstr "如果设置为“0”，将明文随 AuthAction 重定向。"
+
+msgid "Open Port Before Authentication"
+msgstr "认证前开放端口"
+
+msgid "<br/>allow：<br/>allow tcp port 80<br/>allow udp port 53"
+msgstr "<br/>允许：<br/>allow tcp port 80<br/>allow udp port 53"
+
+msgid "LAN Open Port"
+msgstr "局域网开放端口"
+
+msgid "Authenticated client isolation settings"
+msgstr "已认证客户端隔离设置"
+
+msgid "<br/>allow：<br/>allow tcp port 80<br/>allow udp port 53<br/>allow all<br/>block：<br/>block to 192.168.0.0/16<br/>192.168.X.1 80 Port Isolation Invalid."
+msgstr "<br/>允许：<br/>allow tcp port 80<br/>allow udp port 53<br/>allow all<br/>拒绝：<br/>block to 192.168.0.0/16<br/>192.168.X.1 80端口隔离无效。"
+
+msgid "MAC Filter"
+msgstr "MAC 过滤"
+
+msgid "Bypass MAC List"
+msgstr "MAC 白名单"
+
+msgid "Black MAC List"
+msgstr "MAC 黑名单"
+
+msgid "Trusted MAC List"
+msgstr "信任 MAC 列表"
+
+msgid "disable"
+msgstr "不启用"
+
+msgid "Only allowed in the list"
+msgstr "仅允许列表内"
+
+msgid "Allow only out of the list"
+msgstr "仅允许列表外"
+
+msgid "uses specific HEXADECIMAL values to mark packets used by iptables as a bitwise mask."
+msgstr "数据包标记修改"
+
+msgid "<br/> Modify the packet marker hexadecimal mask <br/> without modification if necessary. < br /> if you need visitor equipment to support adbyby, ssr.... See the default package tag. Modify iptables by yourself. <br/>"
+msgstr "<br/>修改数据包标记十六进制掩码<br/>如无必要不用修改。<br/>如需要访客设备支持 adbyby、ssr 等。请查看默认包标记。自行修改 iptables。<br/>"
+
+msgid "fw_mark_authenticated"
+msgstr "放行标记"
+
+msgid "fw_mark_trusted"
+msgstr "白名单标记"
+
+msgid "fw_mark_blocked"
+msgstr "拒绝标记"

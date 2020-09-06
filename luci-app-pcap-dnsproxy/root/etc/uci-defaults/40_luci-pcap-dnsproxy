@@ -1,0 +1,44 @@
+#!/bin/sh
+
+pkgname="pcap-dnsproxy"
+type1name="pcap-dnsproxy"
+type2name="main"
+type3name="rule"
+pkgdir="/etc/$pkgname"
+cfglist="Config Hosts IPFilter"
+listlist="Routing.txt WhiteList.txt"
+
+
+## uci config file
+touch /etc/config/$pkgname
+if [ ."$(uci -q get ${pkgname}.@${type1name}[-1])" != ."${type1name}" ]; then
+	uci -q batch <<-EOF >/dev/null
+		add $pkgname $type1name
+		set ${pkgname}.@${type1name}[-1].enabled='1'
+		commit $pkgname
+	EOF
+fi
+if [ ."$(uci -q get ${pkgname}.@${type3name}[-1])" != ."${type3name}" ]; then
+	uci -q batch <<-EOF >/dev/null
+		add $pkgname $type3name
+		commit $pkgname
+	EOF
+fi
+
+## master luci-app-pcap-dnsproxy config folder
+mkdir ${pkgdir}/user 2>/dev/null
+for _name in $cfglist; do
+	if [ ! -e "$pkgdir/${_name}.conf-opkg" ]; then
+		touch $pkgdir/${_name}.conf-opkg
+		cp -f $pkgdir/${_name}.conf $pkgdir/${_name}.conf-opkg 2>/dev/null
+		sed -i '1 i ####\n' $pkgdir/${_name}.conf
+		[ "${_name}" == "Config" ] && /usr/bin/pcap-dnsproxy.sh reset_full
+	fi
+done
+for _name in $listlist; do
+	rm -f $pkgdir/${_name}-opkg 2>/dev/null
+done
+
+
+rm -rf /tmp/luci-indexcache /tmp/luci-modulecache/
+return 0

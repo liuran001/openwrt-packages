@@ -1,0 +1,66 @@
+msgid "RUNNING"
+msgstr "运行中"
+
+msgid "NOT RUNNING"
+msgstr "未运行"
+
+msgid "General Setting"
+msgstr "基本设置"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "use Fair_Mode"
+msgstr "使用公平模式"
+
+msgid "Enable the Fair_Mode"
+msgstr "启用公平模式"
+
+msgid "Enable the Fair_Mode or use the Compete_Mode"
+msgstr "启用公平模式，否则系统运行在竞争模式，默认使用竞争模式，仅当可信 DNS 返回速度快于国内 DNS 时采用公平模式"
+
+msgid "Listen Port"
+msgstr "监听端口"
+
+msgid "Listen Address"
+msgstr "监听地址"
+
+msgid "CHNRoute File"
+msgstr "国内路由表"
+
+msgid "GFWRoute File"
+msgstr "国外路由表"
+
+msgid "China DNS Servers"
+msgstr "国内 DNS 服务器地址"
+
+msgid "Trusted DNS Servers"
+msgstr "可信 DNS 服务器地址"
+
+msgid "Use commas to separate multiple ip address，Max 2 Servers"
+msgstr "使用逗号分隔多个 IP 地址，最多使用两个服务器"
+
+msgid "match chnlist first"
+msgstr "国内路由表优先"
+
+msgid "match chnlist first, default is gfwfirst"
+msgstr "优先匹配国内路由表，默认是优先匹配国外路由表"
+
+msgid "reuse_port"
+msgstr "多进程端口复用"
+
+msgid "reuse_port，for Multi-process load balancing"
+msgstr "多进程负载均衡，提升性能"
+
+msgid "accept no ip"
+msgstr "接受无ip地址的应答"
+
+msgid "accept reply without ipaddr (A/AAAA query)"
+msgstr "接受 qtype 为 A/AAAA 但却没有 IP 的 reply"
+
+msgid "timeout_sec"
+msgstr "查询超时时间 秒"
+
+msgid "repeat_times"
+msgstr "同一地址对可信 DNS 发送查询包数量"
+

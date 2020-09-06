@@ -1,0 +1,1058 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:556
+msgid "0 - Auto choice"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:337
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:345
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:397
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:403
+msgid "0 - Disable"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:251
+msgid "0 - Disable - Once"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:276
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:281
+msgid ""
+"0 is automatically determined by the operating system, the value of 1 - 255 "
+"between"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:252
+msgid "2 - Double"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:253
+msgid "3 - Triple"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:637
+msgid "Addresses"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/controller/pcap-dnsproxy.lua:15
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:93
+msgid "Advanced"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:174
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:184
+msgid ""
+"After enabling, the EDNS subnet address of EDNS Client Subnet Relay will be "
+"added preferentially."
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:152
+msgid "Aliyun"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:528
+msgid "All Non-local requests will only be made via the HTTP CONNECT protocol"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:465
+msgid "All Non-local requests will only be made via the SOCKS protocol"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:427
+msgid "All request to enable"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:56
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:166
+msgid "Alternate Data source"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:355
+msgid "Alternate Server Failed Thresholds Calculation Period"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:351
+msgid "Alternate Server Failure Thresholds"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:360
+msgid "Alternate Server Reset Time"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:173
+msgid "Alternate Update"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:57
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:58
+msgid "Apply to System"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:43
+msgid "Auto Update"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:143
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:204
+msgid "Cleanup"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:624
+msgid "Client Ephemeral Key"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:411
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:415
+msgid "Compression Pointer Mutation"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:46
+msgid "Crontab"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:118
+msgid "Custom mode"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:266
+msgid "DNS Cache Default TTL"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:261
+msgid "DNS Cache Parameter"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:255
+msgid "DNS Cache Type"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:409
+msgid "DNS Header Processing"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:94
+msgid "DNS Proxy"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:18
+msgid "DNSCrypt DB"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:95
+msgid "DNSCurve"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:590
+msgid "DNSCurve (DNSCrypt)"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:592
+msgid "DNSCurve Protocol"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:451
+msgid "DNSSEC Force Record"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:446
+msgid "DNSSEC Request"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:636
+msgid "Database"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:88
+msgid "Day 1"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:90
+msgid "Day 14"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:91
+msgid "Day 21"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:92
+msgid "Day 28"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:89
+msgid "Day 7"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:387
+msgid "Direct Request"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:209
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:256
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:389
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:410
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:44
+#: applications/luci-app-pcap-dnsproxy/luasrc/view/pcap-dnsproxy/buttons.htm:60
+msgid "Disable"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:405
+msgid "Domain Case Conversion"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:341
+msgid "Domain Test"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:440
+msgid "EDNS Client Subnet Relay"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:172
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:182
+msgid ""
+"EDNS Client Subnet Relay parameter priority is higher than this parameter."
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:412
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:426
+msgid "EDNS Label"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:432
+msgid "EDNS Label List"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/controller/pcap-dnsproxy.lua:16
+msgid "Edit Configuration"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/controller/pcap-dnsproxy.lua:17
+msgid "Edit Hosts"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/controller/pcap-dnsproxy.lua:18
+msgid "Edit IPFilter"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:33
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:50
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/hosts.lua:33
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/ipfilter.lua:33
+msgid "Empty file."
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/view/pcap-dnsproxy/buttons.htm:58
+msgid "Enable"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:428
+msgid "Enable request below list"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:452
+msgid ""
+"Enabling will cause all undeployed DNSSEC function variable name resolution "
+"failure!"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:620
+msgid "Encryption"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:435
+msgid ""
+"Exclude format: All - Local - SOCKS Proxy - HTTP CONNECT Proxy - Direct "
+"Request - DNSCurve - TCP - UDP"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:150
+msgid "Fast in China but not provide Zip download"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:32
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:49
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/hosts.lua:32
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/ipfilter.lua:32
+msgid "File does not exist."
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:208
+msgid "Filter Mode"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:18
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:82
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/hosts.lua:17
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/ipfilter.lua:17
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/logfile.lua:34
+msgid ""
+"For further information <a href=\"%s\" target=\"_blank\">check the online "
+"documentation</a>"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:375
+msgid ""
+"Format: AnyConnect|Host|Hyper|ISATAP|IKE|L2TP|Only|Oracle|PPTP|Pseudo|Teredo|"
+"Tunnel|Virtual|VMNet|VMware|VPN|any|gif|ifb|lo|nflog|nfqueue|stf|tunl|utun"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:82
+msgid "Friday"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:45
+msgid "General"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/controller/pcap-dnsproxy.lua:12
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:81
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:90
+msgid "General Settings"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:151
+msgid "Gitee"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:571
+msgid "HTTP CONNECT Authorization"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:540
+msgid "HTTP CONNECT IPv4 Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:545
+msgid "HTTP CONNECT IPv6 Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:579
+msgid "HTTP CONNECT Password"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:532
+msgid "HTTP CONNECT Protocol"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:525
+msgid "HTTP CONNECT Proxy"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:527
+msgid "HTTP CONNECT Proxy Only"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:575
+msgid "HTTP CONNECT Username"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:555
+msgid "HTTP CONNECT Version"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/view/pcap-dnsproxy/helloworld.htm:2
+msgid "Hello World"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:153
+msgid "HuaweiCloud"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:333
+msgid "ICMP Test"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:653
+msgid "IPv4 Alternate DNS"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:150
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:694
+msgid "IPv4 Alternate DNS Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:154
+msgid "IPv4 Alternate DNS TTL"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:699
+msgid "IPv4 Alternate Provider Name"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:704
+msgid "IPv4 Alternate Provider Public Key"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:210
+msgid "IPv4 Data source"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:171
+msgid "IPv4 EDNS Client Subnet Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:120
+msgid "IPv4 Listen Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:224
+msgid "IPv4 Local Alternate DNS Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:218
+msgid "IPv4 Local Main DNS Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:644
+msgid "IPv4 Main DNS"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:143
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:672
+msgid "IPv4 Main DNS Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:147
+msgid "IPv4 Main DNS TTL"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:681
+msgid "IPv4 Main Provider Name"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:687
+msgid "IPv4 Main Provider Public Key"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:275
+msgid "IPv4 Packet TTL"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:285
+msgid "IPv4 TTL/IPv6 Hop Limits Tolerance"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:286
+msgid ""
+"IPv4 TTL/IPv6 Hop Limits value range of ± data packets can be accepted, to "
+"avoid the short-term changes in the network environment caused by the "
+"failure of the problem"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:395
+msgid ""
+"IPv4 support needs Liunx version newer than 3.7. IPv6 TFO support needs "
+"Liunx version newer than 3.16"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:664
+msgid "IPv6 Alternate DNS"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:164
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:729
+msgid "IPv6 Alternate DNS Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:168
+msgid "IPv6 Alternate DNS Hop Limits"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:734
+msgid "IPv6 Alternate Provider Name"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:739
+msgid "IPv6 Alternate Provider Public Key"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:218
+msgid "IPv6 Data source"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:181
+msgid "IPv6 EDNS Client Subnet Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:125
+msgid "IPv6 Listen Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:236
+msgid "IPv6 Local Alternate DNS Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:230
+msgid "IPv6 Local Main DNS Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:658
+msgid "IPv6 Main DNS"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:157
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:710
+msgid "IPv6 Main DNS Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:161
+msgid "IPv6 Main DNS Hop Limits"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:716
+msgid "IPv6 Main Provider Name"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:722
+msgid "IPv6 Main Provider Public Key"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:280
+msgid "IPv6 Packet Hop Limits"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:372
+msgid "If disabled, it will automatically open the 'Direct Request' feature"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:400
+msgid "In milliseconds, must greater than value of 'Pcap Reading Timeout'"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:381
+msgid "In milliseconds, with a minimum of 10"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:292
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:302
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:312
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:322
+msgid "In milliseconds, with a minimum of 500"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:267
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:334
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:342
+msgid "In seconds"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:629
+msgid "In seconds, minimum is 10"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:356
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:361
+msgid "In seconds, with a minimum of 5"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:433
+msgid ""
+"Include format: Local + SOCKS Proxy + HTTP CONNECT Proxy + Direct Request + "
+"DNSCurve + TCP + UDP"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:167
+msgid "Just in case if you can't use 'git-http'"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:138
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:199
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:244
+msgid "Last update"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:142
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:203
+msgid "List Cleanup"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:111
+msgid "Listen Port"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:100
+msgid "Listen Protocol"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:64
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:66
+msgid "Load from System"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/view/pcap-dnsproxy/js.htm:51
+msgid "Loading"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:91
+msgid "Local DNS Request"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:214
+msgid "Local Force Request"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:210
+msgid "Local Hosts"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:194
+msgid "Local Protocol"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:211
+msgid "Local Routing"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/controller/pcap-dnsproxy.lua:20
+#: applications/luci-app-pcap-dnsproxy/luasrc/controller/pcap-dnsproxy.lua:22
+msgid "Logfile"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:55
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:149
+msgid "Main Data source"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:78
+msgid "Monday"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:72
+msgid "Month"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:673
+msgid ""
+"More support for DNSCurve (DNSCrypt) servers please move <a href=\"%s\" "
+"target=\"_blank\">here</a>"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:245
+msgid "Multiple requests"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/logfile.lua:12
+msgid "No pcap-dnsproxy error logs yet!"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:34
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:36
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:191
+msgid "None"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:441
+msgid ""
+"Only enabled when providing services as a non-local private network dns "
+"server"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:114
+msgid "Operation Mode"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:132
+msgid "Outgoing Protocol"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:92
+msgid "Parameter"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:520
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:580
+msgid "Password"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:371
+msgid "Pcap Capture"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:374
+msgid "Pcap Devices Blacklist"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:380
+msgid "Pcap Reading Timeout"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/controller/pcap-dnsproxy.lua:11
+msgid "Pcap_DNSProxy Server"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:368
+msgid "Pcap_DNSProxy Server Name"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:32
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:49
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/hosts.lua:32
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/ipfilter.lua:32
+msgid "Please check your configuration or reinstall %s."
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/logfile.lua:21
+msgid "Please edit this file directly in a terminal session."
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:25
+msgid "Port:"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:116
+msgid "Private network mode"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:117
+msgid "Proxy mode"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:258
+msgid "Queue"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:399
+msgid "Receive Waiting"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:606
+msgid "Reliable DNSCurve Protocol Port Timeout"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:291
+msgid "Reliable Once Socket Timeout"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:301
+msgid "Reliable Serial Socket Timeout"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/view/pcap-dnsproxy/buttons.htm:50
+msgid "Reload"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:72
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:74
+msgid "Reset All settings"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:47
+msgid "Restore DNS"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:46
+msgid "Restore system DNS"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:17
+msgid "RoutingList"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:34
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:192
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:193
+msgid "Rules"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/controller/pcap-dnsproxy.lua:13
+msgid "Rules Update"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:25
+msgid "Running"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:511
+msgid "SOCKS Authorization"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:496
+msgid "SOCKS IPv4 Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:501
+msgid "SOCKS IPv6 Address"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:519
+msgid "SOCKS Password"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:477
+msgid "SOCKS Protocol"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:462
+msgid "SOCKS Proxy"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:464
+msgid "SOCKS Proxy Only"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:491
+msgid "SOCKS UDP No Handshake"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:515
+msgid "SOCKS Username"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:469
+msgid "SOCKS Version"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:83
+msgid "Saturday"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:60
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/hosts.lua:21
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/ipfilter.lua:21
+msgid "Save"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:124
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:125
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:181
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:182
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:232
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:233
+msgid "Save & Apply"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:246
+msgid "Send parallel requests to the same remote server at a time"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:628
+msgid "Server Connection Information Check Interval"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:635
+msgid "Server Input"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:115
+msgid "Server mode"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/view/pcap-dnsproxy/buttons.htm:46
+msgid "Service Control"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:32
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:35
+msgid "Service Status"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/view/pcap-dnsproxy/buttons.htm:48
+msgid "Start"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/view/pcap-dnsproxy/buttons.htm:52
+msgid "Stop"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:23
+msgid "Stopped"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:77
+msgid "Sunday"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:45
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/hosts.lua:26
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/ipfilter.lua:26
+msgid "System config file: <code>%s</code>"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:394
+msgid "TCP Fast Open"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:44
+msgid "Take over DNS"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:43
+msgid "Take over system DNS request to pcap-dnsproxy"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:506
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:550
+msgid "Target DNS Server"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:645
+msgid ""
+"The 'Name' field of the corresponding server in the <a href=\"%s\" target="
+"\"_blank\">DNSCurve database</a>"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/logfile.lua:20
+msgid "The file size is too large for online editing in LuCI (&ge; 50 KB)."
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/logfile.lua:33
+msgid "The following error logs is generated by pcap-dnsproxy."
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:388
+msgid "The system needs run in global proxy mode"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:16
+msgid ""
+"This form allows you to modify the content of the main pcap-dnsproxy "
+"configuration file"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/hosts.lua:15
+msgid ""
+"This form allows you to modify the content of the pcap-dnsproxy Hosts config "
+"file"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/ipfilter.lua:15
+msgid ""
+"This form allows you to modify the content of the pcap-dnsproxy IPFilter "
+"config file"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:81
+msgid "Thursday"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:257
+msgid "Timer"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:259
+msgid "Timer + Queue"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:79
+msgid "Tuesday"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:248
+msgid "Unless the packet loss is very high, not recommended to open"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:613
+msgid "Unreliable DNSCurve Protocol Port Timeout"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:311
+msgid "Unreliable Once Socket Timeout"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:321
+msgid "Unreliable Serial Socket Timeout"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:25
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:49
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:60
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:156
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:174
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:224
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:225
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:248
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:249
+msgid "Update"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:70
+msgid "Update Cycle"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:76
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:87
+msgid "Update Date"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:65
+msgid "Update Schedule"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:54
+msgid "Update Source"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:96
+msgid "Update Time"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:250
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:336
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:344
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:402
+msgid "Use Default"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:29
+msgid "User config file: <code>%s</code>"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:516
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:576
+msgid "Username"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:80
+msgid "Wednesday"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:71
+msgid "Week"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:16
+msgid "WhiteList"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:65
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:73
+msgid "You may need to revert&apply 'UNSAVED CHANGES' once"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:23
+msgid "You need install 'git-http' first"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/logfile.lua:36
+msgid ""
+"https://github.com/wongsyrone/Pcap_DNSProxy/blob/master/Documents/FAQ.en.txt"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/configuration.lua:20
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:84
+msgid ""
+"https://github.com/wongsyrone/Pcap_DNSProxy/blob/master/Documents/ReadMe.en."
+"txt"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/hosts.lua:19
+msgid ""
+"https://github.com/wongsyrone/Pcap_DNSProxy/blob/master/Documents/ReadMe.en."
+"txt#L706"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/ipfilter.lua:19
+msgid ""
+"https://github.com/wongsyrone/Pcap_DNSProxy/blob/master/Documents/ReadMe.en."
+"txt#L891"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:607
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:614
+msgid "in milliseconds, minimum to 500"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:19
+msgid "is not installed or not found"
+msgstr ""
