@@ -29,5 +29,5 @@
 `Actions页面报错是正常的，因为只有上游有更新时才能成功上传`
 
 ## ~~pytbt~~
-[![LATOPAY](https://latopay.com/w/lt-bar-20714.png)](https://latopay.com/@liuran001)
+[![点我打钱](https://latopay.com/w/lt-bar-20714.png)](https://latopay.com/@liuran001)
 `手机端请用桌面版UA打开上面页面`
