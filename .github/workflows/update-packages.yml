@@ -57,7 +57,7 @@ jobs:
         cd $GITHUB_WORKSPACE/${{matrix.target}}
         git add .
         git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)"
-        git push HEAD:${{matrix.target}}
+        git push origin ${{matrix.target}}
  
 
  
