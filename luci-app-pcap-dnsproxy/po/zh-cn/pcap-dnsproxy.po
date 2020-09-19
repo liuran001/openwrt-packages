@@ -610,11 +610,11 @@ msgstr "本土 DNS 解析"
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:214
 msgid "Local Force Request"
-msgstr "强制使用本土服务器解析"
+msgstr "强制使用本土服务器解析本土域名"
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:210
 msgid "Local Hosts"
-msgstr ""
+msgstr "本土域名白名单"
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:194
 msgid "Local Protocol"
@@ -622,7 +622,7 @@ msgstr "本土出口协议"
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:211
 msgid "Local Routing"
-msgstr ""
+msgstr "本土境内路由表"
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/controller/pcap-dnsproxy.lua:20
 #: applications/luci-app-pcap-dnsproxy/luasrc/controller/pcap-dnsproxy.lua:22

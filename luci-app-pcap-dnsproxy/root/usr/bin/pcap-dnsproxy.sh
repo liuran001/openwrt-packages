@@ -406,6 +406,8 @@ uci2conf() {
 	done
 
 
+#config_load $UCICFGFILE
+
 # Defining variables for uci config
 #cat <<< `map_tab "$@"` | sed -n "s/^/'/; s/$/'/ p"
 local uci_list=`map_tab "$map" uci | sed -n "s/^/'/; s/$/'/ p"` # "$@"
@@ -413,7 +415,7 @@ local uci_list=`map_tab "$map" uci | sed -n "s/^/'/; s/$/'/ p"` # "$@"
 local uci_count=${#uci_list[@]}
 # Get values of uci config
 for _var in "${uci_list[@]}"; do local $_var; config_get "$_var" "$section" "$_var"; done
-#eval "config_set \"\$section\" \"\$_var\" \"\$$_var\"" # Only set to environment variables
+#config_set "$section" "$_var" "${!_var}" # Only set to environment variables
 
 
 # Write $config file
@@ -424,7 +426,7 @@ local __FUNCTION
 
 for _var in "${uci_list[@]}"; do
 	# <$_var> not empty AND <$$_var> not empty
-	if [ -n "$_var" -a -n "$(eval echo \$$_var)" ]; then
+	if [ -n "$_var" -a -n "${!_var}" ]; then
 
 		_raw=`map_tab "$map" raw "$_var"` # ~~Also need process DynamicList like: 'HTTP CONNECT Header Field'~~ Consider not adding, can only added them from user conffile
 
@@ -438,7 +440,7 @@ for _var in "${uci_list[@]}"; do
 				eval "$__FUNCTION" >/dev/null
 				araw_list=`eval "$__FUNCTION" | sed -n "s/^/'/; s/$/'/ p"` # "$@"
 					eval araw_list=(${araw_list//'/\'})
-                
+
 				# Write Function conf
 				for _tab in "${araw_list[@]}"; do
 					command="$command s~^\($(echo "$_tab" | cut -f1 -d=)\) \([<=>]\).*\$~\1 \2 $(echo "$_tab" | cut -f2 -d=)~;"
@@ -450,7 +452,7 @@ for _var in "${uci_list[@]}"; do
 			# Normal uci element
 			else
 				# Write Normal conf
-				eval "_var=\"\$$_var\""
+				_var="${!_var}"
 				command="$command s~^\($_raw\) \([<=>]\).*\$~\1 \2 ${_var}~;"
 				#echo "Normal: ${_raw} = ${_var}" #debug test
 			fi
@@ -459,7 +461,7 @@ for _var in "${uci_list[@]}"; do
 			>&2 echo "uci2conf: The Element \"$_var\" not have relative element"; return 1
 			>&2 echo "This situation basically does not exist" >/dev/null
 		fi
-	
+
 	# <$_var> returns empty
 	else
 		echo "uci2conf: The Element \"$_var\" is empty" >/dev/null
@@ -467,8 +469,8 @@ for _var in "${uci_list[@]}"; do
 done
 		#echo "$command"
 
-	if   [ "$map" == "$(eval echo \$$CONF_LIST_FIRST)" ]; then sed -i "1,/^\[.*\]$/            { $command }" $config;
-	elif [ "$map" == "$(eval echo \$$CONF_LIST_LAST)" ]; then  sed -i "/^\[$map\]$/,$          { $command }" $config;
+	if   [ "$map" == "${!CONF_LIST_FIRST}" ]; then sed -i "1,/^\[.*\]$/            { $command }" $config;
+	elif [ "$map" == "${!CONF_LIST_LAST}" ]; then  sed -i "/^\[$map\]$/,$          { $command }" $config;
 	else                                                       sed -i "/^\[$map\]$/,/^\[.*\]$/ { $command }" $config;
 	fi
 
@@ -482,7 +484,7 @@ conf2uci() {
 		else eval "local \$_var=\"\$1\"" && shift; fi
 	done
 
-	
+
 # Defining variables for conffile
 #cat <<< `map_tab "$@"` | sed -n "s/^/'/; s/$/'/ p"
 local raw_list=`map_tab "$map" raw | sed -n "s/^/'/; s/$/'/ p"` # "$@"
@@ -514,7 +516,7 @@ for _var in "${raw_list[@]}"; do
 				#eval "echo '$__FUNCTION'"
 			araw_list=`eval "$__FUNCTION" | sed -n "s/^/'/; s/$/'/ p"` # "$@"
 				eval araw_list=(${araw_list//'/\'})
-            
+
 			# Write Function conf
 			for _tab in "${araw_list[@]}"; do
 				uci_set "$pkgnm" "$section" "$(echo "$_tab" | cut -f1 -d=)" "$(echo "$_tab" | cut -f2 -d=)"
@@ -599,7 +601,7 @@ for _head in "${valid_head[@]}"; do
 
 	valid_param=$(echo `sed -n "/^\[$_head\][ \t]*$/,/^\[.*\][ \t]*$/ { /^[^\[^#]/ { s|^\(.\+\) =.*$|'\1'|g p }}" "$userconf" | sort | uniq`)
 		eval valid_param=(${valid_param//'/\'})
-	
+
 	for _param in "${valid_param[@]}"; do
 		_multi=$([ "$(map_tab "$_head" uci "$_param")" == "MULTICONF" ] && echo 1 || echo 0)
 
@@ -762,7 +764,7 @@ local uci_list=`map_tab "$map" uci | sed -n "s/^/'/; s/$/'/ p"` # "$@"
 local uci_count=${#uci_list[@]}
 # Get values of uci config
 for _var in "${uci_list[@]}"; do local $_var; config_get "$_var" "$section" "$_var"; done
-#eval "config_set \"\$section\" \"\$_var\" \"\$$_var\"" # Only set to environment variables
+#config_set "$section" "$_var" "${!_var}" # Only set to environment variables
 
 
 # Create schedule
@@ -789,18 +791,18 @@ if   [ "$aauto" == "0" ]; then
 elif [ "$aauto" == "1" ]; then
 
 	# general cron
-	if   [ "$aauto_cycle" == "week" ]; then [ -n "$aauto_week" ] && _week=$aauto_week || _week=3;
-	elif [ "$aauto_cycle" == "month" ]; then [ -n "$aauto_month" ] && _day=$aauto_month || _day=1;
+	if   [ "$aauto_cycle" == "week" ]; then _week=${aauto_week:-3};
+	elif [ "$aauto_cycle" == "month" ]; then _day=${aauto_month:-1};
 	else return 1;
 	fi
-	[ -n "$aauto_time" ] && _time="0 $aauto_time" || _time='0 9'
 
+	_time="0 ${aauto_time:-9}"
 	_cron="$_time $_day * $_week"
 
 elif [ "$aauto" == "2" ]; then
 
 	# crontab cron
-	[ -n "$aauto_cron" ] && _cron=$aauto_cron || _cron='0 9 * * 3'
+	_cron="${aauto_cron:-0 9 * * 3}"
 
 else return 1;
 fi
@@ -835,12 +837,12 @@ uci2conf_full() {
 
 	# Apply Uci config to pcap-dnsproxy Main Config file
 	for _conf in "${CONF_LIST[@]}"; do
-		eval "config_foreach uci2conf \"\$TypedSection\" \"\$$_conf\" \"\$ConfigFile\""
+		config_foreach uci2conf "$TypedSection" "${!_conf}" "$ConfigFile"
 	done
 
 	# Apply User config to pcap-dnsproxy Main Config file
 	userconf "$UserConfig" "$ConfigFile"
-	
+
 }
 
 conf2uci_full() {
@@ -854,7 +856,7 @@ conf2uci_full() {
 
 	# Apply pcap-dnsproxy Main Config file to Uci config
 	for _conf in "${CONF_LIST[@]}"; do
-		eval "conf2uci \"\$TypedSection\" \"\$$_conf\" \"\$ConfigFile\" \"\$PackageName\""
+		conf2uci "$TypedSection" "${!_conf}" "$ConfigFile" "$PackageName"
 	done
 
 }
@@ -869,7 +871,7 @@ userconf_full() {
 
 	# Apply User config to pcap-dnsproxy Main Config file
 	userconf "$UserConfig" "$ConfigFile"
-	
+
 }
 
 reset_full() {
@@ -921,7 +923,7 @@ CONF_LIST=`map_def nam | sed -n "s/^/'/; s/$/'/ p"` # "$@"
 	eval CONF_LIST=(${CONF_LIST//'/\'})
 CONF_LIST_COUNT=${#CONF_LIST[@]}
      CONF_LIST_FIRST=${CONF_LIST[0]}
-eval CONF_LIST_LAST=\${CONF_LIST[$((${CONF_LIST_COUNT}-1))]}
+eval CONF_LIST_LAST=\${CONF_LIST[$[${CONF_LIST_COUNT}-1]]}
 
 # Define Map name and values
 for _var in "`map_def`"; do eval "${_var[@]}"; done
@@ -932,4 +934,3 @@ for _var in "`map_def`"; do eval "${_var[@]}"; done
 
 
 $_FUNCTION "$@"
-

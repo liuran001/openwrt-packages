@@ -7,6 +7,8 @@ status=$(unify_ps_status "openclash_debug.sh")
 
 DEBUG_LOG="/tmp/openclash_debug.log"
 LOGTIME=$(date "+%Y-%m-%d %H:%M:%S")
+CHANGE_FILE="/tmp/yaml_change.yaml"
+DNS_FILE="/tmp/yaml_dns.yaml"
 uci commit openclash
 
 enable_custom_dns=$(uci get openclash.config.enable_custom_dns 2>/dev/null)
@@ -28,6 +30,7 @@ core_tun_version=$(/etc/openclash/core/clash_tun -v 2>/dev/null |awk -F ' ' '{pr
 core_game_version=$(/etc/openclash/core/clash_game -v 2>/dev/null |awk -F ' ' '{print $2}' 2>/dev/null)
 servers_update=$(uci get openclash.config.servers_update 2>/dev/null)
 op_version=$(sed -n 1p /etc/openclash/openclash_version 2>/dev/null)
+china_ip_route=$(uci get openclash.config.china_ip_route 2>/dev/null)
 
 if [ -z "$CONFIG_FILE" ] || [ ! -f "$CONFIG_FILE" ]; then
 	CONFIG_NAME=$(ls -lt /etc/openclash/config/ | grep -E '.yaml|.yml' | head -n 1 |awk '{print $9}')
@@ -203,6 +206,7 @@ IPV6-DNS解析: $(ts_cf "$ipv6_enable")
 自定义规则: $(ts_cf "$enable_custom_clash_rules")
 仅允许内网: $(ts_cf "$intranet_allowed")
 仅代理命中规则流量: $(ts_cf "$enable_rule_proxy")
+绕过中国大陆IP: $(ts_cf "$china_ip_route")
 
 #启动异常时建议关闭此项后重试
 保留配置: $(ts_cf "$servers_update")
@@ -262,32 +266,16 @@ if [ -n "$(grep OpenClash-General-Settings "$CONFIG_FILE")" ]; then
    sed '/OpenClash-General-Settings/,$d' "$CONFIG_FILE" >> "$DEBUG_LOG" 2>/dev/null
 else
    /usr/share/openclash/yml_field_name_ch.sh "$CONFIG_FILE" 2>/dev/null
-   proxy_len=$(sed -n '/^Proxy:/=' "$CONFIG_FILE" 2>/dev/null)
-   provider_len=$(sed -n '/^proxy-providers:/=' "$CONFIG_FILE" 2>/dev/null)
-   group_len=$(sed -n '/^proxy-groups:/=' "$CONFIG_FILE" 2>/dev/null)
-   dns_len=$(sed -n '/^dns:/=' "$CONFIG_FILE" 2>/dev/null)
-   rule_len=$(sed -n '/^rules:/=' "$CONFIG_FILE" 2>/dev/null)
-   if [ "$dns_len" -ge "$proxy_len" ] || [ "$dns_len" -ge "$rule_len" ] || [ "$dns_len" -ge "$group_len" ]; then
-   	  echo "错误: 不支持的配置文件， General 设置部分应位于开头，请根据模板修改后重试！" >> "$DEBUG_LOG"
-   fi 2>/dev/null
-   	
-   if [ "$proxy_len" -ge "$rule_len" ] || [ "$provider_len" -ge "$rule_len" ]; then
-   	  echo "错误: 不支持的配置文件，服务器节点设置部分应位于规则之前，请根据模板修改后重试！" >> "$DEBUG_LOG"
+   #取出general部分
+   /usr/share/openclash/yml_field_cut.sh "general" "$CHANGE_FILE" "$CONFIG_FILE"
+   
+   #取出dns部分
+   nameserver_len=$(sed -n '/^ \{0,\}nameserver:/=' "$CONFIG_FILE" 2>/dev/null)
+   if [ -n "$nameserver_len" ]; then
+      /usr/share/openclash/yml_field_cut.sh "$nameserver_len" "$DNS_FILE" "$CONFIG_FILE"
    fi 2>/dev/null
    
-   if [ "$group_len" -ge "$rule_len" ] || [ "$proxy_len" -ge "$group_len" ]; then
-   	  echo "错误: 不支持的配置文件，策略组设置部分应位于规则之前、节点之后，请根据模板修改后重试！" >> "$DEBUG_LOG"
-   fi 2>/dev/null
-   
-   if [ "$proxy_len" -le "$provider_len" ]; then
-      sed '/^ \{0,\}Proxy:/,$d' "$CONFIG_FILE" >> "$DEBUG_LOG" 2>/dev/null
-   elif [ "$proxy_len" -ge "$provider_len" ]; then
-      sed '/^ \{0,\}proxy-providers:/,$d' "$CONFIG_FILE" >> "$DEBUG_LOG" 2>/dev/null
-   elif [ -n "$proxy_len" ] && [ -z "$provider_len" ]; then
-      sed '/^ \{0,\}Proxy:/,$d' "$CONFIG_FILE" >> "$DEBUG_LOG" 2>/dev/null
-   elif [ -z "$proxy_len" ] && [ -n "$provider_len" ]; then
-      sed '/^ \{0,\}proxy-providers:/,$d' "$CONFIG_FILE" >> "$DEBUG_LOG" 2>/dev/null
-   fi 2>/dev/null
+   cat "$CONFIG_FILE" "$DNS_FILE" >> "$DEBUG_LOG"
 fi
 
 #firewall
