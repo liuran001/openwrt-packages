@@ -3194,6 +3194,9 @@ input[type="checkbox"]:checked {
   .cbi-section > div {
     overflow-x: auto;
   }
+.cbi-map >.cbi-section{
+	padding:0 1rem;
+	}
 }
 @media screen and (max-width: 600px) {
   .mobile-hide {

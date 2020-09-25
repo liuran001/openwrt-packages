@@ -34,6 +34,14 @@ table td, .table .td {
 ._select {
 	background: #dad8d8;
 }
+
+._now_use {
+	background: #94e1ff;
+}
+
+.ping a:hover{
+	text-decoration : underline;
+}
 </style>
 
 <script type="text/javascript">
@@ -211,6 +219,36 @@ table td, .table .td {
 		}
 	}
 	
+	//获取当前使用的节点
+	function get_now_use_node() {
+		XHR.get('<%=dsp.build_url("admin/services/passwall/get_now_use_node")%>', null,
+			function(x, result) {
+				for (var i = 1; i <= result.udp; i++) {
+					var id = result["UDP" + i];
+					if (id) {
+						var dom = document.getElementById("cbi-passwall-" + id);
+						if (dom) {
+							dom.classList.add("_now_use");
+							dom.title = "当前UDP" + i + "节点";
+						}
+					}
+				}
+				for (var i = 1; i <= result.tcp; i++) {
+					var id = result["TCP" + i];
+					if (id) {
+						var dom = document.getElementById("cbi-passwall-" + id);
+						if (dom) {
+							dom.classList.add("_now_use");
+							dom.title = "当前TCP" + i + "节点";
+							//var v = "当前使用：" + document.getElementById("cbid.passwall." + id + ".remarks").value;
+							//document.getElementById("cbi-passwall-" + id + "-remarks").innerHTML = v;
+						}
+					}
+				}
+			}
+		);
+	}
+	
 	function ping_node(cbi_id, dom) {
 		var full = get_address_full(cbi_id);
 		if (full != null) {
@@ -239,9 +277,9 @@ table td, .table .td {
 	
 	/* 自动Ping */
 	var nodes = [];
-	const auto_ping_value = document.getElementsByClassName('auto_ping_value');
-	for (var i = 0; i < auto_ping_value.length; i++) {
-		var cbi_id = auto_ping_value[i].getAttribute("cbiid");
+	const ping_value = document.getElementsByClassName('ping_value');
+	for (var i = 0; i < ping_value.length; i++) {
+		var cbi_id = ping_value[i].getAttribute("cbiid");
 		var full = get_address_full(cbi_id);
 		if (full != null) {
 			var flag = false;
@@ -263,6 +301,8 @@ table td, .table .td {
 		}
 	}
 	
+	get_now_use_node();
+	
 	const _xhr = (index) => {
 		return new Promise((res) => {
 			const dom = nodes[index];
@@ -277,15 +317,15 @@ table td, .table .td {
 						var strs = dom.indexs.split(",");
 						for (var i = 0; i < strs.length; i++) {
 							if (result.ping == null || result.ping.trim() == "") {
-								auto_ping_value[strs[i]].innerHTML = "<font style='color:red'><%:Timeout%></font>";
+								ping_value[strs[i]].innerHTML = "<font style='color:red'><%:Timeout%></font>";
 							} else {
 								var ping = parseInt(result.ping);
 								if (ping < 100)
-									auto_ping_value[strs[i]].innerHTML = "<font style='color:green'>" + result.ping + " ms" + "</font>";
+									ping_value[strs[i]].innerHTML = "<font style='color:green'>" + result.ping + " ms" + "</font>";
 								else if (ping < 200)
-									auto_ping_value[strs[i]].innerHTML = "<font style='color:#fb9a05'>" + result.ping + " ms" + "</font>";
+									ping_value[strs[i]].innerHTML = "<font style='color:#fb9a05'>" + result.ping + " ms" + "</font>";
 								else if (ping >= 200)
-									auto_ping_value[strs[i]].innerHTML = "<font style='color:red'>" + result.ping + " ms" + "</font>";
+									ping_value[strs[i]].innerHTML = "<font style='color:red'>" + result.ping + " ms" + "</font>";
 							}
 						}
 					}
@@ -295,7 +335,7 @@ table td, .table .td {
 				function(x) {
 					var strs = dom.indexs.split(",");
 					for (var i = 0; i < strs.length; i++) {
-						auto_ping_value[strs[i]].innerHTML = "<font style='color:red'><%:Timeout%></font>";
+						ping_value[strs[i]].innerHTML = "<font style='color:red'><%:Timeout%></font>";
 					}
 					res();
 				}
@@ -333,15 +373,15 @@ table td, .table .td {
 					var strs = indexs.split(",");
 					for (var i = 0; i < strs.length; i++) {
 						if (result.ping == null || result.ping.trim() == "") {
-							auto_ping_value[strs[i]].innerHTML = "<font style='color:red'><%:Timeout%></font>";
+							ping_value[strs[i]].innerHTML = "<font style='color:red'><%:Timeout%></font>";
 						} else {
 							var ping = parseInt(result.ping);
 							if (ping < 100)
-								auto_ping_value[strs[i]].innerHTML = "<font style='color:green'>" + result.ping + " ms" + "</font>";
+								ping_value[strs[i]].innerHTML = "<font style='color:green'>" + result.ping + " ms" + "</font>";
 							else if (ping < 200)
-								auto_ping_value[strs[i]].innerHTML = "<font style='color:#fb9a05'>" + result.ping + " ms" + "</font>";
+								ping_value[strs[i]].innerHTML = "<font style='color:#fb9a05'>" + result.ping + " ms" + "</font>";
 							else if (ping >= 200)
-								auto_ping_value[strs[i]].innerHTML = "<font style='color:red'>" + result.ping + " ms" + "</font>";
+								ping_value[strs[i]].innerHTML = "<font style='color:red'>" + result.ping + " ms" + "</font>";
 						}
 					}
 				}
@@ -351,7 +391,7 @@ table td, .table .td {
 			function(x) {
 				var strs = indexs.split(",");
 				for (var i = 0; i < strs.length; i++) {
-					auto_ping_value[strs[i]].innerHTML = "<font style='color:red'><%:Timeout%></font>";
+					ping_value[strs[i]].innerHTML = "<font style='color:red'><%:Timeout%></font>";
 				}
 				index++;
 				return auto_ping();
@@ -362,7 +402,7 @@ table td, .table .td {
 	*/
 	
 	var edit_btn = document.getElementById("cbi-passwall-nodes").getElementsByClassName("cbi-button cbi-button-edit");
-	for(var i = 0; i < edit_btn.length; i++) {
+	for (var i = 0; i < edit_btn.length; i++) {
 		try {
 			var onclick_str = edit_btn[i].getAttribute("onclick");
 			var id = onclick_str.substring(onclick_str.lastIndexOf('/') + 1, onclick_str.length - 1);
