@@ -3184,8 +3184,7 @@ input[type="checkbox"]:checked {
   header > .fill > .container > .brand {
     display: inline-block;
   }
-  .main > .main-left > .nav > .slide > .menu,
-  .main > .main-left > .nav > li > [data-title="Logout"] {
+  .main > .main-left > .nav > .slide > .menu {
     font-size: 1.2rem;
   }
   .main > .main-left > .nav > .slide > .slide-menu > li > a {
@@ -3195,7 +3194,7 @@ input[type="checkbox"]:checked {
     overflow-x: auto;
   }
 .cbi-map >.cbi-section{
-	padding:0 1rem;
+	padding:0 1rem !important;
 	}
 }
 @media screen and (max-width: 600px) {
