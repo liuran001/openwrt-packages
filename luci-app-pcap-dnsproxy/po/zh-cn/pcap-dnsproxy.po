@@ -1,15 +1,10 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-07-18 07:04+0000\n"
-"Last-Translator: Zheng Qian <sotux82@gmail.com>\n"
-"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
-"openwrt/luciapplicationspcap-dnsproxy/zh_Hans/>\n"
 "Language: zh-cn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 3.9\n"
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:556
 msgid "0 - Auto choice"

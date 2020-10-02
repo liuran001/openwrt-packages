@@ -8,7 +8,7 @@ function index()
 		return
 	end
 
-	entry({"admin", "network", "pcap-dnsproxy"}, firstchild(), _("Pcap_DNSProxy Server"), 30).dependent = false
+	entry({"admin", "network", "pcap-dnsproxy"}, firstchild(), _("Pcap_DNSProxy Server"), 32).dependent = false
 	entry({"admin", "network", "pcap-dnsproxy", "general"}, cbi("pcap-dnsproxy/general"), _("General Settings"), 1).leaf = true
 	entry({"admin", "network", "pcap-dnsproxy", "rules"}, cbi("pcap-dnsproxy/rules"), _("Rules Update"), 2).leaf = true
 
