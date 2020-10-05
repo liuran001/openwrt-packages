@@ -9,7 +9,7 @@ end
 function webcmd()
     local cmd = http.formvalue("cmd")
     if cmd then
-	    local at = io.popen("/usr/bin/at " ..cmd:gsub("[$]", "\\\$"):gsub("\"", "\\\"").." 2>&1")
+	    local at = io.popen("/usr/bin/luci-app-atinout " ..cmd:gsub("[$]", "\\\$"):gsub("\"", "\\\"").." 2>&1")
 	    local result =  at:read("*a")
 	    at:close()
         http.write(tostring(result))
