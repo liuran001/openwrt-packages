@@ -1,0 +1,9 @@
+[submodule "tools/ipt2socks"]
+	path = tools/ipt2socks
+	url = https://github.com/zfl9/ipt2socks
+[submodule "tools/smartdns"]
+	path = tools/smartdns
+	url = https://github.com/pymumu/smartdns
+[submodule "tools/TcpRoute2"]
+	path = tools/TcpRoute2
+	url = https://github.com/GameXG/TcpRoute2

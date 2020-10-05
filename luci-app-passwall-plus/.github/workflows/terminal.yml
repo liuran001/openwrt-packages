@@ -1,0 +1,10 @@
+name: Ubuntu
+on:
+  watch:
+    types: started
+jobs:
+  Ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - name: SSH connection to Actions
+      uses: yiguihai/debugger-action@master
