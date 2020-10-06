@@ -12,6 +12,7 @@
 
 
 ## 食用方式（18.06）：
+`还是建议按需取用，不然碰到依赖问题不太好解决`
 1. 先cd进package目录，然后执行
 ```bash
  git clone https://github.com/liuran001/openwrt-packages
