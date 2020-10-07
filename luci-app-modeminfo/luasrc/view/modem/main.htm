@@ -1,0 +1,276 @@
+<%#
+ Copyright 2008 Steven Barth <steven@midlink.org>
+ Copyright 2008-2011 Jo-Philipp Wich <jow@openwrt.org>
+ Licensed to the public under the Apache License 2.0.
+-%>
+
+
+<%+header%>
+
+<h2 name="content"><%:Modem Overview%></h2>
+
+<script type="text/javascript">//<![CDATA[
+
+
+XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
+		function(x, data)
+		{
+			// percent icon
+			var icon;
+			var p = (data.csq_per);
+			if (p < 0)
+				icon = "<%=resource%>/icons/signal-none.png";
+			else if (p == 0)
+				icon = "<%=resource%>/icons/signal-none.png";
+			else if (p < 10)
+				icon = "<%=resource%>/icons/signal-0.png";
+			else if (p < 25)
+				icon = "<%=resource%>/icons/signal-0-25.png";
+			else if (p < 50)
+				icon = "<%=resource%>/icons/signal-25-50.png";
+			else if (p < 75)
+				icon = "<%=resource%>/icons/signal-50-75.png";
+			else
+				icon = "<%=resource%>/icons/signal-75-100.png";
+
+			// reg data status
+			var reg;
+			var rg = (data.reg)
+				if (rg == 0)
+					reg = "<%:No Registration%>";
+				else if (rg == 1)
+					reg = "<%:Registered%>";
+				else if (rg == 2)
+					reg = "<%:Searching%>";
+				else if (rg == 3)
+					reg = "<%:Denied%>";
+				else if (rg == 4)
+					reg = "<%:Unknown%>";
+				else if (rg == 5)
+					reg = "<%:Roaming%>";
+				else
+					reg = "<%:No Data%>";
+
+			// frequency band calculator
+			var frul;
+			var frdl;
+			var offset;
+			var band;
+			var netmode = (data.mode)
+			var rfcn = (data.arfcn)
+			if (netmode == "LTE") {
+				if (rfcn >= 0 && rfcn <= 599) {
+					var frdl = 2110;
+					var frul = 1920;
+					var offset = 0;
+					var band = "B1 FDD";
+				} else if (rfcn >= 1200 && rfcn <= 1949) {
+					var frdl = 1805;
+					var frul = 1710;
+					var offset = 1200;
+					var band = "B3 FDD";
+				} else if (rfcn >= 2750 && rfcn <= 3449) {
+					var frdl = 2620;
+					var frul = 2500;
+					var offset = 2750;
+					var band = "B7 FDD";
+				} else if (rfcn >= 3450 && rfcn <= 3799) {
+					var frdl = 925;
+					var frul = 880;
+					var offset = 3450;
+					var band = "B8 FDD";
+				} else if (rfcn >= 6150 && rfcn <= 6449) {
+					var frdl = 791;
+					var frul = 832;
+					var offset = 6150;
+					var band = "B20 FDD";
+				} else if (rfcn >= 9870 && rfcn <= 9919) {
+					var frdl = 452.5;
+					var frul = 462.5;
+					var offset = 9870;
+					var band = "B31 FDD";
+				} else if (rfcn >= 33750 && rfcn <= 38249) {
+					var frdl = 2570;
+					var frul = 2570;
+					var offset = 33750;
+					var band = "B38 TDD";
+				} else if (rfcn >= 38650 && rfcn <= 39649) {
+					var frdl = 2300;
+					var frul = 2300;
+					var offset = 38650;
+					var band = "B40 TDD";
+				} else {
+					var offset = 0;
+					var frdl = 0;
+					var frul = 0;
+					var rfcn = 0;
+					var band = "--";
+				}
+				var dlfreq = (frdl + (rfcn - offset)/10);
+				var ulfreq = (frul + (rfcn - offset)/10);
+			} else {
+				if (rfcn >= 10562 && rfcn <= 10838) {
+					var offset = 950;
+					var dlfreq = (rfcn/5);
+					var ulfreq = ((rfcn - offset)/5);
+					var band = "IMT2100";
+				} else if (rfcn >= 2937 && rfcn <= 3088) {
+					var frul = 925;
+					var offset = 340;
+					var ulfreq = (offset + (rfcn/5));
+					var dlfreq = (ulfreq - 45);
+					var band = "UMTS900";
+				} else if (rfcn >= 955 && rfcn <= 1023) {
+					var frul = 890;
+					var ulfreq = (frul + ((rfcn - 1024)/5));
+					var dlfreq = (ulfreq + 45);
+					var band = "DSC900";
+				} else if (rfcn >= 512 && rfcn <= 885) {
+					var frul = 1710;
+					var ulfreq = (frul + (rfcn - 512)/5);
+					var dlfreq = (ulfreq + 95);
+					var band = "DCS1800";
+				} else if (rfcn >= 1 && rfcn <= 124) {
+					var frul = 890;
+					var ulfreq = (frul + (rfcn/5));
+					var dlfreq = (ulfreq + 45);
+					var band = "GSM900";
+				} else {
+					var ulfreq = 0;
+					var dlfreq = 0;
+					var band = "--";
+				}
+			}
+			
+			// name channels and signal/noise  
+			if (netmode == "LTE") {
+				var namech = "EARFCN";
+				var namesnr = "SINR";
+			} else if (netmode == "3G" || netmode == "UMTS" || netmode == "HSPA" || netmode == "HSUPA" || netmode == "HSDPA" || netmode == "HSPA+" || netmode == "WCDMA" || netmode == "DC-HSPA+") {
+				var namech = "UARFCN";
+				var namesnr = "ECIO";
+			} else {
+				var namech = "ARFCN";
+				var namesnr = "SINR/ECIO";
+			}
+
+			// stuff
+			if (e = document.getElementById('status'))
+			if (e)
+				e.innerHTML = String.format(reg);
+
+			if (e = document.getElementById('device'))
+			 	e.innerHTML = String.format(data.device);
+
+			if (e = document.getElementById('mccmnc'))
+			 	e.innerHTML = String.format(data.mcc  + " " + data.mnc);
+
+			if (e = document.getElementById('cops'))
+			 	e.innerHTML = String.format(data.cops);
+
+			if (e = document.getElementById('mode'))
+			 	e.innerHTML = String.format(data.mode + " / " + band);
+
+			if (e = document.getElementById('csq_pe'))
+			if (e)
+				e.innerHTML = String.format('<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>', icon, p);
+
+			if (e = document.getElementById('csq_per'))
+			 	e.innerHTML = String.format(data.csq_per+"%");
+
+			if (e = document.getElementById('lac'))
+			 	e.innerHTML = String.format(data.lac + " / " + data.lac_num);
+
+			if (e = document.getElementById('cid'))
+			 	e.innerHTML = String.format(data.cid + " / " + data.cid_num);
+
+			if (e = document.getElementById('rssi'))
+			 	e.innerHTML = String.format(data.rssi + " dBm");
+
+			if (e = document.getElementById('sinr'))
+			 	e.innerHTML = String.format(data.sinr + " dB");
+
+			if (e = document.getElementById('rsrp'))
+			 	e.innerHTML = String.format(data.rsrp + " dBm");
+
+			if (e = document.getElementById('rsrq'))
+			 	e.innerHTML = String.format(data.rsrq + " dB");
+
+			if (e = document.getElementById('imei'))
+			 	e.innerHTML = String.format(data.imei);
+
+			if (e = document.getElementById('freq'))
+			 	e.innerHTML = String.format(dlfreq + " / " + ulfreq + " MHz" );
+
+			if (e = document.getElementById('arfcn'))
+				e.innerHTML = String.format(data.arfcn);
+			
+			if (e = document.getElementById('chname'))
+				e.innerHTML = String.format('<b>'+namech+':</b>');
+
+			if (e = document.getElementById('snrname'))
+				e.innerHTML = String.format('<b>'+namesnr+':</b>');
+
+            		if (e = document.getElementById('chiptemp'))
+			 	e.innerHTML = String.format(data.chiptemp + " &deg;C");
+
+		}
+	);
+//]]></script>
+
+<fieldset class="cbi-section">
+	<legend><%:Mobile network%></legend>
+	<div class="table" width="100%">
+		<div class="tr cbi-rowstyle-2">
+			<div class="td left" width="25%"><b><%:Device:%></b></div>
+			<div class="td left" width="25%" id="device">-</div>
+			<div class="td left" width="25%"><b><%:Status:%></b></div>
+			<div class="td left" width="25%" id="status">-</div>
+		</div>
+		<div class="tr cbi-rowstyle-1">
+			<div class="td left" width="25%"><b><%:MCC MNC:%></b></div>
+			<div class="td left" width="25%" id="mccmnc">-</div>
+			<div class="td left" width="25%"><b><%:Network Desc.:%></b></div>
+			<div class="td left" width="25%" id="cops">-</div>
+		</div>
+		<div class="tr cbi-rowstyle-2">
+			<div class="td left" width="25%"><b><%:Network/band:%></b></div>
+			<div class="td left" width="25%" id="mode">-</div>
+			<div class="td left" width="25%"><b><%:Signal strength:%></b></div>
+			<div class="td left" width="25%" id="csq_pe">-</div>
+		</div>
+		<div class="tr cbi-rowstyle-1">
+			<div class="td left" width="25%" id="chname"><b><%:E/U/ARFCN:%></b></div>
+			<div class="td left" width="25%" id="arfcn">-</div>
+			<div class="td left" width="25%"><b><%:Freq. (DL/UL):%></b></div>
+			<div class="td left" width="25%" id="freq">-</div>
+		</div>
+		<div class="tr cbi-rowstyle-2"> 
+			<div class="td left" width="25%"><b><%:LAC/TAC:%></b></div>
+			<div class="td left" width="25%" id="lac">-</div>
+			<div class="td left" width="25%"><b><%:CID:%></b></div>
+			<div class="td left" width="20%" id="cid">-</div>
+		</div>
+		<div class="tr cbi-rowstyle-1">
+			<div class="td left" width="25%"><b><%:RSSI:%></b></div>
+			<div class="td left" width="25%" id="rssi">-</div>
+			<div class="td left" width="25%" id="snrname"><b><%:SINR/ECIO:%></b></div>
+			<div class="td left" width="25%" id="sinr">-</div>
+		</div>
+		<div class="tr cbi-rowstyle-2">
+			<div class="td left" width="25%"><b><%:RSRP:%></b></div>
+			<div class="td left" width="25%" id="rsrp">-</div>
+			<div class="td left" width="25%"><b><%:RSRQ:%></b></div>
+			<div class="td left" width="25%" id="rsrq">-</div>
+		</div>
+		<div class="tr cbi-rowstyle-1">
+			<div class="td left" width="25%"><b><%:IMEI:%></b></div>
+			<div class="td left" width="25%" id="imei">-</div>
+			<div class="td left" width="25%"><b><%:Chip Temp:%></b></div>
+			<div class="td left" width="25%" id="chiptemp">-</div>
+		</div>
+	</div>
+</fieldset>
+
+
+<%+footer%>
