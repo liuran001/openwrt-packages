@@ -94,33 +94,29 @@
         return ret;
     }
 
-    /**
-     * menu click
-     */
-    $(".main > .main-left > .nav > .slide > .menu").click(function () {
-        var ul = $(this).next(".slide-menu");
-        var menu = $(this);
-        if (!menu.hasClass("exit")) {
-            $(".main > .main-left > .nav > .slide > .active").next(".slide-menu").stop(true).slideUp("fast");
-            $(".main > .main-left > .nav > .slide > .menu").removeClass("active");
-            if (!ul.is(":visible")) {
-                menu.addClass("active");
-                ul.addClass("active");
-                ul.stop(true).slideDown("fast");
-            } else {
-                ul.stop(true).slideUp("fast", function () {
-                    menu.removeClass("active");
-                    ul.removeClass("active");
-                });
-            }
-
-            return false;
-        }
-
-    });
-
-
-
+	/**
+	 * menu click
+	 */
+	$(".main > .main-left > .nav > .slide > .menu").click(function () {
+		var ul = $(this).next(".slide-menu");
+		var menu = $(this);
+		$(".main > .main-left > .nav > .slide > .menu").each(function () {
+			var ulNode = $(this);
+			ulNode.removeClass("active");
+			ulNode.next(".slide-menu").stop(true).slideUp("fast")
+		});
+		if (!ul.is(":visible")) {
+			menu.addClass("active");
+			ul.addClass("active");
+			ul.stop(true).slideDown("fast");
+		} else {
+			ul.stop(true).slideUp("fast", function () {
+				menu.removeClass("active");
+				ul.removeClass("active");
+			});
+		}
+		return false;
+	});
 
 // define what element should be observed by the observer
 // and what types of mutations trigger the callback
