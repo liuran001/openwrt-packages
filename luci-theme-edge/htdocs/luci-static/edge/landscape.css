@@ -874,9 +874,15 @@
 /* Aspect ratio media queries
   ---------------------------------------------- */
 
+  /* 3/2 and 6/1 -- out of range*/
+  @media screen and (min-aspect-ratio: 3/1) and (max-aspect-ratio: 6/1){
+    body{background: rgb(31, 60, 80);}
+    body:before{content:'Aspect ratio out of range - too wide';color: white;text-align: center;width: 100%;height: 100%;display: block;position: absolute;top: 50%;}
+    #sky, #reflection, #sunMask, #landscape, #bottom, #stag, .controls, .stars, .sunMask, .clouds, .lighting, .vignette, .twinkleWrap,.spriteWrap{display: none;}
+  }
 
   /* 14/5 and 3/1 */
-  @media screen and (min-aspect-ratio: 3/1) and (max-aspect-ratio: 7/2){
+  @media screen and (min-aspect-ratio: 14/5) and (max-aspect-ratio: 7/2){
     .twinkles{}
     #reflection, #sunMask{height: 42%;}
     #landscape{bottom: -3%;}
@@ -1024,8 +1030,8 @@
     #stag{bottom: 31.8%;}
     .sun{top: -70%;}
   }
-  /* 5/9 and 7/10 */
-  @media screen and (min-aspect-ratio: 5/9) and (max-aspect-ratio: 7/10){
+  /* 4/9 and 7/10 */
+  @media screen and (min-aspect-ratio: 4/9) and (max-aspect-ratio: 7/10){
     .twinkles{top: 62%; width: 3%;}
     #reflection, #sunMask{height: 8%;}
     #landscape{bottom: 32%;}
@@ -1034,8 +1040,8 @@
     .sun{top: -55%;}
   }
 
-  /* 1/10 and 5/9 --- out of range*/
-  @media screen and (min-aspect-ratio: 1/10) and (max-aspect-ratio: 5/9){
+  /* 1/10 and 4/9 --- out of range*/
+  @media screen and (min-aspect-ratio: 1/10) and (max-aspect-ratio: 4/9){
     body{background: rgb(31, 60, 80);}
     body:before{content:'Aspect ratio out of range - too narrow';color: white;text-align: center;width: 100%;height: 100%;display: block;position: absolute;top: 50%;}
     #sky, #reflection, #sunMask, #landscape, #bottom, #stag, .controls, .stars, .sunMask, .clouds, .lighting, .vignette, .twinkleWrap,.spriteWrap{display: none;}
