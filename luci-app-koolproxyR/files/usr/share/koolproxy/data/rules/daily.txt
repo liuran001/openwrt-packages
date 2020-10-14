@@ -27,8 +27,8 @@
 |https://www.baidu.com/s?$s@id="?00?"@id="Fuck Ad" style="display:none"@
 |https://m.baidu.com/$s@class="ec_r_????????????????"@id="ec_r_????????????????" style="display:none"@
 |https://www.baidu.com/$s@class="ec_r_????????????????"@id="ec_r_????????????????" style="display:none"@
-|https://m.baidu.com/$s@</head>@<script type="text/javascript" src="https://kp.cmcc.download/KP/hide.js"></script><script src="https://kp.cmcc.download/KP/sizzle_mini"></script><script>fuckcss('#header > div:nth-child(7):not([id])')</script>@
-|https://www.baidu.com/$s@</head>@<script type="text/javascript" src="https://kp.cmcc.download/KP/hide.js"></script><script src="https://kp.cmcc.download/KP/sizzle_mini"></script><script>fuckcss('#header > div:nth-child(7):not([id])')</script>@
+|https://m.baidu.com/$s@</head>@<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/houzi-/CDN/KP/hide.js"></script><script src="https://cdn.jsdelivr.net/gh/houzi-/CDN/KP/sizzle_mini"></script><script>fuckcss('#header > div:nth-child(7):not([id])')</script>@
+|https://www.baidu.com/$s@</head>@<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/houzi-/CDN/KP/hide.js"></script><script src="https://cdn.jsdelivr.net/gh/houzi-/CDN/KP/sizzle_mini"></script><script>fuckcss('#header > div:nth-child(7):not([id])')</script>@
 ! ---- test rules ----
 !x  -----------------------------------------------------------------------------------------------------------------
 @@@@|https://pic.yefu365.com

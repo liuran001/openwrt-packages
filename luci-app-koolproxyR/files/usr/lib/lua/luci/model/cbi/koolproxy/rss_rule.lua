@@ -2,7 +2,7 @@ local m, s, o
 local koolproxy = "koolproxy"
 local sid = arg[1]
 
-m = Map(koolproxy, "%s - %s" %{translate("koolproxy"), translate("编辑规则")})
+m = Map(koolproxy, "%s - %s" %{translate("广告过滤大师"), translate("编辑规则")})
 m.redirect = luci.dispatcher.build_url("admin/services/koolproxy")
 
 if not arg[1] or m.uci:get(koolproxy, sid) ~= "rss_rule" then
