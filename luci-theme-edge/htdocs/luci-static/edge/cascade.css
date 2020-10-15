@@ -686,12 +686,18 @@ header .fill .status * {
     background-color: #FDAC41 !important;
 	color:#fff !important;
 }
-.danger {
+.danger,.error {
   background-color: rgba(255, 91, 92, 0.2) !important;
+	color:#FF5B5C !important;
+}
+.danger a,.error a{
 	color:#FF5B5C !important;
 }
 .warning {
   background-color: rgba(253, 172, 65, 0.2) !important;
+	color:#FDAC41 !important;
+}
+.warning a{
 	color:#FDAC41 !important;
 }
 .modal.warning {
@@ -702,9 +708,8 @@ header .fill .status * {
   background-color: rgba(57, 218, 138, 0.2) !important;
 	color:#39DA8A !important;
 }
-
-.error {
-  color: #f00;
+.success a{
+  color:#39DA8A !important;
 }
 .alert,
 .alert-message {
@@ -714,11 +719,10 @@ header .fill .status * {
   background:rgba(90, 141, 238, 0.2);
       color: #5A8DEE;
   border: 0;
-
 }
-.alert.error,
-.alert-message.error {
-  background-color: #ffd600;
+.alert a,
+.alert-message a{
+      color: #5A8DEE;
 }
 .alert h4,
 .alert-message h4 {
