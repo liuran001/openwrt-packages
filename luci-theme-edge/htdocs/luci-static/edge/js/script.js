@@ -362,8 +362,10 @@ $(".waves-input-wrapper").filter(function () {
     }
 }).hide();
 
-	$("div>select:first-child,div>input[type='text']:first-child,div>input[type='email']:first-child,div>input[type='url']:first-child,div>input[type='date']:first-child,div>input[type='datetime']:first-child,div>input[type='tel']:first-child,div>input[type='number']:first-child,div>input[type='search']:first-child").after("<span class='focus-input'></span>");
-
+$("div>select:first-child,div>input[type='text']:first-child,div>input[type='email']:first-child,div>input[type='url']:first-child,div>input[type='date']:first-child,div>input[type='datetime']:first-child,div>input[type='tel']:first-child,div>input[type='number']:first-child,div>input[type='search']:first-child").filter(function () {
+return (!$("body.Diagnostics").length)
+}).after("<span class='focus-input'></span>");
+	
 $("input[type='checkbox']").filter(function () {
   return (!$(this).next("label").length)
 }).css({"position":"relative","opacity":"1","pointer-events":"auto"});
