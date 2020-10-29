@@ -3470,12 +3470,6 @@ input[type="checkbox"]:checked {
 		display: grid;
 	}
 
-	.tr {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-	}
-
 	.Overview .table[width="100%"] > .tr {
 		flex-wrap: nowrap;
 	}
@@ -3523,14 +3517,6 @@ input[type="checkbox"]:checked {
   .td.cbi-section-table-cell {
 		flex-basis: auto;
 		padding-top: 1rem;
-	}
-
-	.cbi-section-table-row {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 2px 0 rgba(0, 0, 0, 0.12);
 	}
 
 	.td.cbi-value-field,
@@ -4119,9 +4105,11 @@ h2,.cbi-map-descr {
 	padding-left: 2rem;
 }
 
+@media screen and (max-width: 1680px) and (min-width: 1280px) {
 .cbi-map >.cbi-section .cbi-section-table,.cbi-map >.cbi-section .cbi-tabmenu,.cbi-map >.cbi-section .table {
-	margin-left: -1.95rem !important;
-	width: 105.5% !important;
+	margin-left: -1.95rem;
+	width: 105.5%
+}
 }
 
 .admin-status-overview h2.content {
