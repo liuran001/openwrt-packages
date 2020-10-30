@@ -377,6 +377,6 @@ $("select,input").filter(function () {
 }).blur(function(){
   $(this).css("border-bottom","1px solid #9e9e9e");
 });
-	}, 400);
+	}, 0);
 	$(".cbi-value").has("textarea").css("background","none");
 })(jQuery);
