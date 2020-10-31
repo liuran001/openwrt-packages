@@ -807,8 +807,11 @@ msgstr "注意：使用一键生成配置文件功能时无需设置此项，修
 msgid "Clean Log"
 msgstr "清理日志"
 
-msgid "Refresh Log"
-msgstr "刷新日志"
+msgid "Stop Refresh Log"
+msgstr "停止刷新"
+
+msgid "Start Refresh Log"
+msgstr "开始刷新"
 
 msgid "Config File"
 msgstr "配置文件"
@@ -1046,3 +1049,15 @@ msgstr "小闪存模式"
 
 msgid "Move Core And GEOIP Data File To /tmp/etc/openclash For Small Flash Memory Device"
 msgstr "针对闪存空间不够的设备，移动内核和GEOIP数据库文件到 /tmp/etc/openclash 文件夹"
+
+msgid "Round-robin"
+msgstr "轮询（轮流使用全部代理）"
+
+msgid "Consistent-hashing"
+msgstr "哈希匹配（访问相同网站时使用同一个代理）"
+
+msgid "Strategy Type"
+msgstr "策略类型"
+
+msgid "Choose The Load-Balance's Strategy Type"
+msgstr "选择负载均衡的策略类型"
