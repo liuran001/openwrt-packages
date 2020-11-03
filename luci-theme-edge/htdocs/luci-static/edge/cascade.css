@@ -1113,7 +1113,15 @@ body[class*="node-"] > .main > .main-left > .nav > .slide > .menu.active::before
 }
 
 #maincontent > .container {
-	margin: 1rem 0 1rem 0;
+	margin: 0 2%;
+}
+
+.Overview.node-admin-status #maincontent > .container {
+	padding:0;
+}
+
+.Overview.node-admin-status #maincontent > .container h2{
+	padding-left:2rem;
 }
 
 ul {
@@ -1153,25 +1161,9 @@ h5 {
 	padding-bottom: 10px;
 }
 
-.cbi-section,
-.cbi-section-error,
-#iptables,
-.Firewall form,
-#cbi-network > .cbi-section-node,
-#cbi-wireless > .cbi-section-node,
-#cbi-wireless > #wifi_assoclist_table,
-[data-tab-title],
-[data-page^="admin-system-admin"]:not(.node-main-login) .cbi-map:not(#cbi-dropbear),
-[data-page="admin-system-opkg"] #maincontent > .container {
-	font-family: inherit;
-	font-weight: normal;
-	font-style: normal;
-	line-height: normal;
-	min-width: inherit;
-	margin: 1rem 0;
-	padding: 0rem;
-	border: 0;
-	background-color: #fff;
+.container .cbi-section{
+	margin-bottom:1rem;
+
 }
 
 .cbi-modal .cbi-section,
@@ -1188,7 +1180,7 @@ h5 {
 .cbi-section-descr {
 	font-size: small;
 	line-height: 2rem;
-	padding: 0 0 0.5rem 2rem;
+	padding: 0 0 0.5rem 0;
 }
 
 .cbi-section-node {
@@ -1598,7 +1590,7 @@ button:hover,
 }
 
 ul.tabs,.tabmenu .tabs,#tabmenu .tabs,ul.cbi-tabmenu {
-	padding-left: 2rem;
+	padding-left: 2.5%;
 	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12);
 	transition: box-shadow .25s, -webkit-box-shadow .25s;
 	border-radius: 2px;
@@ -1606,6 +1598,11 @@ ul.tabs,.tabmenu .tabs,#tabmenu .tabs,ul.cbi-tabmenu {
 	margin-bottom: 10px;
 	background-color: #fff;
 	padding-top: 1rem;
+}
+
+#packages{
+	margin-left: -2%;
+    width: 105%;
 }
 
 .cbi-tabmenu > li:hover {
@@ -2259,7 +2256,6 @@ body.modal-overlay-active #modal_overlay {
 .cbi-page-actions {
 	padding-top: 1rem;
 	text-align: right;
-	padding-right: 2rem;
 }
 
 .node-main-login .cbi-page-actions {
@@ -2347,8 +2343,6 @@ textarea {
 	transition: box-shadow .25s, -webkit-box-shadow .25s;
 	border-radius: 2px;
 	border: 0 !important;
-	margin: 0 2rem;
-	width: 95% !important;
 }
 
 .cbi-section textarea {
@@ -2975,15 +2969,9 @@ input[name="nslookup"] {
 	color: #32325d;
 	color: var(--gray-dark);
 }
-/* software */
-[data-page="admin-system-opkg"] h2 {
-	margin-left: 1.5rem;
-	color: #32325d;
-	color: var(--gray-dark);
-}
 
 .controls {
-	margin: 0.5em 2rem 1em 2rem !important;
+	margin: 0.5em 0 1em 0 !important;
 }
 
 .controls > * > .btn:not([aria-label$="page"]) {
@@ -3235,20 +3223,6 @@ input[type="checkbox"]:checked {
 	background-size: 70%;
 	background-repeat: no-repeat;
 	background-position: center;
-}
-/* IE hacks */
-@media all and (-ms-high-contrast: none) {
-	.main > .main-left > .nav > .slide > .menu::before {
-		top: 30.25%;
-	}
-
-	.main > .main-left > .nav > li:last-child::before {
-		top: 20%;
-	}
-
-	.showSide::before {
-		top: -12px;
-	}
 }
 
 @media screen and (max-width: 1600px) {
@@ -3622,10 +3596,6 @@ input[type="checkbox"]:checked {
 	.cbi-section > div {
 		overflow-x: auto;
 	}
-
-	.cbi-map >.cbi-section {
-		padding: 0 1rem !important;
-	}
 }
 
 @media screen and (max-width: 600px) {
@@ -3722,6 +3692,7 @@ input[type="checkbox"]:checked {
 	margin: 0.5rem 0;
 	background: none;
 	padding: 0;
+	border:none;
 }
 
 .cbi-map style+fieldset.cbi-section:first-of-type p font {
@@ -4002,10 +3973,6 @@ code,.cbi-progressbar::after {
 	background-color: white !important;
 }
 
-.cbi-map >.cbi-section {
-	padding: 0 2rem;
-}
-
 .cbi-map >.cbi-section .cbi-value {
 	padding-left: 1rem;
 	padding-right: 1rem;
@@ -4059,15 +4026,9 @@ i input {
 	flex-basis: auto !important;
 }
 
-h2,.cbi-map-descr {
-	padding-left: 2rem;
-}
-
-@media screen and (max-width: 1680px) and (min-width: 1280px) {
-.cbi-map >.cbi-section .cbi-section-table,.cbi-map >.cbi-section .cbi-tabmenu,.cbi-map >.cbi-section .table {
-	margin-left: -1.95rem !important;
-	width: 105.5% !important;
-}
+.cbi-map >.cbi-section .cbi-section-table,.container .cbi-tabmenu,.container #tabmenu,.cbi-map >.cbi-section .table {
+	margin-left: -2%;
+    width: 105%;
 }
 
 .admin-status-overview h2.content {
