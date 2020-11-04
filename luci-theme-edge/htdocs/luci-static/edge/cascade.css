@@ -364,46 +364,6 @@ a {
 	width: 100%;
 }
 
-.col-1 {
-	flex: 1 1 30px !important;
-}
-
-.col-2 {
-	flex: 2 2 60px !important;
-}
-
-.col-3 {
-	flex: 3 3 90px !important;
-}
-
-.col-4 {
-	flex: 4 4 120px !important;
-}
-
-.col-5 {
-	flex: 5 5 150px !important;
-}
-
-.col-6 {
-	flex: 6 6 180px !important;
-}
-
-.col-7 {
-	flex: 7 7 210px !important;
-}
-
-.col-8 {
-	flex: 8 8 240px !important;
-}
-
-.col-9 {
-	flex: 9 9 270px !important;
-}
-
-.col-10 {
-	flex: 10 10 300px !important;
-}
-
 * {
 	box-sizing: border-box;
 	margin: 0;
@@ -900,7 +860,7 @@ header .fill .status * {
 
 .main .main-left .nav>li>a {
 	display: block;
-	font-size: 0.9rem !important;
+	font-size: 0.93rem !important;
 	margin: 0.4rem 0.5rem !important;
 	padding: 0.5rem 0 0.5rem 2.5rem !important;
 	transition: box-shadow .25s, -webkit-box-shadow .25s;
@@ -2996,12 +2956,6 @@ input[name="nslookup"] {
 	padding-top: 0.1rem;
 }
 
-.td.version,
-.td.size {
-	white-space: normal !important;
-	word-break: break-word;
-}
-
 .cbi-tabmenu + .cbi-section {
 	margin-top: 0;
 }
@@ -3585,14 +3539,6 @@ input[type="checkbox"]:checked {
 		display: inline-block;
 	}
 
-	.main > .main-left > .nav > .slide > .menu {
-		font-size: 1.2rem;
-	}
-
-	.main > .main-left > .nav > .slide > .slide-menu > li > a {
-		font-size: 0.8rem;
-	}
-
 	.cbi-section > div {
 		overflow-x: auto;
 	}
@@ -4125,6 +4071,21 @@ div[id^="cbi-unblockmusic"] .cbi-button {
 
 .command-output {
 	padding: 0 2rem;
+}
+
+.cbi-section-table .tr>.td:last-child,#packages .tr>.td:last-child{
+	padding-right:3%;
+}
+
+@media screen and (max-width: 1152px) {
+#packages .tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+#packages .td {
+    padding: 1em 2rem;
+}
 }
 
 .chromeframe {
