@@ -368,7 +368,7 @@ return (!$(this).parents(".cbi-dynlist").length&&!$("body.Diagnostics").length)
 	
 $("input[type='checkbox']").filter(function () {
   return (!$(this).next("label").length)
-}).css({"position":"relative","opacity":"1","pointer-events":"auto"});
+}).show();
 
 $("select,input").filter(function () {
   return ($(this).next(".focus-input").length)
