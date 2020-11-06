@@ -3353,6 +3353,12 @@ display:none !important;
 		border-top: 0;
 	}
 
+.node-admin-status.Overview .tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 	.th,
   .td {
 		display: inline-block;
