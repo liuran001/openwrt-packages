@@ -440,7 +440,7 @@ input:not([type]), input[type=text]:not(.browser-default), input[type=password]:
 	border-radius: 0;
 	outline: none;
 	margin: 0;
-	padding: 0;
+	padding: 0 0.5rem;
 	-webkit-box-shadow: none;
 	box-shadow: none;
 	-webkit-box-sizing: content-box;
@@ -1805,7 +1805,7 @@ ul.tabs,.tabmenu .tabs,#tabmenu .tabs,ul.cbi-tabmenu {
 	outline: 0;
 }
 
-.cbi-dropdown > ul.preview {
+#cbi-adblock-global-adb_sources .cbi-dropdown > ul.preview {
 	display: none;
 }
 
@@ -3148,12 +3148,12 @@ input[type="checkbox"] {
     margin-left: .5rem;
 }
 
-.cbi-dropdown-open .cbi-dropdown[open] > ul.dropdown{
+#cbi-adblock-global-adb_sources .cbi-dropdown-open .cbi-dropdown[open] > ul.dropdown{
 	position:relative !important;
 	bottom:0 !important;
 }
 
-.cbi-dropdown-open .preview,.cbi-dropdown-open .more,.cbi-dropdown-open .open{
+#cbi-adblock-global-adb_sources .cbi-dropdown-open .preview,#cbi-adblock-global-adb_sources .cbi-dropdown-open .more,.cbi-dropdown-open .open{
 display:none !important;	
 }
 
@@ -3326,10 +3326,6 @@ display:none !important;
 		font-size: 1rem;
 	}
 
-	.table {
-		display: block;
-	}
-
 	.Interfaces .table {
 		overflow-x: hidden;
 	}
@@ -3460,6 +3456,14 @@ display:none !important;
 		width: 100% !important;
 		margin-left: 0 !important;
 	}
+#packages .tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+#packages .td {
+    padding: 1em 2rem;
+}
 }
 
 @media screen and (max-width: 768px) {
@@ -4028,8 +4032,12 @@ cbi-button.cbi-button-neutral {
 }
 
 input[type=password]+.cbi-button.cbi-button-neutral {
-	padding: 0.1rem 0.4rem;
+	padding: 0 0.4rem;
 	color: #fff !important;
+}
+
+.cbi-input-password[type=text]+.cbi-button.cbi-button-neutral {
+	padding: 0.2rem 0.5rem;
 }
 
 .main-right>hr {
@@ -4059,17 +4067,6 @@ div[id^="cbi-unblockmusic"] .cbi-button {
 
 .cbi-section-table .tr>.td:last-child,#packages .tr>.td:last-child{
 	padding-right:3%;
-}
-
-@media screen and (max-width: 1152px) {
-#packages .tr {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-#packages .td {
-    padding: 1em 2rem;
-}
 }
 
 .chromeframe {
