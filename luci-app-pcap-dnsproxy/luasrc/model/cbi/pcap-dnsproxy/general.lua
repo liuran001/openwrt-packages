@@ -11,33 +11,45 @@ local packageName = "pcap-dnsproxy"
 local conf = packageName
 local config = "/etc/config/" .. conf
 
-local tmpfsVersion = tostring(util.trim(sys.exec("opkg list-installed " .. packageName .. " | awk '{print $3}'")))
-local tmpfsPort = tostring(util.trim(sys.exec("echo `netstat -lpntu | grep Pcap_DNSProxy | grep \"^udp\" | sed -En \"s|^.\*\\b([0-9]+\\\.[0-9]+\\\.[0-9]+\\\.[0-9]+):([0-9]+)\\b.\*\$|\\2|p\" | sort -nu` | sed 's/ /, /g'")))
-if not tmpfsVersion or tmpfsVersion == "" then
-	tmpfsStatusCode = -1
-	tmpfsVersion = ""
-	tmpfsStatus = packageName .. " " .. translate("is not installed or not found")
+local packageVersion = tostring(util.trim(sys.exec("opkg list-installed " .. packageName .. " | awk '{print $3}'"))) or nil
+local packageStatus, packageStatusCode
+local ubusStatus = util.ubus("service", "list", { name = packageName })
+
+if not packageVersion then
+	packageStatusCode = -1
+	packageStatus = translatef("%s is not installed or not found", packageName)
 else  
-	tmpfsVersion = " [" .. packageName .. " " .. tmpfsVersion .. "]"
-end
-local tmpfsStatus = translate("Stopped")
-if sys.call("netstat -lpntu | grep Pcap_DNSProxy") == 0 then
-	tmpfsStatus = translate("Running") .. " - " .. translate("Port: ") .. tmpfsPort
+	if not ubusStatus or not ubusStatus[packageName] then
+		packageStatusCode = 0
+		packageStatus = translate("Stopped")
+		if not sys.init.enabled(packageName) then
+			packageStatus = packageStatus .. " (" .. translate("disabled") .. ")"
+		end
+	else
+		packageStatusCode, packageStatus = 1, translate("Running")
+		local StatusPort = tostring(util.trim(sys.exec("echo `netstat -lpntu | grep Pcap_DNSProxy | grep \"^udp\" | sed -En \"s|^.\*\\b([0-9]+\\\.[0-9]+\\\.[0-9]+\\\.[0-9]+):([0-9]+)\\b.\*\$|\\2|p\" | sort -nu` | sed 's/ /, /g'")))
+		if StatusPort and not (StatusPort == "") then
+			packageStatus = packageStatus .. " - " .. translatef("Port: %s", StatusPort)
+		end
+	end
 end
 
 
 m = Map(conf, "")
 
 
-h = m:section(TypedSection, "pcap-dnsproxy", translate("Service Status") .. tmpfsVersion)
+h = m:section(TypedSection, "pcap-dnsproxy", translatef("Service Status [%s %s]", packageName, packageVersion or translate("null")))
 h.anonymous = true
 
 ss = h:option(DummyValue, "_dummy", translate("Service Status"))
 ss.template = packageName .. "/status"
-ss.value = tmpfsStatus
+ss.value = packageStatus
 
-buttons = h:option(DummyValue, "_dummy")
-buttons.template = packageName .. "/buttons"
+if not (packageStatusCode == -1) then
+	buttons = h:option(DummyValue, "_dummy")
+	buttons.template = packageName .. "/buttons"
+end
+
 
 if sys.call("netstat -lpntu | grep Pcap_DNSProxy") == 0 then
 	take_over = h:option(Button, "_button0", translate("Take over system DNS request to pcap-dnsproxy"))

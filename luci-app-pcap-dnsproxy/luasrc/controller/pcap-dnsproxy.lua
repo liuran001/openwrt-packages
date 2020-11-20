@@ -38,12 +38,12 @@ function pcap_dnsproxy_action(name)
 		luci.sys.init.stop(packageName)
 		luci.util.exec("/usr/bin/pcap-dnsproxy.sh daemon_oper remove")
 	elseif name == "enable" then
-		--luci.sys.init.enable(packageName)
-		luci.util.exec("uci set " .. packageName .. ".@pcap-dnsproxy[-1].enabled=1; uci commit " .. packageName)
+		luci.sys.init.enable(packageName)
+		--luci.util.exec("uci set " .. packageName .. ".@pcap-dnsproxy[-1].enabled=1; uci commit " .. packageName)
 		luci.util.exec("/usr/bin/pcap-dnsproxy.sh daemon_oper add")
 	elseif name == "disable" then
-		--luci.sys.init.disable(packageName)
-		luci.util.exec("uci set " .. packageName .. ".@pcap-dnsproxy[-1].enabled=0; uci commit " .. packageName)
+		luci.sys.init.disable(packageName)
+		--luci.util.exec("uci set " .. packageName .. ".@pcap-dnsproxy[-1].enabled=0; uci commit " .. packageName)
 		luci.util.exec("/usr/bin/pcap-dnsproxy.sh daemon_oper remove")
 	end
 	luci.http.prepare_content("text/plain")
