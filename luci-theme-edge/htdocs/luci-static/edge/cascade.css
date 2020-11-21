@@ -2281,6 +2281,12 @@ textarea {
 	border: 0 !important;
 }
 
+textarea:focus{
+	outline: none;
+	border: 1px solid #5A8DEE !important;
+	box-shadow: 0 0px 5px 0 #5A8DEE;
+}
+
 .cbi-section textarea {
 	margin: 0rem;
 }
