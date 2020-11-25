@@ -362,8 +362,8 @@ $(".waves-input-wrapper").filter(function () {
     }
 }).hide();
 
-$("div>select:first-child,div>input[type='text']:first-child,div>input[type='email']:first-child,div>input[type='url']:first-child,div>input[type='date']:first-child,div>input[type='datetime']:first-child,div>input[type='tel']:first-child,div>input[type='number']:first-child,div>input[type='search']:first-child").filter(function () {
-return (!$(this).parents(".cbi-dynlist").length&&!$("body.Diagnostics").length&&!$(this).is("[type='password']"))
+$("div>select:first-child,div>input:first-child").filter(function () {
+return (!$(this).parents(".cbi-dynlist").length&&!$("body.Diagnostics").length&&!$(this).is("[type='button']")&&!$(this).hasClass("cbi-input-password"))
 }).after("<span class='focus-input'></span>");
 	
 $("input[type='checkbox']").filter(function () {
