@@ -362,8 +362,8 @@ $(".waves-input-wrapper").filter(function () {
     }
 }).hide();
 
-$("div>select:first-child,div>input:first-child").filter(function () {
-return (!$(this).parents(".cbi-dynlist").length&&!$("body.Diagnostics").length&&!$(this).is("[type='button']")&&!$(this).hasClass("cbi-input-password"))
+$("div>select:first-child,div>input[type='text']:first-child").filter(function () {
+return (!$(this).parents(".cbi-dynlist").length&&!$("body.Diagnostics").length&&!$(this).hasClass("cbi-input-password"))
 }).after("<span class='focus-input'></span>");
 	
 $("input[type='checkbox']").filter(function () {
