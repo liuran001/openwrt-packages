@@ -110,7 +110,7 @@ run() {
     fill_cookie
     echo -e $(date '+%Y-%m-%d %H:%M:%S %A') >$LOG_HTM 2>/dev/null
     [ ! -f "/usr/bin/node" ] && echo -e "未安装node.js,请安装后再试!\nNode.js is not installed, please try again after installation!">>$LOG_HTM && exit 1
-    node $JD_SCRIPT >>$LOG_HTM 2>&1 &
+    node $JD_SCRIPT >>$LOG_HTM 2>/dev/null
 }
 
 back_run() {
@@ -139,8 +139,7 @@ check_ver() {
     if [ $? -ne 0 ]; then
         cancel "501"
     else
-        remote_ver=$(get_ver $TEMP_SCRIPT)
-        echo $remote_ver
+        echo $(get_ver $TEMP_SCRIPT)
     fi
 }
 
