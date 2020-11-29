@@ -57,6 +57,11 @@ endef
 define Build/Compile
 endef
 
+define Package/luci-app-vssr/conffiles
+	/etc/vssr/
+	/etc/config/vssr
+endef
+
 define Package/luci-app-vssr/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
 	cp -pR ./luasrc/* $(1)/usr/lib/lua/luci
