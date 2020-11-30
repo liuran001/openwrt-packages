@@ -4110,3 +4110,6 @@ div[id^="cbi-unblockmusic"] .cbi-button {
 [data-page="admin-network-wifi"] tr > td input[type="button"]{
 	    padding: 0.5rem 1rem !important;
 }
+table.interfaces .th{
+	padding:1.1em 0.5rem !important;
+}
