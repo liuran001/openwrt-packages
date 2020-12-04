@@ -13,11 +13,16 @@ A new SSR SS V2ray Trojan luci app bese luci-app-ssr-plus
 稳定性的差异来自于你固件的内核，还有ss ssr v2ray 这几个核心插件的稳定性，当然你的节点才是影响稳定性的最大因素。  
 Luci 能决定的只有操作起来是否便利、顺手，还有对几个核心应用功能的适配挖掘而已。
 
-### Update Log 2020-08-30  v1.17-1
+### Update Log 2020-12-04  v1.18
 
 #### Updates
 
-- FIX: 修复台台湾视频分流不起作用的问题。
+- NEW: 增加V2ray的VLESS支持。
+- NEW: 增加V2ray的XTLS支持。
+- NEW: 增加Xray的支持（可选择使用Xray代替V2ray执行）。
+- NEW: 增加订阅时可手动添加机场名称（主要用于v2ray订阅）。
+- NEW: 增加订阅节点过滤。
+- UPDATE: 更新IP地址库。
 
 详情见[具体日志](./relnotes.txt)。 
 
