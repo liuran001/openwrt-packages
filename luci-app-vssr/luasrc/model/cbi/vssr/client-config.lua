@@ -91,13 +91,20 @@ obfs = {
     'random_head',
     'tls1.2_ticket_auth'
 }
-local securitys = {'auto', 'none', 'aes-128-gcm', 'chacha20-poly1305'}
+local securitys = {
+    'auto',
+    'none',
+    'aes-128-gcm',
+    'chacha20-poly1305'
+}
 
 local flows = {
     'xtls-rprx-origin',
     'xtls-rprx-origin-udp443',
     'xtls-rprx-direct',
-    'xtls-rprx-direct-udp443'
+    'xtls-rprx-direct-udp443',
+    'xtls-rprx-splice',
+    'xtls-rprx-splice-udp443'
 }
 
 m = Map(vssr, translate('Edit vssr Server'))
