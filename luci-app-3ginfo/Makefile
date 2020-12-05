@@ -6,8 +6,8 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=luci-app-3ginfo
 LUCI_TITLE:=LuCI panel for 3ginfo
 LUCI_PKGARCH:=all
-LUCI_DEPENDS:=+3ginfo-text
-PKG_VERSION:=1.3
+LUCI_DEPENDS:=+3ginfo-text +kmod-usb-serial +kmod-usb-serial-option +luci-compat
+PKG_VERSION:=1.3.1
 PKG_RELEASE:=1
 
 include $(TOPDIR)/feeds/luci/luci.mk
