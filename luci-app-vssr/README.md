@@ -4,25 +4,16 @@ A new SSR SS V2ray Trojan luci app bese luci-app-ssr-plus
 目前只适配最新版 argon主题 （其他主题下应该也可以用 但显示应该不会很完美）
 目前Lean最新版本的openwrt 已经可以直接拉取源码到 package/lean 下直接进行勾选并编译。  
 
-### 写在前面：
-插件的初衷是优化操作体验和提升视觉感受，所以插件体积会比较大，并不适合小ROM机器使用。
 
-还有些个人的想法，首先这只是个Luci app，说白了就是个GUI控制界面而已,本身并不能决定你设备的性能和节点的速度。  
-决定你性能的东西是你的硬件方案 如cpu性能，是否支持硬件aes加速，还有就是几个主核心应用程序的版本。  
-另外关于插件稳定性的问题，Luci除非自身有逻辑性的BUG，一般情况下是不会有稳定性差异的，  
-稳定性的差异来自于你固件的内核，还有ss ssr v2ray 这几个核心插件的稳定性，当然你的节点才是影响稳定性的最大因素。  
-Luci 能决定的只有操作起来是否便利、顺手，还有对几个核心应用功能的适配挖掘而已。
-
-### Update Log 2020-12-04  v1.18
+### Update Log 2020-12-05  v1.19
 
 #### Updates
 
-- NEW: 增加V2ray的VLESS支持。
-- NEW: 增加V2ray的XTLS支持。
-- NEW: 增加Xray的支持（可选择使用Xray代替V2ray执行）。
-- NEW: 增加订阅时可手动添加机场名称（主要用于v2ray订阅）。
-- NEW: 增加订阅节点过滤。
-- UPDATE: 更新IP地址库。
+- FIX: 修复了白名单模式下可能变成全局的问题。
+- UPDATE: 提高白名单列表更新速度。
+- UPDATE: 服务器列表采用新的排序方式(按字母顺序)。
+- UPDATE: 优化节点列表加载速度并改进排序显示，现在几乎秒加载。
+- DELETE: 删除许可页面。
 
 详情见[具体日志](./relnotes.txt)。 
 
@@ -56,6 +47,6 @@ make -j1 V=s
 https://github.com/coolsnowwolf/lede
 
 ### My other project
-Argon theme ：https://github.com/jerrykuku/luci-theme-argon
-
+Argon theme ：https://github.com/jerrykuku/luci-theme-argon 
+京东签到插件 ：https://github.com/jerrykuku/luci-app-jd-dailybonus 
 openwrt-nanopi-r1s-h5 ： https://github.com/jerrykuku/openwrt-nanopi-r1s-h5
