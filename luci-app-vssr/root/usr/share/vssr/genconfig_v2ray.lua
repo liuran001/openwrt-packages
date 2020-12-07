@@ -7,31 +7,33 @@ local local_port = arg[3]
 local outbounds_table = {}
 local rules_table = {}
 
+function read_conf(file)
+    local rfile = io.open(file, "r")
+    local ltable = {}
+    for line in rfile:lines() do
+        local re = string.gsub(line, "\r", "")
+        table.insert(ltable,re)
+    end
+    return ltable
+end
 
 local v2ray_flow = ucursor:get_first(name, 'global', 'v2ray_flow', '0')
-local proxy_domain_name = ucursor:get_list(name, '@access_control[0]', 'proxy_domain_name')
+
+local custom_domain = read_conf("/etc/vssr/custom_domain.list")
+local youtube_domain = read_conf("/etc/vssr/youtube_domain.list")
+local tw_video_domain = read_conf("/etc/vssr/tw_video_domain.list")
+local netflix_domain = read_conf("/etc/vssr/netflix_domain.list")
+local disney_domain = read_conf("/etc/vssr/disney_domain.list")
+local prime_domain = read_conf("/etc/vssr/prime_domain.list")
+local tvb_domain = read_conf("/etc/vssr/tvb_domain.list")
+
 local flow_table = {
     yotube = {
         name = 'youtube',
         port = 2081,
         rules = {
             type = 'field',
-            domain = {
-                'youtube',
-                'ggpht.com',
-                'googlevideo.com',
-                'withyoutube.com',
-                'youtu.be',
-                'youtube-nocookie.com',
-                'youtube.com',
-                'youtubeeducation.com',
-                'youtubegaming.com',
-                'youtubei.googleapis.com',
-                'youtubekids.com',
-                'youtubemobilesupport.com',
-                'yt.be',
-                'ytimg.com'
-            },
+            domain = youtube_domain,
             outboundTag = 'youtube'
         }
     },
@@ -40,19 +42,7 @@ local flow_table = {
         port = 2082,
         rules = {
             type = 'field',
-            domain = {
-                'vidol.tv',
-                'hinet.net',
-                'books.com',
-                'litv.tv',
-                'pstatic.net',
-                'app-measurement.com',
-                'kktv.com.tw',
-                'gamer.com.tw',
-                'wetv.vip',
-                'kktv.me',
-                'myvideo.net.tw'
-            },
+            domain = tw_video_domain,
             outboundTag = 'tw_video'
         }
     },
@@ -61,30 +51,7 @@ local flow_table = {
         port = 2083,
         rules = {
             type = 'field',
-            domain = {
-                'fast.com',
-                'netflix.ca',
-                'netflix.com',
-                'netflix.net',
-                'netflixinvestor.com',
-                'netflixtechblog.com',
-                'nflxext.com',
-                'nflximg.com',
-                'nflximg.net',
-                'nflxsearch.net',
-                'nflxso.net',
-                'nflxvideo.net',
-                'netflixdnstest0.com',
-                'netflixdnstest1.com',
-                'netflixdnstest2.com',
-                'netflixdnstest3.com',
-                'netflixdnstest4.com',
-                'netflixdnstest5.com',
-                'netflixdnstest6.com',
-                'netflixdnstest7.com',
-                'netflixdnstest8.com',
-                'netflixdnstest9.com'
-            },
+            domain = netflix_domain,
             outboundTag = 'netflix'
         }
     },
@@ -93,14 +60,7 @@ local flow_table = {
         port = 2084,
         rules = {
             type = 'field',
-            domain = {
-                'cdn.registerdisney.go.com',
-                'disneyplus.com',
-                'disney-plus.net',
-                'dssott.com',
-                'bamgrid.com',
-                'execute-api.us-east-1.amazonaws.com'
-            },
+            domain = disney_domain,
             outboundTag = 'disney'
         }
     },
@@ -109,20 +69,7 @@ local flow_table = {
         port = 2085,
         rules = {
             type = 'field',
-            domain = {
-                'aiv-cdn.net',
-                'amazonaws.com',
-                'amazonvideo.com',
-                'llnwd.net',
-                'amazonprimevideos.com',
-                'amazonvideo.cc',
-                'prime-video.com',
-                'primevideo.cc',
-                'primevideo.com',
-                'primevideo.info',
-                'primevideo.org',
-                'primevideo.tv'
-            },
+            domain = prime_domain,
             outboundTag = 'prime'
         }
     },
@@ -131,7 +78,7 @@ local flow_table = {
         port = 2086,
         rules = {
             type = 'field',
-            domain = {'tvsuper.com', 'tvb.com'},
+            domain = tvb_domain,
             outboundTag = 'tvb'
         }
     },
@@ -140,7 +87,7 @@ local flow_table = {
         port = 2087,
         rules = {
             type = 'field',
-            domain = proxy_domain_name,
+            domain = custom_domain,
             outboundTag = 'custom'
         }
     }
