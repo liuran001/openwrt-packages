@@ -78,12 +78,8 @@ opengt
  let $r="+COPS"
  gosub readatcmd
 
- let $c="AT+QCSQ^m"
- let $r="+QCSQ"
- gosub readatcmd
-
- let $c="AT+QNWINFO^m"
- let $r="+QNWINFO"
+ let $c="AT+QENG=\"servingcell\"^m"
+ let $r="+QENG"
  gosub readatcmd
 
  let $c="AT+QTEMP^m"
@@ -97,6 +93,10 @@ opengt
  gosub readatcmd
 
  send "AT+TEMP^m"
+ get 1 "" $s
+ print $s
+
+ send "AT\^CA_INFO?^m"
  get 1 "" $s
  print $s
  goto next

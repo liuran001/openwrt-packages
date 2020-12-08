@@ -177,6 +177,7 @@ function huawei_data(){
 		esac
 	fi
 	EARFCN=$(echo "$O" | awk -F[,\ ] '/^\^HFREQINFO/ {print $4}')
+	BWDx=$(echo "$O" | awk -F[,\ ] '/^\^HFREQINFO/ {print $6}')
 	RSRx=$(echo "$O" | awk -F[,:] '/^\^LTERSRP:/ {print $2}')
 	if [ "x$RSRx" != "x" ]; then
 		RSRP=$RSRx
@@ -205,6 +206,14 @@ function huawei_data(){
 		esac
 	fi
 	CHIPTEMP=$(echo "$O" | awk -F[,] '/^\^CHIPTEMP/ {print $4}')
+	case $BWDx in
+		1400) BWDL=0 ;;
+		3000) BWDL=1 ;;
+		5000) BWDL=2 ;;
+		10000) BWDL=3 ;;
+		15000) BWDL=4 ;;
+		20000) BWDL=5 ;;
+	esac
 }
 
 # Option modems
@@ -244,6 +253,14 @@ function sierra_data(){
 		RSRP=$(echo "$O" |  awk '/RSRP/{print $3}' | head -1)
 		RSRQ=$(echo "$O" | awk '/RSRQ/{print $3}' |head -1)
 		SINR=$(echo "$O" | awk '/SINR/{print $6}' |head -1)
+		BWDx=$(echo "$O" | awk '/LTE bw/{print $6}')
+		case $BWDx in
+			3) BWDL=1 ;;
+			5) BWDL=2 ;;
+			10) BWDL=3 ;;
+			15) BWDL=4 ;;
+			20) BWDL=5 ;;
+		esac
 		# Sierra 74XX series
 		if [ "x$SINR" = "x" ]; then
 			SINR=$(echo "$O" | awk '/SINR/{print $3}' |head -1)
@@ -299,6 +316,8 @@ function simcom_data(){
 		RSRQ=$(($RSQx/10))
 		SINx=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {print $15}')
 		SINR=$(($SINx*2 - 20))
+		BWDL=$(echo "$O" |awk -F[,\ ] '/^\+CPSI/ {print $10}')
+		BWUL=$(echo "$O" |awk -F[,\ ] '/^\+CPSI/ {print $11}')
 	else
 		EARFCN=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {print $11}')
 		ECIx=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {print $13}')
@@ -311,14 +330,17 @@ function simcom_data(){
 function quectel_data(){
 	generic_data
 	if [ "$MODE" = "LTE" ]; then
-		EARFCN=$(echo "$O" |awk -F[,\ ] '/^\+QNWINFO/ {print $8}')
-		RSRP=$(echo "$O" |awk -F[,\ ] '/^\+QCSQ/ {print $4}')
-		SINx=$(echo "$O" |awk -F[,\ ] '/^\+QCSQ/ {print $5}')
-		SINR=$(($SINx/5 - 20))
-		RSRQ=$(echo "$O" |awk -F[,\ ] '/^\+QCSQ/ {print $6}')
+		EARFCN=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $10}')
+		RSRP=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $15}')
+		SINR=$(echo "$O" |awk -F "[\, ]" '/\+QENG:/{print $18}')
+		RSRQ=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $16}')
+		BWUL=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $12}')
+                BWDL=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $13}')
+	elif [ "$MODE" = "EDGE" ]; then
+		EARFCN=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $10}')
 	else
-		EARFCN=$(echo "$O" |awk -F[,\ ] '/^\+QNWINFO/ {print $6}')
-		ECIO=$(echo "$O" |awk -F[,\ ] '/^\+QCSQ/ {print $5}')
+		EARFCN=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $9}')
+		ECIO=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $13}')
 		SINR=$ECIO
 	fi
 	CHIPTEMP=$(echo "$O" | awk -F[,\ ] '/^\+QTEMP/ {print $2}')
@@ -347,11 +369,20 @@ function zte_data(){
 function qualcomm_data(){
         generic_data
 	RADIODATA=$(echo "$O" |grep -A2 RFSTS: | awk 'NR ==2{print $0}')
+	BW=$(echo "$O" |grep -A2 AT^CA_INFO | awk 'NR ==2{print $0}')
 	EARFCN=$(echo "$RADIODATA" |awk -F [,] '{print $2}')
         if [ "$MODE" = "LTE" ]; then
                 RSRP=$(echo "$RADIODATA" |awk -F [,] '{printf "%.0f\n",$3}')
                 RSRQ=$(echo "$RADIODATA" |awk -F [,] '{printf "%.0f\n",$5}')
                 SINR=$(echo "$RADIODATA" |awk -F [,] '{printf "%.0f\n",$16}')
+		BWDx=$(echo "$BW" | awk '{printf "%.0f\n",$8}')
+		case $BWDx in
+			3) BWDL=1 ;;
+			5) BWDL=2 ;;
+			10) BWDL=3 ;;
+			15) BWDL=4 ;;
+			20) BWDL=5 ;;
+		esac
         else
                 ECIO=$(echo "$RADIODATA" |awk -F [,] '{printf "%.0f\n",$4}')
                 SINR=$ECIO

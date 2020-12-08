@@ -6,7 +6,7 @@ function json_status() {
         IFS=$'\n'
         for jvar in device=$DEVICE mcc=$COPS_MCC mnc=$COPS_MNC cops=$COPS mode=$MODE csq_per=$CSQ_PER lac=$LAC lac_num=$LAC_NUM \
                         cid=$CID cid_num=$CID_NUM rssi=$CSQ_RSSI sinr=$SINR rsrp=$RSRP rsrq=$RSRQ imei=$IMEI \
-                        reg=$REGST csq_col=$CSQ_COL arfcn=$EARFCN chiptemp=$CHIPTEMP; do
+                        reg=$REGST csq_col=$CSQ_COL arfcn=$EARFCN chiptemp=$CHIPTEMP bwul=$BWUL bwdl=$BWDL; do
                 json_add_string ${jvar%=*} ${jvar#*=}
         done
         json_close_object
@@ -16,7 +16,7 @@ function json_status() {
 function if_null() {
         for var in DEVICE COPS_MCC COPS_MNC COPS MODE CSQ_PER \
                         LAC LAC_NUM CID CID_NUM CSQ_RSSI SINR RSRP \
-                        RSRQ IMEI REGST EARFCN CHIPTEMP; do
+                        RSRQ IMEI REGST EARFCN CHIPTEMP BWUL BWDL; do
                 if [ "x$(eval echo \${$var})" = "x" ]; then
                         eval $var='--'
                 fi
