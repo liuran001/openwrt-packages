@@ -160,6 +160,13 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			
 			// name channels and signal/noise  
 			if (netmode == "LTE") {
+				var calte = (data.lteca)
+				var carrier;
+				if (calte > 0) {
+					carrier = "+";
+				} else {
+					carrier = "";
+				}
 				var namech = "EARFCN";
 				var namesnr = "SINR";
 				if (e = document.getElementById('arfcn'))
@@ -191,7 +198,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			 	e.innerHTML = String.format(data.cops);
 
 			if (e = document.getElementById('mode'))
-			 	e.innerHTML = String.format(data.mode + " / " + band);
+			 	e.innerHTML = String.format(data.mode + "" + carrier + " / " + band);
 
 			if (e = document.getElementById('csq_pe'))
 			if (e)

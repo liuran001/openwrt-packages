@@ -370,6 +370,7 @@ function qualcomm_data(){
         generic_data
 	RADIODATA=$(echo "$O" |grep -A2 RFSTS: | awk 'NR ==2{print $0}')
 	BW=$(echo "$O" |grep -A2 AT^CA_INFO | awk 'NR ==2{print $0}')
+	LTE_CA=$(echo "$O" | awk '/SCC/{print $0}' | wc -l)
 	EARFCN=$(echo "$RADIODATA" |awk -F [,] '{print $2}')
         if [ "$MODE" = "LTE" ]; then
                 RSRP=$(echo "$RADIODATA" |awk -F [,] '{printf "%.0f\n",$3}')
