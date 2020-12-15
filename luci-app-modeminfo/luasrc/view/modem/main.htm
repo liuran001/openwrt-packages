@@ -157,21 +157,18 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 					var band = "--";
 				}
 			}
-			var carrier;
+			var carrier = "";
 			// name channels and signal/noise  
 			if (netmode == "LTE") {
 				var calte = (data.lteca)
 				var carrier;
 				if (calte > 0) {
 					carrier = "+";
-				} else {
-					carrier = "";
 				}
 				var namech = "EARFCN";
 				var namesnr = "SINR";
 				if (e = document.getElementById('arfcn'))
 	                                e.innerHTML = String.format(data.arfcn + " " + bw);
-                                if (e = document.getElementById('arfcn'))
 			} else if (netmode == "3G" || netmode == "UMTS" || netmode == "HSPA" || netmode == "HSUPA" || netmode == "HSDPA" || netmode == "HSPA+" || netmode == "WCDMA" || netmode == "DC-HSPA+") {
 				var namech = "UARFCN";
 				var namesnr = "ECIO";
