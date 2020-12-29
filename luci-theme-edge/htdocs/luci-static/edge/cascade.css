@@ -384,12 +384,11 @@ h5,
 h6 {
 	font-family: inherit;
 	font-weight: normal;
-	line-height: 1.1 !important;
+	line-height: 1.1rem;
 	color: inherit;
 }
 
 html {
-	overflow-y: hidden;
 	-webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust: 100%;
 }
@@ -402,7 +401,6 @@ body {
 
 html,
 body {
-	height: 100%;
 	margin: 0;
 	padding: 0;
 	overflow-x: hidden;
@@ -4023,9 +4021,8 @@ i input {
 	min-width: 5rem !important;
 }
 
-#cbi-passwall .status .red, #cbi-passwall .status .green {
-	font-size: 0.83rem !important;
-	line-height: 2rem;
+#cbi-passwall .block h4 {
+	padding:0;
 }
 
 .waves-input-wrapper .waves-button-input {
@@ -4113,6 +4110,7 @@ div[id^="cbi-unblockmusic"] .cbi-button {
 table.interfaces .th{
 	padding:1.1em 0.5rem !important;
 }
-.cbi-value-field br{
-	display:none;
+.cbi-value-field>div:first-child{
+	 display: inline-flex !important;
+    cursor: pointer;
 }
