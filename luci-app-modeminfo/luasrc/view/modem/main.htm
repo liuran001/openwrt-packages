@@ -167,18 +167,27 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				}
 				var namech = "EARFCN";
 				var namesnr = "SINR";
+				var namecid = "CID:<br />eNB ID";
 				if (e = document.getElementById('arfcn'))
 	                                e.innerHTML = String.format(data.arfcn + " " + bw);
+				if (e = document.getElementById('cid'))
+                                        e.innerHTML = String.format(data.cid + " / " + data.cid_num + "<br />" + data.enbid);
 			} else if (netmode == "3G" || netmode == "UMTS" || netmode == "HSPA" || netmode == "HSUPA" || netmode == "HSDPA" || netmode == "HSPA+" || netmode == "WCDMA" || netmode == "DC-HSPA+") {
 				var namech = "UARFCN";
 				var namesnr = "ECIO";
+				var namecid = "CID";
 				if (e = document.getElementById('arfcn'))
 	                                e.innerHTML = String.format(data.arfcn);
+				if (e = document.getElementById('cid'))
+                                        e.innerHTML = String.format(data.cid + " / " + data.cid_num);
 			} else {
 				var namech = "ARFCN";
 				var namesnr = "SINR/ECIO";
+				var namecid = "CID";
 				if (e = document.getElementById('arfcn'))
-	                                e.innerHTML = String.format(data.arfcn);
+					e.innerHTML = String.format(data.arfcn);
+				if (e = document.getElementById('cid'))
+					e.innerHTML = String.format(data.cid + " / " + data.cid_num);
 			}
 
 			// stuff
@@ -208,9 +217,6 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			if (e = document.getElementById('lac'))
 			 	e.innerHTML = String.format(data.lac + " / " + data.lac_num);
 
-			if (e = document.getElementById('cid'))
-				e.innerHTML = String.format(data.cid + " / " + data.cid_num + "<br />" + data.enbid);
-
 			if (e = document.getElementById('rssi'))
 			 	e.innerHTML = String.format(data.rssi + " dBm");
 
@@ -234,6 +240,9 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 
 			if (e = document.getElementById('snrname'))
 				e.innerHTML = String.format('<b>'+namesnr+':</b>');
+
+			if (e = document.getElementById('cidname'))
+				e.innerHTML = String.format('<b>'+namecid+':</b>');
 
             		if (e = document.getElementById('chiptemp'))
 			 	e.innerHTML = String.format(data.chiptemp + " &deg;C");
@@ -272,7 +281,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 		<div class="tr cbi-rowstyle-2"> 
 			<div class="td left" width="25%"><b><%:LAC/TAC:%></b></div>
 			<div class="td left" width="25%" id="lac">-</div>
-			<div class="td left" width="25%"><b><%:CID:%><br /><%:eNB ID:%></b></div>
+			<div class="td left" width="25%" id="cidname"><b><%:CID:%></b></div>
 			<div class="td left" width="20%" id="cid">-</div>
 		</div>
 		<div class="tr cbi-rowstyle-1">
