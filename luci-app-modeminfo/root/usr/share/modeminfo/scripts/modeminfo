@@ -141,6 +141,8 @@ function get_reg_data(){
 	fi
 	CREG="+CGREG"
 	CID=$(echo "$O" | awk -F[,] '/\'$CREG'/ {printf "%s", toupper($4)}' | sed 's/[^A-F0-9]//g')
+	ENBx=$(echo $CID | sed -e 's/..$//')
+	ENBID=$(printf %d 0x$ENBx)
 	if [ "x$CID" != "x" ]; then
 		CID_NUM=$(printf %d 0x$CID)
 		if [ ${#CID} -gt 4 ]; then
