@@ -1,9 +1,0 @@
-1|yhosts.txt|https://raw.githubusercontent.com/VeleSila/yhosts/master/hosts.txt|Yhosts规则
-1|kp.dat|https://raw.githubusercontent.com/houzi-/CDN/master/kp.dat|视频规则
-1|user.txt||自定义规则
-1|easylistchina.txt|https://raw.githubusercontent.com/ycg31/KoolProxy/master/rules/easylistchina.txt|ABP规则
-1|fanboy.txt|https://raw.githubusercontent.com/ycg31/KoolProxy/master/rules/fanboy.txt|Fanboy规则
-1|mv.txt|https://gitee.com/xinggsf/Adblock-Rule/raw/master/mv.txt|乘风视频
-1|koolproxy.txt|https://raw.githubusercontent.com/houzi-/CDN/master/koolproxy.txt|静态规则
-1|daily.txt|https://raw.githubusercontent.com/houzi-/CDN/master/daily.txt|每日规则
-1|anti-ad.txt|https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-easylist.txt|Anti-AD规则

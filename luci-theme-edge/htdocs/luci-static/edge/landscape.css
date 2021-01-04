@@ -10,7 +10,7 @@
   position: absolute;
   min-width: 100%;
   min-height: 100%;
-  height: auto;
+  width:100%;
   background: #fff;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;

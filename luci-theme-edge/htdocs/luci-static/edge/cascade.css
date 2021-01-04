@@ -2677,6 +2677,7 @@ input[name="nslookup"] {
 .node-main-login .main .main-right #maincontent {
 	height: 100%;
 	padding-top: 23vh;
+	padding-bottom:1rem;
 	margin-top: 0rem;
 	background-color: transparent !important;
 	text-align: center;
@@ -4071,8 +4072,11 @@ div[id^="cbi-unblockmusic"] .cbi-button {
 	padding: 0 2rem;
 }
 
-.cbi-section-table .tr>.td:last-child,#packages .tr>.td:last-child{
+#packages .tr>.td:last-child{
 	padding-right:3%;
+}
+.cbi-section-table .tr>.td:last-child{
+	padding-right:2rem;
 }
 
 .chromeframe {
