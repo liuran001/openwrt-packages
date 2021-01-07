@@ -1532,12 +1532,6 @@ ul.tabs,.tabmenu .tabs,#tabmenu .tabs,ul.cbi-tabmenu {
 	background-color: #fff;
 	padding-top: 1rem;
 }
-
-#packages{
-	margin-left: -2%;
-    width: 105%;
-}
-
 .cbi-tabmenu > li:hover {
 	background-color: rgba(246,178,181,0.2);
 }
@@ -3966,11 +3960,6 @@ i input {
 
 .controls > * > .btn {
 	flex-basis: auto !important;
-}
-
-.cbi-map >.cbi-section .cbi-section-table,.container .cbi-tabmenu,.container #tabmenu,.cbi-map >.cbi-section .table {
-	margin-left: -2%;
-    width: 105%;
 }
 
 .admin-status-overview h2.content {
