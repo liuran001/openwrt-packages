@@ -255,6 +255,7 @@ function sierra_data(){
 		RSRP=$(echo "$O" |  awk '/RSRP/{print $3}' | head -1)
 		RSRQ=$(echo "$O" | awk '/RSRQ/{print $3}' |head -1)
 		SINR=$(echo "$O" | awk '/SINR/{print $6}' |head -1)
+		CSQ_RSSI=$(echo $O | awk '/PCC RxM RSSI/{print $4}')
 		LTE_CA=$(echo "$O" | awk '/SCC RxM RSSI/{print $0}' |wc -l)
 		BWDx=$(echo "$O" | awk '/LTE bw/{print $6}')
 		case $BWDx in
