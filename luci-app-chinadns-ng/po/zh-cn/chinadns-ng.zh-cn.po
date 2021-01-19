@@ -1,3 +1,9 @@
+msgid "ChinaDNS-NG is a tool for resolving DNS poisoning. You can find how it works and usage here:"
+msgstr "ChinaDNS-NG使用黑白名单和中国IP范围列表来解决DNS污染，详细工作原理和使用方法见："
+
+msgid "github project"
+msgstr "github 项目地址"
+
 msgid "RUNNING"
 msgstr "运行中"
 
@@ -6,6 +12,18 @@ msgstr "未运行"
 
 msgid "General Setting"
 msgstr "基本设置"
+
+msgid "Route Setting"
+msgstr "路由表设置"
+
+msgid "Rules Update"
+msgstr "规则更新"
+
+msgid "White List"
+msgstr "域名白名单"
+
+msgid "Black List"
+msgstr "域名黑名单"
 
 msgid "Enable"
 msgstr "启用"
@@ -25,11 +43,41 @@ msgstr "监听端口"
 msgid "Listen Address"
 msgstr "监听地址"
 
-msgid "CHNRoute File"
-msgstr "国内路由表"
+msgid "Custom CHNRoute List (White Domain List)"
+msgstr "自定义墙内路由表（白名单）"
 
-msgid "GFWRoute File"
-msgstr "国外路由表"
+msgid "Edit the content of custom white domain list file (/etc/chinadns-ng/whitelist.txt)"
+msgstr "编辑自定义域名白名单文件（/etc/chinadns-ng/whitelist.txt）的内容"
+
+msgid "Use CHNRoute File"
+msgstr "使用的墙内路由表（白名单）文件"
+
+msgid "Choose white domain list file, domains in white list will use China DNS servers. You can choose one of these or use any other file:"
+msgstr "选择使用的域名白名单文件，白名单中的域名将使用国内DNS服务器进行解析。你可以从以下文件中选择或者使用其他文件："
+
+msgid "(custom CHNRoute list, you can edit it below)"
+msgstr "（自定义墙内路由表文件，你可以在下面修改其内容）"
+
+msgid "(default CHNRoute list, can be updated automaticly)"
+msgstr "（默认墙内路由表文件，可以自动更新）"
+
+msgid "Custom GFWRoute List (Black Domain List)"
+msgstr "自定义墙外路由表（黑名单）"
+
+msgid "Edit the content of custom black domain list file (/etc/chinadns-ng/blacklist.txt)"
+msgstr "编辑自定义域名黑名单文件（/etc/chinadns-ng/blacklist.txt）的内容"
+
+msgid "Use GFWRoute File"
+msgstr "使用的墙外路由表（黑名单）文件"
+
+msgid "Choose black domain list file, Domains in black list will use trusted DNS servers. You can choose one of these or use any other file:"
+msgstr "选择使用的域名黑名单文件，黑名单中的域名将使用可信DNS服务器进行解析。你可以从以下文件中选择或者使用其他文件："
+
+msgid "(custom GFWRoute list, you can edit it below)"
+msgstr "（自定义墙外路由表文件，你可以在下面修改其内容）"
+
+msgid "(default GFWRoute list, can be updated automaticly. If you use SSR+, don't use gfwlist file for black list.)"
+msgstr "（默认墙外路由表文件，可以自动更新。如果你使用SSR+，不建议使用GFWlist做黑名单，因为GFWlist中的域名会走SSR+的隧道进行解析）"
 
 msgid "China DNS Servers"
 msgstr "国内 DNS 服务器地址"
@@ -37,7 +85,7 @@ msgstr "国内 DNS 服务器地址"
 msgid "Trusted DNS Servers"
 msgstr "可信 DNS 服务器地址"
 
-msgid "Use commas to separate multiple ip address，Max 2 Servers"
+msgid "Use commas to separate multiple ip address, Max 2 Servers"
 msgstr "使用逗号分隔多个 IP 地址，最多使用两个服务器"
 
 msgid "match chnlist first"
@@ -64,3 +112,23 @@ msgstr "查询超时时间 秒"
 msgid "repeat_times"
 msgstr "同一地址对可信 DNS 发送查询包数量"
 
+msgid "Auto Update"
+msgstr "自动更新"
+
+msgid "Update Now"
+msgstr "立刻更新"
+
+msgid "Auto update China ipset and route lists at 3:00 on Saturday"
+msgstr "每周六3:00自动更新中国IP范围列表和路由表文件"
+
+msgid "Refresh"
+msgstr "更新"
+
+msgid "Refresh..."
+msgstr "正在更新，请稍候.."
+
+msgid "Refresh OK!"
+msgstr "更新成功！"
+
+msgid "Refresh Error!"
+msgstr "更新失败！"
