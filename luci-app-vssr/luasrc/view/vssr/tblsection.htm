@@ -47,10 +47,8 @@
                                     </a>
                                     <%- if self.extedit then -%>
                                         <a class="cbi-button ssr-button " type="button" value="" <%- if
-                                            type(self.extedit)=="string" then %> onclick="location.href='
-                                            <%=self.extedit:format(section.name)%>'" <%- elseif
-                                                    type(self.extedit)=="function" then %> onclick="location.href='
-                                                    <%=self:extedit(section.name)%>'" <%- end %> alt="<%:Edit%>" title="
+                                            type(self.extedit)=="string" then %> href="<%=self.extedit:format(section.name)%>" <%- elseif
+                                                    type(self.extedit)=="function" then %> href="<%=self:extedit(section.name)%>" <%- end %> alt="<%:Edit%>" title="
                                                                 <%:Edit%>"><span class="icon-edit"></span>
                                                                     <%:Edit%></a>
                                         <%- end; if self.addremove then %>
