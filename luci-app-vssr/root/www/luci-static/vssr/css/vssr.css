@@ -27,19 +27,19 @@
 /**  复写theme  **/
 
 .cbi-section {
-    background: #fff;
+
     border: 0;
     border-radius: .375rem;
-    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+
     overflow-x: auto;
     overflow-y: hidden;
 }
+
 .cbi-section-node {
-    background: #fff;
+
     border: 0;
     border-radius: .375rem;
     margin-bottom: 0px;
-    box-shadow: 0 0 0 0 rgba(136, 152, 170, 0.15);
     overflow-x: auto;
     overflow-y: hidden;
     padding: 0rem 0;
@@ -54,10 +54,10 @@
     display: block;
     margin-bottom: 0;
     padding: .8755rem 1.5rem;
-    border-bottom: 1px solid #ddd;
+
     margin-bottom: 0rem;
     letter-spacing: .1rem;
-    color: #32325d;
+
     font-weight: 600;
     box-sizing: border-box;
 }
@@ -83,10 +83,11 @@
     box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .15);
 }
 
-.status .block  .img-con {
+.status .block .img-con {
     margin: 1rem;
 
 }
+
 .status .block .green {
     font-size: 1.25rem;
     color: #2dce89;
@@ -142,6 +143,7 @@
     background: #5e72e4;
     color: #fff;
 }
+
 .ssr-button:link,
 .ssr-button:hover,
 .ssr-button:focus,
@@ -194,6 +196,7 @@
 .host_con.slow {
     color: #fb6340;
 }
+
 .host_ok {
     color: #fff;
     background: #2dce89;
@@ -222,6 +225,7 @@
 .flag-icon:before {
     position: absolute;
 }
+
 .alias {
     margin-bottom: 1px;
     padding-left: 0px;
@@ -545,7 +549,8 @@ footer.mobile-hide {
     .p-in5 {
         padding-bottom: 3rem;
     }
-    .cbi-page-actions{
+
+    .cbi-page-actions {
         padding-bottom: 4rem !important;
     }
 }
