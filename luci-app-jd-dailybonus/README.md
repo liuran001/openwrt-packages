@@ -50,7 +50,12 @@ make -j1 V=s #编译固件
 1.自行安装Node [命令: opkg update && opkg install node]
   (如果已经安装node版本的网易云插件则可以跳过)   
   
-2.安装luci-app-jd-dailybonus
+2.需要安装以下依赖：
+```
+opkg update  
+opkg install luasocket lua-md5 lua-cjson luasec
+```
+3.安装luci-app-jd-dailybonus
 
 ### 感谢
 
