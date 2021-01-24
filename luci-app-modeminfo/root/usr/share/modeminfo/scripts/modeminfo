@@ -317,7 +317,7 @@ function simcom_data(){
 		CSQ_RSSI=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", $14/10}')
 		RSRP=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", $13/10}')
 		RSRQ=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", $12/10}')
-		SINx=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", ($15*2)-20}')
+		SINR=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", ($15*2)-20}')
 		BWDL=$(echo "$O" |awk -F[,\ ] '/^\+CPSI/ {print $10}')
 		BWUL=$(echo "$O" |awk -F[,\ ] '/^\+CPSI/ {print $11}')
 	else

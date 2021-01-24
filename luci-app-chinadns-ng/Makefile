@@ -2,11 +2,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-chinadns-ng
 PKG_VERSION:=1.1
-PKG_RELEASE:=6
+PKG_RELEASE:=7
 
 LUCI_TITLE:=LuCI support for chinadns-ng
 LUCI_DESCRIPTION:=LuCI Support for chinadns-ng.
-LUCI_DEPENDS:=+chinadns-ng
+LUCI_DEPENDS:=+chinadns-ng +wget
 LUCI_PKGARCH:=all
 
 include $(TOPDIR)/feeds/luci/luci.mk
