@@ -85,6 +85,10 @@ opengt
  let $c="AT+QTEMP^m"
  let $r="+QTEMP"
  gosub readatcmd
+
+ send "AT+QCAINFO^m"
+ get 1 "" $s
+ print $s
  goto next1
  
 :qualcomm

@@ -338,6 +338,7 @@ function quectel_data(){
 		RSRQ=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $16}')
 		BWUL=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $12}')
                 BWDL=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $13}')
+		LTE_CA=$(echo "$O" | awk '/^\+QCAINFO/{print $0}' | wc -l)
 	elif [ "$MODE" = "EDGE" ]; then
 		EARFCN=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $10}')
 	else
