@@ -7,8 +7,8 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=luci-app-jd-dailybonus
 LUCI_PKGARCH:=all
-PKG_VERSION:=1.0.1
-PKG_RELEASE:=20210123
+PKG_VERSION:=1.0.2
+PKG_RELEASE:=20210124
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -18,7 +18,7 @@ define Package/luci-app-jd-dailybonus
 	SUBMENU:=3. Applications
 	TITLE:=Luci for JD dailybonus Script 
 	PKGARCH:=all
-	DEPENDS:=+node +wget +lua +luasocket +lua-cjson +lua-md5 +luasec
+	DEPENDS:=+node +wget +lua
 endef
 
 define Build/Prepare
@@ -44,7 +44,6 @@ define Package/luci-app-jd-dailybonus/install
 	$(INSTALL_DIR) $(1)/usr/share/jd-dailybonus
 	$(INSTALL_BIN) ./root/usr/share/jd-dailybonus/*.sh $(1)/usr/share/jd-dailybonus/
 	$(INSTALL_DATA) ./root/usr/share/jd-dailybonus/*.js $(1)/usr/share/jd-dailybonus/
-	$(INSTALL_DATA) ./root/usr/share/jd-dailybonus/*.lua $(1)/usr/share/jd-dailybonus/
 
 	$(INSTALL_DIR) $(1)/usr/share/rpcd/acl.d
 	$(INSTALL_DATA) ./root/usr/share/rpcd/acl.d/* $(1)/usr/share/rpcd/acl.d

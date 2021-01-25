@@ -2,20 +2,13 @@
 Luci for JD dailybonus Script for Openwrt  
 一个运行在openwrt下的京东签到插件。
 
-### Update Log 2021-01-20  
+### Update Log 2021-01-24  v1.0.2
 
 #### Updates 
 
-- UPD: 大量代码重构，版本更新到1.0.0
-- UPD: 采用扫码获取cookie(基于Lua 脚本实现)
-- UPD: 增加超时时间设置
-- UPD: 取消了当失败时推送消息的设定每次都会推送 包括手动
-- UPD: 增加telegram推送
-- UPD: 无需修改js脚本设置cookie，才用本地json缓存来读取配置文件
-- UPD: 签到时间拆分为小时+分钟
-- UPD: 取消语言文件，默认为中文
-- UPD: 兼容性做了适配，兼容boorstrap
-- UPD: 默认JS脚本更新到v1.90
+- UPD: 大量代码重构，去除lua-request 使用wget实现网络请求节省大量空间和依赖（感谢@Promix953的更新）
+- FIX: 修复当使用master版本时 提交信息出错的问题
+- FIX: 修复部分文件翻译
 
 
 详情见[具体日志](./relnotes.txt)。 
@@ -53,7 +46,12 @@ make -j1 V=s #编译固件
 2.需要安装以下依赖：
 ```
 opkg update  
-opkg install luasocket lua-md5 lua-cjson luasec
+opkg install node wget lua
+```
+如果更新ipk后无法获取二维码  
+```
+#登录ssh后执行
+rm -rf /tmp/luci-indexcache /tmp/luci-modulecache/*
 ```
 3.安装luci-app-jd-dailybonus
 
@@ -63,6 +61,10 @@ opkg install luasocket lua-md5 lua-cjson luasec
 
 ### 我的其它项目
 Argon theme ：https://github.com/jerrykuku/luci-theme-argon  
-Argon theme config  ：https://github.com/jerrykuku/luci-app-argon-config
+Argon theme config  ：https://github.com/jerrykuku/luci-app-argon-config  
 Hello World ：https://github.com/jerrykuku/luci-app-vssr  
 openwrt-nanopi-r1s-h5 ： https://github.com/jerrykuku/openwrt-nanopi-r1s-h5  
+
+### 支持我
+如果你觉得我做的不错，可以赞赏一下。
+<img src="https://raw.githubusercontent.com/jerrykuku/staff/master/photo_2019-12-22_11-40-20.jpg" width="300" height="300">
