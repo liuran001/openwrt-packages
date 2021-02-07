@@ -3,112 +3,105 @@ msgstr ""
 "Language: ru\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: Andrew Freeman <labz56@gmail.com>\n"
+"Last-Translator: Konstantine Shevlyakov <shevlakov@132lan.ru>\n"
 
-#: applications/luci-app-modeminfo/luasrc/controller/modem.lua:8
+#: applications/luci-app-modeminfo/luasrc/controller/modem/modeminfo.lua:8
 msgid "Modem"
 msgstr "Модем"
 
-#: applications/luci-app-modeminfo/luasrc/controller/modem.lua:9
-msgid "Modem overview"
-msgstr "Обзор модема"
+#: applications/luci-app-modeminfo/luasrc/controller/modem/modeminfo.lua:9
+msgid "Signal Overview"
+msgstr "Состояние сети"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:10
-msgid "Modem Overview"
-msgstr "Информация о модеме"
+#: applications/luci-app-modeminfo/luasrc/controller/modem/modeminfo.lua:10
+msgid "Overview"
+msgstr "Обзор"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:45
+#: applications/luci-app-modeminfo/luasrc/controller/modem/modeminfo.lua:11
+msgid "Setup"
+msgstr "Настройка"
+
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:10
+msgid "Modeminfo: Signal Overview"
+msgstr "Modeminfo: Уровень сигнала"
+
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:40
 msgid "No Registration"
 msgstr "Нет регистрации"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:47
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:42
 msgid "Registered"
 msgstr "Зарегистрирован"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:49
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:44
 msgid "Searching"
 msgstr "Поиск сети"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:51
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:46
 msgid "Denied"
 msgstr "Запрет регистрации"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:53
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:48
 msgid "Unknown"
 msgstr "Неизветсно"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:55
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:50
 msgid "Roaming"
 msgstr "Гостевая сеть"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:57
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:52
 msgid "No Data"
 msgstr "Нет данных"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:125
-msgid "Mobile network"
-msgstr "Мобильная сеть"
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:260
+msgid "Mobile network & Hardware Info"
+msgstr "Мобильная сеть и информация о модеме"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:128
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:263
 msgid "Device:"
 msgstr "Устройство:"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:130
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:265
 msgid "Status:"
 msgstr "Состояние:"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:134
-msgid "MCC MNC:"
-msgstr "MCC MNC:"
-
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:136
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:271
 msgid "Network Desc.:"
 msgstr "Имя сети:"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:140
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:275
 msgid "Network/band:"
 msgstr "Сеть/Диапазон:"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:142
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:277
 msgid "Signal strength:"
 msgstr "Уровень сигнала:"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:146
-msgid "E/U/ARFCN:"
-msgstr ""
-
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:148
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:283
 msgid "Freq. (DL/UL):"
 msgstr "Частота (Вх/Исх):"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:152
-msgid "LAC/TAC:"
-msgstr ""
-
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:154
-msgid "CID:"
-msgstr ""
-
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:158
-msgid "RSSI:"
-msgstr ""
-
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:160
-msgid "SINR/ECIO:"
-msgstr ""
-
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:164
-msgid "RSRP:"
-msgstr ""
-
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:166
-msgid "RSRQ:"
-msgstr ""
-
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:170
-msgid "IMEI:"
-msgstr ""
-
-#: applications/luci-app-modeminfo/luasrc/view/modem/main.htm:172
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:307
 msgid "Chip Temp:"
 msgstr "Температура:"
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:11
+msgid "Modeminfo: Configuration"
+msgstr "Modeminfo: Конфигурация"
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:12
+msgid "Configuration panel of Мodeminfo."
+msgstr "Панель конфигурации Modeminfo."
+
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:17
+msgid "Modeminfo AT-port"
+msgstr "Порт AT-комманд"
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:18
+msgid "In automatic mode detect first answered AT-port."
+msgstr "В автоматическом режиме находит первый отвечающий AT-порт."
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:21
+msgid "Autodetect"
+msgstr "Автоматически"
