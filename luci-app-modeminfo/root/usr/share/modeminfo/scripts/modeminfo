@@ -17,6 +17,7 @@ function get_device_info() {
 		get_port
 	fi
 	O=$(gcom -d $DEVPORT -s $GSCRIPT 2>/dev/null)
+	#O=$(cat /root/modem.log)
 	SEC=$(uci show network | grep "/dev/"${DEV##/*/} | cut -f2 -d.)
 	if [ -z "$SEC" ]; then
 		getpath $DEVPORT
@@ -33,7 +34,7 @@ function get_device_info() {
 }
 
 function get_port() {
-	devices=$(ls /dev/ttyUSB* /dev/cdc-wdm* /dev/ttyACM* /dev/ttyHS* 2>/dev/null | sort -r);
+	devices="$(ls /dev/ttyUSB* /dev/cdc-wdm* /dev/ttyACM* /dev/ttyHS* 2>/dev/null | sort -r)"
 		for d in $devices; do
 			DEVPORT=$d gcom -s $RES/scripts/probeport.gcom > /dev/null 2>&1
 			if [ $? = 0 ]; then
@@ -255,9 +256,21 @@ function sierra_data(){
 		RSRP=$(echo "$O" |  awk '/RSRP/{print $3}' | head -1)
 		RSRQ=$(echo "$O" | awk '/RSRQ/{print $3}' |head -1)
 		SINR=$(echo "$O" | awk '/SINR/{print $6}' |head -1)
-		CSQ_RSSI=$(echo $O | awk '/PCC RxM RSSI/{print $4}')
-		LTE_CA=$(echo "$O" | awk '/SCC RxM RSSI/{print $0}' |wc -l)
+		CSQ_RSSI=$(echo "$O" | awk '/PCC RxM RSSI:/{print $4}')
+		LTE_CA=$(echo "$O" | awk '/SCC RxM RSSI:/{print $0}' |wc -l)
 		BWDx=$(echo "$O" | awk '/LTE bw/{print $6}')
+		if [ $LTE_CA -ge 1 ]; then
+			CA=$(echo "$O" | awk -F [:] '/LTE Scell band/{print $3}' | sed -e 's/B//g')
+			for cc in "$CA"; do
+				SC=$cc
+				SCC="$SCC+$cc"
+			done
+			bw=$(echo "$O" |awk '/LTE Scell bw:/{print $3}' | sed -e 's/bw://g')
+			for bwc in $bw; do	
+				bwcc="$bwcc+$bwc"
+			done
+			BWCA=$(($BWDx$bwcc))
+		fi
 		case $BWDx in
 			3) BWDL=1 ;;
 			5) BWDL=2 ;;
@@ -337,8 +350,35 @@ function quectel_data(){
 		CSQ_RSSI=$(echo "$O" |awk -F "[\, ]" '/\+QENG:/{print $17}')
 		RSRQ=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $16}')
 		BWUL=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $12}')
-                BWDL=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $13}')
+	        BWDL=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $13}')
 		LTE_CA=$(echo "$O" | awk '/^\+QCAINFO/{print $0}' | wc -l)
+		if [ $LTE_CA -ge 2 ]; then
+			CA_INFO=$(echo "$O" | awk '/^\+QCAINFO/{print $0}' | awk '/scc/{print $0}')
+			CA=$(echo "$CA_INFO" | awk -F [\,] '{print $4}' | awk '{print $3}' | sed 's/\"//g')
+			BWC=$(echo "$CA_INFO" | awk -F [\,] '{print $3}')
+			for cc in $CA; do
+				SC=$cc
+				SCC="$SCC+$SC"
+			done
+			case $BWDL in
+				1) BWCP=3 ;;
+				2) BWCP=5 ;;
+				3) BWCP=10 ;;
+				4) BWCP=15 ;;
+				5) BWCP=20 ;;
+			esac
+			for BW in $BWC; do
+				case $BW in
+					15) BWCC=3 ;;
+					25) BWCC=5 ;;
+					50) BWCC=10 ;;
+					75) BWCC=15 ;;
+					100) BWCC=20 ;;
+				esac
+				BWCA="$BWCA+$BWCC"
+			done
+			BWCA=$(($BWCP$BWCA))
+		fi
 	elif [ "$MODE" = "EDGE" ]; then
 		EARFCN=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $10}')
 	else
@@ -388,6 +428,18 @@ function qualcomm_data(){
 			15) BWDL=4 ;;
 			20) BWDL=5 ;;
 		esac
+		if [ $LTE_CA -ge 1 ]; then
+			CA=$(echo "$O" | awk '/SCC/{print $5}')
+			for cc in $CA; do
+				SC=$(echo $cc | sed -e 's/LTE_B//g' -e 's/.$//')
+				SCC="$SCC+$SC"
+			done
+			bw=$(echo "$O" |awk '/SCC/{printf "%.0f\n",$8}')
+			for bwc in $bw; do	
+				bwcc="$bwcc+$bwc"
+			done
+			BWCA=$(($BWDx$bwcc))
+		fi
         else
                 ECIO=$(echo "$RADIODATA" |awk -F [,] '{printf "%.0f\n",$4}')
 		CSQ_RSSI=$(echo "$RADIODATA" |awk -F [,] '{printf "%.0f\n",$6}')

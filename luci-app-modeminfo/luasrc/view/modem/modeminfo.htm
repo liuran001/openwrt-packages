@@ -63,47 +63,47 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 					var frdl = 2110;
 					var frul = 1920;
 					var offset = 0;
-					var band = "B1 FDD";
+					var band = "1";
 				} else if (rfcn >= 1200 && rfcn <= 1949) {
 					var frdl = 1805;
 					var frul = 1710;
 					var offset = 1200;
-					var band = "B3 FDD";
+					var band = "3";
 				} else if (rfcn >= 2400 && rfcn <= 2469) {
 					var rfdl = 869;
 					var frul = 824;
 					var offset = 2400;
-					var band = "B5 FDD";
+					var band = "B5";
 				} else if (rfcn >= 2750 && rfcn <= 3449) {
 					var frdl = 2620;
 					var frul = 2500;
 					var offset = 2750;
-					var band = "B7 FDD";
+					var band = "7";
 				} else if (rfcn >= 3450 && rfcn <= 3799) {
 					var frdl = 925;
 					var frul = 880;
 					var offset = 3450;
-					var band = "B8 FDD";
+					var band = "8";
 				} else if (rfcn >= 6150 && rfcn <= 6449) {
 					var frdl = 791;
 					var frul = 832;
 					var offset = 6150;
-					var band = "B20 FDD";
+					var band = "20";
 				} else if (rfcn >= 9870 && rfcn <= 9919) {
 					var frdl = 452.5;
 					var frul = 462.5;
 					var offset = 9870;
-					var band = "B31 FDD";
+					var band = "31";
 				} else if (rfcn >= 33750 && rfcn <= 38249) {
 					var frdl = 2570;
 					var frul = 2570;
 					var offset = 33750;
-					var band = "B38 TDD";
+					var band = "38";
 				} else if (rfcn >= 38650 && rfcn <= 39649) {
 					var frdl = 2300;
 					var frul = 2300;
 					var offset = 38650;
-					var band = "B40 TDD";
+					var band = "40";
 				} else {
 					var offset = 0;
 					var frdl = 0;
@@ -113,17 +113,17 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				}
 				var bwdld = (data.bwdl);
 				if (bwdld == 0) {
-					var bw = "(1.4 MHz)";
+					var bw = 1.4;
 				} else if (bwdld == 1) {
-					var bw = "(3 MHz)";
+					var bw = 3;
 				} else if (bwdld == 2) {
-					var bw = "(5 MHz)";
+					var bw = 5;
 				} else if (bwdld == 3) {
-					var bw = "(10 MHz)";
+					var bw = 10;
 				} else if (bwdld == 4) {
-					var bw = "(15 MHz)";
+					var bw = 15;
 				} else if (bwdld == 5) {
-					var bw = "(20 MHz)";
+					var bw = 20;
 				} else {
 					var bw = "";
 				}
@@ -163,24 +163,42 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				}
 			}
 			var carrier = "";
+			var bcc;
 			// name channels and signal/noise  
 			if (netmode == "LTE") {
 				var calte = (data.lteca)
 				var carrier;
+				var scc;
+				var bwca = data.bwca;
+				var arfcn = data.arfcn;
+				var freq;
 				if (calte > 0) {
 					carrier = "+";
+					scc = data.scc;
+					bw = bwca;
+					bca = " (CA: " + bw + " MHz)";
+					arfcn = "PCC: "+ data.arfcn + " " + bca;
+					freq = "PCC: " + dlfreq + " / " + ulfreq + " MHz";
+					bcc = " B" + band + "" + scc;
+				} else {
+					scc = "";
+					bcc = " B" + band;
+					bca = " (" + bw + " MHz)";
+					arfcn = data.arfcn + " " + bca;
+					freq = dlfreq + " / " + ulfreq + " MHz"
 				}
 				var namech = "EARFCN";
 				var namesnr = "SINR";
 				var namecid = "CID:<br />eNB ID";
 				if (e = document.getElementById('arfcn'))
-	                                e.innerHTML = String.format(data.arfcn + " " + bw);
+	                                e.innerHTML = String.format(arfcn);
 				if (e = document.getElementById('cid'))
                                         e.innerHTML = String.format(data.cid + " / " + data.cid_num + "<br />" + data.enbid);
 			} else if (netmode == "3G" || netmode == "UMTS" || netmode == "HSPA" || netmode == "HSUPA" || netmode == "HSDPA" || netmode == "HSPA+" || netmode == "WCDMA" || netmode == "DC-HSPA+") {
 				var namech = "UARFCN";
 				var namesnr = "ECIO";
 				var namecid = "CID";
+				var bcc = " " + band;
 				if (e = document.getElementById('arfcn'))
 	                                e.innerHTML = String.format(data.arfcn);
 				if (e = document.getElementById('cid'))
@@ -210,7 +228,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			 	e.innerHTML = String.format(data.cops);
 
 			if (e = document.getElementById('mode'))
-			 	e.innerHTML = String.format(data.mode + "" + carrier + " / " + band);
+			 	e.innerHTML = String.format(data.mode + "" + carrier + " /"+ bcc);
 
 			if (e = document.getElementById('csq_pe'))
 			if (e)
@@ -238,7 +256,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			 	e.innerHTML = String.format(data.imei);
 
 			if (e = document.getElementById('freq'))
-			 	e.innerHTML = String.format(dlfreq + " / " + ulfreq + " MHz" );
+			 	e.innerHTML = String.format(freq);
 			
 			if (e = document.getElementById('chname'))
 				e.innerHTML = String.format('<b>'+namech+':</b>');
