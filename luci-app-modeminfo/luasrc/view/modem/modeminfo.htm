@@ -164,6 +164,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			}
 			var carrier = "";
 			var bcc;
+			var freq;
 			// name channels and signal/noise  
 			if (netmode == "LTE") {
 				var calte = (data.lteca)
@@ -171,7 +172,6 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				var scc;
 				var bwca = data.bwca;
 				var arfcn = data.arfcn;
-				var freq;
 				if (calte > 0) {
 					carrier = "+";
 					scc = data.scc;
@@ -199,6 +199,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				var namesnr = "ECIO";
 				var namecid = "CID";
 				var bcc = " " + band;
+				var freq = dlfreq + " / " + ulfreq + " MHz"
 				if (e = document.getElementById('arfcn'))
 	                                e.innerHTML = String.format(data.arfcn);
 				if (e = document.getElementById('cid'))
@@ -207,6 +208,8 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				var namech = "ARFCN";
 				var namesnr = "SINR/ECIO";
 				var namecid = "CID";
+				var bcc = " " + band;
+				freq = dlfreq + " / " + ulfreq + " MHz"
 				if (e = document.getElementById('arfcn'))
 					e.innerHTML = String.format(data.arfcn);
 				if (e = document.getElementById('cid'))
