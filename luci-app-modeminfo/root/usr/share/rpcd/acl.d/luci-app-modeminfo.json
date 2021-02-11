@@ -1,0 +1,11 @@
+{
+	"luci-app-modeminfo": {
+		"description": "Grant UCI access for luci-app-modeminfo",
+		"read": {
+			"uci": [ "modeminfo" ]
+		},
+		"write": {
+			"uci": [ "modeminfo" ]
+		}
+	}
+}
