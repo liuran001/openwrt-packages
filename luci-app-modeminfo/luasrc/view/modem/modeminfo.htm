@@ -189,31 +189,25 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				}
 				var namech = "EARFCN";
 				var namesnr = "SINR";
-				var namecid = "CID:<br />eNB ID";
-				if (e = document.getElementById('arfcn'))
-	                                e.innerHTML = String.format(arfcn);
-				if (e = document.getElementById('cid'))
-                                        e.innerHTML = String.format(data.cid + " / " + data.cid_num + "<br />" + data.enbid);
+				var nametac = "LAC(dec)/eNB ID";
+				var lactac = data.lac + " (" + data.lac_num + ") / " + data.enbid;
 			} else if (netmode == "3G" || netmode == "UMTS" || netmode == "HSPA" || netmode == "HSUPA" || netmode == "HSDPA" || netmode == "HSPA+" || netmode == "WCDMA" || netmode == "DC-HSPA+") {
 				var namech = "UARFCN";
 				var namesnr = "ECIO";
-				var namecid = "CID";
+				var nametac = "LAC(dec)";
 				var bcc = " " + band;
 				var freq = dlfreq + " / " + ulfreq + " MHz"
-				if (e = document.getElementById('arfcn'))
-	                                e.innerHTML = String.format(data.arfcn);
-				if (e = document.getElementById('cid'))
-                                        e.innerHTML = String.format(data.cid + " / " + data.cid_num);
+				var arfcn = data.arfcn;
+				var lactac = data.lac + " / " + data.lac_num;
+				
 			} else {
 				var namech = "ARFCN";
 				var namesnr = "SINR/ECIO";
-				var namecid = "CID";
+				var nametac = "LAC(dec)";
 				var bcc = " " + band;
-				freq = dlfreq + " / " + ulfreq + " MHz"
-				if (e = document.getElementById('arfcn'))
-					e.innerHTML = String.format(data.arfcn);
-				if (e = document.getElementById('cid'))
-					e.innerHTML = String.format(data.cid + " / " + data.cid_num);
+				var arfcn = data.arfcn;
+				var freq = dlfreq + " / " + ulfreq + " MHz"
+				var lactac = data.lac + " / " + data.lac_num;
 			}
 
 			// stuff
@@ -223,6 +217,9 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 
 			if (e = document.getElementById('device'))
 			 	e.innerHTML = String.format(data.device);
+			
+			if (e = document.getElementById('cid'))
+					e.innerHTML = String.format(data.cid + " (" + data.cid_num + ")");
 
 			if (e = document.getElementById('mccmnc'))
 			 	e.innerHTML = String.format(data.mcc  + " " + data.mnc);
@@ -239,9 +236,12 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 
 			if (e = document.getElementById('csq_per'))
 			 	e.innerHTML = String.format(data.csq_per+"%");
+			
+			if (e = document.getElementById('arfcn'))
+	            e.innerHTML = String.format(arfcn);
 
 			if (e = document.getElementById('lac'))
-			 	e.innerHTML = String.format(data.lac + " / " + data.lac_num);
+			 	e.innerHTML = String.format(lactac);
 
 			if (e = document.getElementById('rssi'))
 			 	e.innerHTML = String.format(data.rssi + " dBm");
@@ -260,6 +260,9 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 
 			if (e = document.getElementById('freq'))
 			 	e.innerHTML = String.format(freq);
+			
+			if (e = document.getElementById('nametac'))
+				e.innerHTML = String.format('<b>'+nametac+':</b>');
 			
 			if (e = document.getElementById('chname'))
 				e.innerHTML = String.format('<b>'+namech+':</b>');
@@ -301,13 +304,13 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 		<div class="tr cbi-rowstyle-1">
 			<div class="td left" width="25%" id="chname"><b><%:E/U/ARFCN:%></b></div>
 			<div class="td left" width="25%" id="arfcn">-</div>
-			<div class="td left" width="25%"><b><%:Freq. (DL/UL):%></b></div>
+			<div class="td left" width="25%"><b><%:Freq. DL/UL:%></b></div>
 			<div class="td left" width="25%" id="freq">-</div>
 		</div>
 		<div class="tr cbi-rowstyle-2"> 
-			<div class="td left" width="25%"><b><%:LAC/TAC:%></b></div>
+			<div class="td left" width="25%" id="nametac"><b><%:LAC(dec):%></b></div>
 			<div class="td left" width="25%" id="lac">-</div>
-			<div class="td left" width="25%" id="cidname"><b><%:CID:%></b></div>
+			<div class="td left" width="25%"><b><%:CID(dec):%></b></div>
 			<div class="td left" width="20%" id="cid">-</div>
 		</div>
 		<div class="tr cbi-rowstyle-1">

@@ -78,8 +78,8 @@ msgid "Signal strength:"
 msgstr "Уровень сигнала:"
 
 #: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:283
-msgid "Freq. (DL/UL):"
-msgstr "Частота (Вх/Исх):"
+msgid "Freq. DL/UL:"
+msgstr "Частота Вх/Исх:"
 
 #: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:307
 msgid "Chip Temp:"
