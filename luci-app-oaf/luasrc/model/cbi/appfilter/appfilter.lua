@@ -19,6 +19,14 @@ m = Map("appfilter",
 	
 s = m:section(TypedSection, "global", translate("Basic Settings"))
 s:option(Flag, "enable", translate("Enable App Filter"),translate(""))
+um = s:option(DummyValue, "")
+um.template="cbi/oaf_dvalue"
+local fullcone=SYS.exec("uci get firewall.@defaults[0].fullcone");
+local bbr=SYS.exec("uci get flowoffload.@flow[0].bbr");
+local flow_offloading=SYS.exec("uci get flowoffload.@flow[0].flow_offloading");
+if string.match(fullcone, "1")  or string.match(bbr, "1") or string.match(flow_offloading, "1") then
+    um.value="运行环境检测失败，请先关闭ACC加速模块!"
+end
 s.anonymous = true
 
 local rule_count=0
@@ -31,17 +39,15 @@ local display_str="<strong>当前版本:  </strong>"..version.."<br><strong>特�
 s = m:section(TypedSection, "feature", translate("特征库更新"), display_str )
 
 fu = s:option(FileUpload, "")
-fu.template = "cbi/other_upload"
+fu.template = "cbi/oaf_upload"
 s.anonymous = true
 
 um = s:option(DummyValue, "rule_data")
-um.template = "cbi/other_dvalue"
-
+um.template="cbi/oaf_dvalue"
 --um.value =rule_count .. " " .. translate("Records").. "  "..version
 s = m:section(TypedSection, "appfilter", translate("App Filter Rules"))
 s.anonymous = true
 s.addremove = false
-
 
 local class_fd = io.popen("find /tmp/appfilter/ -type f -name '*.class'")
 if class_fd then
@@ -172,7 +178,6 @@ http.setfilehandler(
 			if not meta then return end
 			if	meta and chunk then fd = nixio.open(dir .. meta.file, "w") end
 			if not fd then
-				--um.value = translate("Create upload file error.")
 				return
 			end
 		end
@@ -182,7 +187,8 @@ http.setfilehandler(
 		if eof and fd then   
 			fd:close()   
 			local fd2 = io.open("/tmp/upload/"..meta.file)
-			local line=fd2:read("*l");               
+			local line=fd2:read("*l");       
+			fd2:close()        
 			local ret=string.match(line, "#version")
 			if ret ~= nil then 
 					local cmd="cp /tmp/upload/"..meta.file.." /etc/appfilter/feature.cfg";
@@ -193,6 +199,7 @@ http.setfilehandler(
 			else                                      
 					um.value = translate("更新失败，格式错误!")
 			end
+			os.execute("rm /tmp/upload/* -fr");
 		end
 
 	end
