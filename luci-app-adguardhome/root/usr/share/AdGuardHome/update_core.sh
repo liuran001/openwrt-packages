@@ -27,7 +27,7 @@ check_latest_version(){
 	if [ -z "${latest_ver}" ]; then
 		echo -e "\nFailed to check latest version, please try again later."  && EXIT 1
 	fi
-	now_ver="$($binpath -c /dev/null --check-config 2>&1| grep -m 1 -E 'v[0-9.]+' -o)"
+	now_ver="$($binpath --version 2>/dev/null | grep -m 1 -E '[0-9]+[.][0-9.]+' -o)"
 	if [ "${latest_ver}"x != "${now_ver}"x ] || [ "$1" == "force" ]; then
 		echo -e "Local version: ${now_ver}., cloud version: ${latest_ver}." 
 		doupdate_core
@@ -130,20 +130,16 @@ doupdate_core(){
 	Arch="amd64"
 	;;
 	"mipsel")
-	Arch="mipsle"
+	Arch="mipsle_softfloat"
 	;;
 	"mips64el")
-	Arch="mips64le"
-	Arch="mipsle"
-	echo -e "mips64el use $Arch may have bug" 
+	Arch="mips64le_softfloat"
 	;;
 	"mips")
-	Arch="mips"
+	Arch="mips_softfloat"
 	;;
 	"mips64")
-	Arch="mips64"
-	Arch="mips"
-	echo -e "mips64 use $Arch may have bug" 
+	Arch="mips64_softfloat"
 	;;
 	"arm")
 	Arch="arm"
