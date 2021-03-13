@@ -9,6 +9,9 @@
 
 `lean源码用主分支，op官方源码用packages-19.07`
 
+## 有问题请发issue，我不上恩山的！！！
+请求加入xxx软件包/问题反馈也请使用issue
+
 ### 更新日志
 `2021/3/13`
 - 添加uu加速器，修改adguardhome的luci来源（原作者长期未更新，存在大量问题）
@@ -33,5 +36,5 @@
 ## 不要为了下载而Fork这个项目
 
 ## 支持一下？（推荐使用支付宝）
-[![点我打钱](https://latopay.com/w/lt-bar-20714.png)](https://ac59075b964b0715.link.6n6n.top/app/index.php?rootid=123&n=qrpay_free)
+[点我打钱](https://ac59075b964b0715.link.6n6n.top/app/index.php?rootid=123&n=qrpay_free)
 
