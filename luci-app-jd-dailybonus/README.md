@@ -4,12 +4,11 @@ Luci for JD dailybonus Script for Openwrt
 
 
 
-### Update Log 2021-03-15  v1.0.4
+### Update Log 2021-03-16  v1.0.5
 
 #### Updates 
 
-- UPD: 增加更多账号功能，双击cookie输入框即可调出二维码，扫码自动填入。【感谢[maple's sky](https://github.com/maplesky)】
-
+- FIX: 修正新的PR依赖jQuery的问题。
 
 详情见[具体日志](./relnotes.txt)。 
 
