@@ -387,6 +387,10 @@ function quectel_data(){
 		SINR=$ECIO
 	fi
 	CHIPTEMP=$(echo "$O" | awk -F[,\ ] '/^\+QTEMP/ {print $2}')
+	# Quectel EM1X modem temp sensors
+	if [ ! $(echo "$CHIPTEMP" | grep "^?[0-9]+$") ]; then
+                CHIPTEMP=$(echo "$O" | awk -F[,\ ] '/^\+QTEMP/ {print $3}' | sed -e 's/\"//g')
+        fi
 }
 # Zte modems
 function zte_data(){
