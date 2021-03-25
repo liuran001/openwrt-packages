@@ -2,8 +2,6 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode_js@1.0.0/qrcode.min.js"></script>
 <style>
     #mask-box {
-        width: 100%;
-        height: 100%;
         z-index: 1000;
         display: flex;
         position: absolute;
@@ -48,9 +46,6 @@
     div[id$="-html"] {
         display: none;
     }
-    div[data-prefix$="Cookies"] {
-        position: relative;
-    }
 </style>
 
 <script type="text/javascript">
@@ -91,19 +86,23 @@
 
     // 二维码层居中
     var center = function() {
-        if ( selector.offsetTop <= 320 ) {
-            code.style.top = selector.offsetTop + selector.offsetHeight + "px";
+        // 调整遮罩层覆盖范围
+        mask.style.width = section.clientWidth + "px";
+        mask.style.height = section.clientHeight + "px";
+        // 二维码层居中
+        var top = selector.offsetTop - selector.parentNode.offsetTop;
+        if ( selector.offsetTop <= 380 ) {
+            code.style.top = top + selector.offsetHeight + "px";
         } else {
-            code.style.top = selector.offsetTop - code.offsetHeight + "px";
+            code.style.top = top - code.offsetHeight + "px";
         }
-        code.style.left = ( ( selector.offsetWidth - code.offsetWidth ) / 2 ) + selector.offsetLeft +  "px";
+        code.style.left = ( ( selector.offsetWidth - code.offsetWidth ) / 2 ) + parseInt( ( selector.currentStyle || window.getComputedStyle( selector ) ).marginLeft ) + "px";
     };
 
     // 获取二维码
     var feedback = function() {
         // 清除二维码
         make.clear();
-
         // 获取通信数据
         XHR.get( '<%=luci.dispatcher.build_url("admin", "services", "jd-dailybonus","qrcode")%>', null, ( x, d ) => {
             if ( x.status != 200 ) {
@@ -114,9 +113,6 @@
             load.remove();
             // 创建二维码
             make.makeCode( d.qrcode_url );
-            // 元素居中
-            center();
-
             // 监听扫码反馈
             XHR.poll( 3, '<%=luci.dispatcher.build_url("admin", "services", "jd-dailybonus","check_login")%>', { check_url: d.check_url }, ( x, d ) => {
                 if ( d.error == 0 ) {
