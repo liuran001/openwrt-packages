@@ -53,7 +53,7 @@
             let p_color = p_colors[n++]
             if (n > 4) { n = 0 }
             let inline_txt = (part.name != '-' && part.name || '') + ' ' + (part.fs != 'Free Space' && part.fs || '') + ' ' + part.size_formated + ' ' + (part.useage != '-' && part.useage || '')
-            let partiton_div = '<div title="' + inline_txt + '" style="display:inline-block; text-align:center;background-color:' + p_color + '; width:' + part_percent + '">' + inline_txt + '</div>'
+            let partiton_div = '<div title="' + inline_txt + '" style="color: #525F7F; display:inline-block; text-align:center;background-color:' + p_color + '; width:' + part_percent + '">' + inline_txt + '</div>'
             partitons_div += partiton_div
           })
           if (item.nodeName == "TR") {
