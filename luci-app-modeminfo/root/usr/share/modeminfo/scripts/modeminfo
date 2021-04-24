@@ -65,6 +65,10 @@ function modem_family() {
 		FAMILY=VODAFONE
 	elif (echo ${DEVICE} | grep -i qua >/dev/null); then
 		FAMILY=QUALCOMM
+	elif (echo ${DEVICE} | grep -i del >/dev/null); then
+		FAMILY=DELL
+	elif (echo "$O" | grep -i xmm >/dev/null); then
+ 		FAMILY=INTEL
 	else
 	        FAMILY=GENERIC
 	fi
@@ -389,7 +393,7 @@ function quectel_data(){
 	CHIPTEMP=$(echo "$O" | awk -F[,\ ] '/^\+QTEMP/ {print $2}')
 	# Quectel EM1X modem temp sensors
 	if [ ! $(echo "$CHIPTEMP" | grep "^?[0-9]+$") ]; then
-                CHIPTEMP=$(echo "$O" | awk -F[,\ ] '/^\+QTEMP/ {print $3}' | sed -e 's/\"//g')
+                CHIPTEMP=$(echo "$O" | awk -F[,\ ] '/^\+QTEMP/ {gsub("\"",""); print $3}')
         fi
 }
 # Zte modems
@@ -452,7 +456,70 @@ function qualcomm_data(){
         CHIPTEMP=$(echo "$O" | awk -F [:] '/tsens_tz_sensor0:/{print $2}')
 }
 
-#generic 3GPP TS 27.007 V10.4.0
+# Dell DW5821 LTE X20 Snapdragon
+function dell_data(){
+	generic_data
+	if [ "$MODE" = "LTE" ]; then
+		EARFCN=$(echo "$O" | awk -F [\:/] '/ARFCN/{gsub(" ","", $3); print $3}')
+		RSRP=$(echo "$O" | awk '/^RSRP/{print $2}' | tr -d "dBm" " " | awk '{printf "%.0f\n", $0}')
+		CSQ_RSSI=$(echo "$O" | awk '/^RSSI/{print $2}' | tr -d "dBm" " " | awk '{printf "%.0f\n", $0}')
+		RSRQ=$(echo  "$O" | awk '/^RSRQ/{print $2}' | tr -d "dB" " " | awk '{printf "%.0f\n", $0}')
+		SINR=$(echo  "$O" | awk '/^RS-SINR/{print $2}' | tr -d "dB" " " | awk '{printf "%.0f\n", $0}')
+		BW=$(echo "$O" |grep -A2 AT^CA_INFO | awk 'NR ==2{print $0}')
+		BWDx=$(echo "$BW" | awk '{printf "%.0f\n",$8}')
+		LTE_CA=$(echo "$O" | awk '/SCC/{print $0}' | wc -l)
+		case $BWDx in
+			3) BWDL=1 ;;
+			5) BWDL=2 ;;
+			10) BWDL=3 ;;
+			15) BWDL=4 ;;
+			20) BWDL=5 ;;
+		esac
+		if [ $LTE_CA -ge 1 ]; then
+                        CA=$(echo "$O" | awk '/SCC/{print $5}')
+                        for cc in $CA; do
+                                SC=$(echo $cc | sed -e 's/LTE_B//g' -e 's/.$//')
+                                SCC="$SCC+$SC"
+                        done
+                        bw=$(echo "$O" |awk '/SCC/{printf "%.0f\n",$8}')
+                        for bwc in $bw; do
+                                bwcc="$bwcc+$bwc"
+                        done
+                        BWCA=$(($BWDx$bwcc))
+                fi
+	else
+		EARFCN=$(echo "$O" | awk -F [\:/] '/Active channel/{gsub(" ","", $2); print $2}')
+		SINR=$(echo "$O" | awk -F [\:./] '/RSSI/{print $5}' | tr -d "dBm\)" " ")
+		
+	fi
+	CHIPTEMP=$(echo "$O" | awk -F [:] '/xo_therm_buf:/{print $2}')
+}
+
+function intel_data(){
+	generic_data
+	DEVx="$(echo "$O" | awk -F [:,] '/CGMI:|GMM:/{gsub("\"|\r","",$0);print substr($2,2);}')"
+	DEVICE=$(echo $DEVx)
+	if [ $MODE = LTE ]; then
+		EARFCN=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $3}')
+		LTE_Cx=$(echo "$O" | awk -F [:,] '/\+XLEC:/{print $3}')
+		LTE_CA=$(($LTE_Cx -1))
+		BWDL=$(echo "$O" | awk -F [:,] '/\+XLEC:/{gsub("\r","",$4); print $4}')
+		RSRP=$(echo "$O" | awk -F [:,] '/\+RSRP:/{printf "%.0f\n", $4}')
+		RSRQ=$(echo "$O" | awk -F [:,] '/\+RSRQ:/{printf "%.0f\n", $4}')
+		case $BWDL in
+			0) N=6 ;;
+			1) N=15 ;;
+			2) N=25 ;;
+			3) N=50 ;;
+			4) N=75 ;;
+			5) N=100 ;;
+		esac
+		CSQ_RSSI=$(echo $RSRP $RSRQ | awk '{printf "%.0f\n", ($1-$2)}')
+		SINx=$(echo "$O" |  awk -F [:,] '/\+XCESQ:/{print $9}')
+		SINR=$(echo $SINx | awk '{printf "%.0f\n", $1/4+5}')
+	fi
+}
+
 function generic_data(){
 	TECH=$(echo "$O" | awk -F[,] '/^\+COPS/ {print $4}')
 	case "$TECH" in
@@ -511,6 +578,18 @@ function get_data_in(){
                         get_csq
                         qualcomm_data
                         get_reg_data
+		;;
+		DELL)
+			get_cops
+			get_csq
+			dell_data
+			get_reg_data
+		;;
+		INTEL)
+			get_cops
+			get_csq
+			intel_data
+			get_reg_data
 		;;
 		*)
 			generic_data

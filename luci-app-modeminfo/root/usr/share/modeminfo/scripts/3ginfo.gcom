@@ -4,6 +4,9 @@ opengt
  set senddelay 0.02
  waitquiet 0.2 0.2
 
+ send "ATI5^m"
+ get 1 "" $k
+
  send "AT\^CURC=0^m"
  waitfor 5 "OK","ERROR"
 
@@ -25,6 +28,8 @@ opengt
  if $toupper($mid($v,0,3)) = "VOD" goto vodafone
  if $toupper($mid($v,0,3)) = "ZTE" goto zte
  if $toupper($mid($v,0,3)) = "QUE" goto quectel
+ if $toupper($mid($v,0,3)) = "DEL" goto dell
+ if $toupper($mid($k,8,3)) = "XMM" goto intel
  goto generic
 
 :simcom
@@ -104,6 +109,51 @@ opengt
  get 1 "" $s
  print $s
  goto next
+
+:dell
+ send "AT\^DEBUG?^m"
+ get 1 "" $s
+ print $s
+
+ send "AT+TEMP^m"
+ get 1 "" $s
+ print $s
+
+ send "AT\^CA_INFO?^m"
+ get 1 "" $s
+ print $s
+ goto next
+
+:intel
+ print "\n",$toupper($mid($k,8,3)),"\n"
+ send "AT+CGMI?^m"
+ get 1 "" $s
+ print $s
+
+ send "AT+GMM?^m"
+ get 1 "" $s
+ print $s
+
+ send "AT+XCESQ?^m"
+ get 1 "" $s
+ print $s
+
+ send "AT+RSRP?^m"
+ get 1 "" $s
+ print $s
+
+ send "AT+RSRQ?^m"
+ get 1 "" $s
+ print $s
+
+ send "AT+XLEC?^m"
+ get 1 "" $s
+ print $s
+
+ send "AT+MTSM=2,10^m"
+ send "AT+MTSM?^m"
+ get 1 "" $s
+ print $s
 
 :zte
  let $c="AT+COPS?^m"

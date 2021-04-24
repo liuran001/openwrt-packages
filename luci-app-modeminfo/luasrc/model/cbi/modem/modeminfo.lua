@@ -6,7 +6,7 @@ require("nixio.fs")
 local m
 local s
 local dev
-local try_port = nixio.fs.glob("/dev/ttyUSB*") or nixio.fs.glob("/dev/ttyACM*")
+local try_port = nixio.fs.glob("/dev/tty[A-Z][A-Z]*")
 
 m = Map("modeminfo", translate("Modeminfo: Configuration"),
 	translate("Configuration panel of Мodeminfo."))
