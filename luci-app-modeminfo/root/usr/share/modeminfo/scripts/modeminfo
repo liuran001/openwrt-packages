@@ -461,10 +461,10 @@ function dell_data(){
 	generic_data
 	if [ "$MODE" = "LTE" ]; then
 		EARFCN=$(echo "$O" | awk -F [\:/] '/ARFCN/{gsub(" ","", $3); print $3}')
-		RSRP=$(echo "$O" | awk '/^RSRP/{print $2}' | tr -d "dBm" " " | awk '{printf "%.0f\n", $0}')
-		CSQ_RSSI=$(echo "$O" | awk '/^RSSI/{print $2}' | tr -d "dBm" " " | awk '{printf "%.0f\n", $0}')
-		RSRQ=$(echo  "$O" | awk '/^RSRQ/{print $2}' | tr -d "dB" " " | awk '{printf "%.0f\n", $0}')
-		SINR=$(echo  "$O" | awk '/^RS-SINR/{print $2}' | tr -d "dB" " " | awk '{printf "%.0f\n", $0}')
+		RSRP=$(echo "$O" | awk '/^RSRP/{gsub("dBm",""); printf "%.0f\n", $2}')
+		CSQ_RSSI=$(echo "$O" | awk '/^RSSI/{gsub("dBm",""); printf "%.0f\n", $2}')
+		RSRQ=$(echo  "$O" | awk '/^RSRQ/{gsub("dB",""); printf "%.0f\n", $2}')
+		SINR=$(echo  "$O" | awk '/^RS-SINR/{gsub("dB",""); printf "%.0f\n", $2}')
 		BW=$(echo "$O" |grep -A2 AT^CA_INFO | awk 'NR ==2{print $0}')
 		BWDx=$(echo "$BW" | awk '{printf "%.0f\n",$8}')
 		LTE_CA=$(echo "$O" | awk '/SCC/{print $0}' | wc -l)
@@ -489,7 +489,7 @@ function dell_data(){
                 fi
 	else
 		EARFCN=$(echo "$O" | awk -F [\:/] '/Active channel/{gsub(" ","", $2); print $2}')
-		SINR=$(echo "$O" | awk -F [\:./] '/RSSI/{print $5}' | tr -d "dBm\)" " ")
+		SINR=$(echo "$O" | awk -F [\:./] '/RSSI/{gsub("dBm",""); print $5}')
 		
 	fi
 	CHIPTEMP=$(echo "$O" | awk -F [:] '/xo_therm_buf:/{print $2}')
