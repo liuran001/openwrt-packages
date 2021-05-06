@@ -1,5 +1,6 @@
 # (c) 2010-2016 Cezary Jackiewicz <cezary@eko.one.pl>
-# (c) 2020 modified by Konstantine Shevlyakov  <shevlakov@132lan.ru>
+# (c) 2020-2021 modified by Konstantine Shevlyakov  <shevlakov@132lan.ru>
+# (c) 2021 modified by Vladislav Kadulin  <spanky@yandex.ru>
 
 
 RES="/usr/share/modeminfo"
@@ -69,6 +70,8 @@ function modem_family() {
 		FAMILY=DELL
 	elif (echo "$O" | grep -i xmm >/dev/null); then
  		FAMILY=INTEL
+ 	elif (echo "$O" | grep -i mik >/dev/null); then
+ 		FAMILY=MIKROTIK
 	else
 	        FAMILY=GENERIC
 	fi
@@ -128,6 +131,33 @@ function get_cops_zte() {
 		COPS_MCC=${COPS_NUM:0:3}
 		COPS_MNC=${COPS_NUM:3:3}
 	fi
+}
+
+# Get MCC and MNC for MikroTik modem 
+function get_cops_mikrotik() {
+	COPS_TMP=$(echo "$O" | awk -F[\"] '/^\+COPS:/ {print $2}')
+	if [ "x$COPS_TMP" != "x" ]; then
+		COPS=$(awk -F[\;] '/'$COPS_TMP'/ {print $2}' $RES/mccmnc.dat)
+	fi
+}
+
+# Get Registarion data MikroTik
+function get_reg_data_mikrotik() {
+	CREG="CREG:"
+	LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/ {printf "%s", toupper($3)}' | sed 's/[^A-F0-9]//g')
+	LAC_NUM=$(printf %d 0x$LAC)
+	CID=$(echo "$O" | awk -F[','] '/\'CREG:'/ {printf "%s", toupper($4)}' | sed 's/[^A-F0-9]//g')
+	ENBx=$(echo $CID | sed -e 's/..$//')
+	ENBID=$(printf %d 0x$ENBx)
+	if [ "x$CID" != "x" ]; then
+		CID_NUM=$(printf %d 0x$CID)
+		if [ ${#CID} -gt 4 ]; then
+			T=$(echo "$CID" | awk '{print substr($1,length(substr($1,1,length($1)-4))+1)}')
+		else
+			T=$CID
+		fi
+	fi
+	REGST=$(echo "$O"  | awk -F[,] '/^\+CREG:/ {print $2}')
 }
 
 # Get Registarion data
@@ -299,7 +329,7 @@ function sierra_data(){
 	CHIPTEMP=$(echo "$O" | awk '/Temperature:/{print $5}')
 }
 
-# Novatel MOdems
+# Novatel modems
 function novatel_data(){
 	# Novatel
 	TECH=$(echo "$O" | awk -F[,\ ] '/^\$CNTI/ {print $4}' | sed 's|/|,|g')
@@ -520,6 +550,52 @@ function intel_data(){
 	fi
 }
 
+# MikroTik R11e-LTE modem (plat.ver."OpenWrt-18.06.7" router: MikroTik RBM33")
+function mikrotik_data() {	
+	TECH=$(echo "$O" | awk -F[,] '/^\+COPS/ {print $4}')
+	case "$TECH" in
+		0*|1*) MODE="GSM";;   # GSM, GSM Compact
+		2*) MODE="UMTS";;     # UTRAN
+		3*) MODE= "EDGE";;    # GSM w/EGPRS
+		4*|5*) MODE="HSDPA";; # UTRAN w/HSDPA, UTRAN w/HSUPA
+		6*) MODE="HSUPA";;    # UTRAN w/HSDPA and HSUPA
+		7*) MODE="LTE";;      # E-UTRAN
+		8*) MODE="HSPA";;     # UTRAN HSPA+
+		 *) MODE="--";;
+	esac
+	DEVx="$(echo "$O" | awk -F [:,] '/CGMI:|GMM:/{gsub("\"|\r","",$0);print substr($2,2);}')"
+	DEVICE=$(echo $DEVx)
+	IMEI=$(echo echo "$O" | awk -F [:,] '/\+CGSN:/{gsub(" ","", $2); print $2}')
+	EEMGSTATE=$(echo "$O" | awk -F[','] '/\+EEMGINFO/ {print $2}')
+	# LTE Engineering Mode
+	if [ $EEMGSTATE -eq 2 ]; then
+		EEMGINFO=$(echo "$O" | awk -F[':'] '/^\+EEMLTESVC:/ {print $2}')
+		if [ "x$EEMGINFO" != "x" ]; then
+			BW=$(echo $EEMGINFO | awk -F[','] '{print $8}')
+			BWDL=$(echo $EEMGINFO | awk -F[','] '{print $9}')
+			RSRP=$(echo $EEMGINFO | awk -F[','] '{print $11}')
+			RSRQ=$(echo $EEMGINFO | awk -F[','] '{print $12}')
+			SINR=$(echo $EEMGINFO | awk -F[','] '{print $13}')
+			EARFCN=$(echo $EEMGINFO | awk -F[','] '{print $6}')
+			COPS_MCC=$(echo $EEMGINFO | awk -F[','] '{print $1}')
+			COPS_MNC=$(echo $EEMGINFO | awk -F[','] '{print $3}')
+			CSQ_RSSI=$(echo $EEMGINFO | awk -F[','] '{print $18}')
+		fi
+	# UMTS Engineering Mode
+	elif [ $EEMGSTATE -eq 1 ]; then
+		COPS_NUM=$(echo "$O" | awk -F[":"] '/^\+EEMUMTSSV:/ {print $2}')
+		if [ "x$EEMGINFO" != "x" ]; then
+			COPS_MCC=$(echo $EEMGINFO | awk -F[','] '{print $11}')
+			COPS_MNC=$(echo $EEMGINFO | awk -F[','] '{print $12}')
+		fi
+	# GSM Engineering Mode
+	elif [ $EEMGSTATE -eq 0 ]; then
+		COPS_NUM=$(echo "$O" | awk -F[":"] '/^\+EEMGINFOSVC:/ {print $2}')
+		COPS_MCC=$(echo $EEMGINFO | awk -F[','] '{print $1}')
+		COPS_MNC=$(echo $EEMGINFO | awk -F[','] '{print $2}')
+	fi
+}
+
 function generic_data(){
 	TECH=$(echo "$O" | awk -F[,] '/^\+COPS/ {print $4}')
 	case "$TECH" in
@@ -590,6 +666,12 @@ function get_data_in(){
 			get_csq
 			intel_data
 			get_reg_data
+		;;
+		MIKROTIK)
+			get_cops_mikrotik
+			get_csq
+			mikrotik_data
+			get_reg_data_mikrotik
 		;;
 		*)
 			generic_data

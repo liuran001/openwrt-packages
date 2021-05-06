@@ -18,6 +18,11 @@ opengt
  gosub readatcmdnr
  let $v=$s
 
+ let $c="AT+CGMI^m"
+ let $r="+CGMI"
+ gosub readatcmd
+ let $t=$s
+
  if $toupper($mid($v,0,3)) = "HUA" goto huawei
  if $toupper($mid($v,0,3)) = "NOK" goto vodafone
  if $toupper($mid($v,0,3)) = "NOV" goto novatel
@@ -30,6 +35,7 @@ opengt
  if $toupper($mid($v,0,3)) = "QUE" goto quectel
  if $toupper($mid($v,0,3)) = "DEL" goto dell
  if $toupper($mid($k,8,3)) = "XMM" goto intel
+ if $toupper($mid($t,9,3)) = "MIK" goto mikrotik
  goto generic
 
 :simcom
@@ -64,6 +70,23 @@ opengt
  gosub readatcmd
 
  send "AT!GSTATUS?^m"
+ get 1 "" $s
+ print $s
+ goto next
+
+:mikrotik
+ # Activate query mode
+ send "AT+EEMOPT=1^m"
+ # Return information of model
+ let $c="AT+CGMM^m"
+ let $r="+CGMM"
+ gosub readatcmd
+ # Return information of serial number
+ let $c="AT+CGSN^m"
+ let $r="+CGSN"
+ gosub readatcmd
+ # Query GSM/UMTS/LTE information in Engineer
+ send "AT+EEMGINFO?^m"
  get 1 "" $s
  print $s
  goto next
