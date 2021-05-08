@@ -359,19 +359,25 @@ function simcom_data(){
 		8*) MODE="LTE";;
 		 *) MODE="--";;
 	esac
-	if [ "$MODE" = "LTE" ]; then
-		EARFCN=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {print $9}')
-		CSQ_RSSI=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", $14/10}')
-		RSRP=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", $13/10}')
-		RSRQ=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", $12/10}')
-		SINR=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", ($15*2)-20}')
-		BWDL=$(echo "$O" |awk -F[,\ ] '/^\+CPSI/ {print $10}')
-		BWUL=$(echo "$O" |awk -F[,\ ] '/^\+CPSI/ {print $11}')
-	else
-		EARFCN=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {print $11}')
-		ECIO=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf"%.0f\n", $13}')
-		SINR="-"$ECIO
-	fi
+	case "$TECH" in
+                8*)
+                        EARFCN=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {print $9}')
+                        CSQ_RSSI=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", $14/10}')
+                        RSRP=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", $13/10}')
+                        RSRQ=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", $12/10}')
+                        SINR=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", ($15*2)-20}')
+                        BWDL=$(echo "$O" |awk -F[,\ ] '/^\+CPSI/ {print $10}')
+                        BWUL=$(echo "$O" |awk -F[,\ ] '/^\+CPSI/ {print $11}')
+                ;;
+                4*|5*|6*|7*)
+                        EARFCN=$(echo "$O" | awk -F[,] '/^\+CPSI/ {print $8}')
+                        ECIO=$(echo "$O" | awk -F[,] '/^\+CPSI/ {printf"%.0f\n", $10}')
+                        SINR="-"$ECIO
+                ;;
+                1*|2*|3*)
+                        EARFCN=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {print $7}')
+                ;;
+        esac
 	CHIPTEMP=$(echo "$O" | awk -F[,\ ] '/^\+CPMUTEMP/ {print $2}')
 }
 # Quectel modems
