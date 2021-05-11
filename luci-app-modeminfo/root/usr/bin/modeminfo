@@ -33,26 +33,7 @@ fi
 
 get_device_info
 get_data_in
-
-# if use ModemManager then get device name via mmcli
-if [ -x /usr/bin/mmcli ] && [ ! -f /tmp/modemdevice ]; then
-	MODEM=$(mmcli -L | awk '{print $1}' | head -1)
-	if [ $MODEM ]; then
-		MANUF=$(mmcli -m $MODEM -J | jsonfilter -e '@["modem"].*["manufacturer"]' | awk '{gsub("\r", ""); print $0}')
-		MODEL=$(mmcli -m $MODEM -J | jsonfilter -e '@["modem"].*["model"]' | awk '{gsub("\r", ""); print $0}')
-		if [ -n "$(echo "$MODEL" | grep "${MANUF}")" ]; then
-			echo "$MODEL" > /tmp/modemdevice
-		else
-			echo "$MANUF $MODEL" > /tmp/modemdevice
-		fi
-	fi
-fi
-if [ -f /tmp/modemdevice ]; then
-	if [ $(cat /tmp/modemdevice | wc -l) = 1 ]; then
-		DEVICE="$(cat /tmp/modemdevice)"
-	fi
-fi
-
+mmcli_name
 if_null
 json_status
 

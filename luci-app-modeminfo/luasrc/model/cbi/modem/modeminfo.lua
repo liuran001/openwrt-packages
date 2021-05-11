@@ -14,6 +14,9 @@ m = Map("modeminfo", translate("Modeminfo: Configuration"),
 s = m:section(TypedSection, "modeminfo")
 s.anonymous = true
 
+name = s:option(Flag, "mmcli_name", translate("Named modem via mmcli"))
+name.rmempty = true
+
 dev = s:option(ListValue, "device", translate("Modeminfo AT-port"),
 	translate("In automatic mode detect first answered AT-port."))
 if try_port then
