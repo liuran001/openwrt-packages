@@ -1,13 +1,13 @@
 # qmi addon for luci-app-modeminfo
-# (c) 2020 written by Konstantine Shevlakov (c) at <shevlakov@132lan.ru>
+# (c) 2020-2021 written by Konstantine Shevlakov (c) at <shevlakov@132lan.ru>
 
 get_device_info(){
         for qmi in $(ls /dev/cdc-wdm*); do
                 if [ $qmi == $(uci -q get modeminfo.@modeminfo[0].device) ]; then
                         QMI_DEVICE=$qmi
                         if [ -n $(which qmicli) ]; then
-                                export QMICTL="qmicli -d ${QMI_DEVICE}"
-                        else i
+                                export QMICTL="qmicli -p -d ${QMI_DEVICE}"
+                        else
                                 logger -t "luci-app-modeminfo" "qmi-utils not found or installed!"
                                 exit 0
                         fi
@@ -20,27 +20,56 @@ get_device_info(){
 
 
 get_hardware_info(){
-        MANUFACTURER=$(${QMICTL} --dms-get-manufacturer | awk -F [:] '/Manufacturer:/{print $2}' | sed -e "s/'//g" -e "s/ *//g")
-        MODEL=`$QMICTL --dms-get-model | awk -F [:] '/Model/{print $2}' | sed "s/'//g" |awk '{print $1}'`
-        DEVICE="${MANUFACTURER} ${MODEL}"
-        IMEI=`$QMICTL --dms-get-ids | awk -F [:] '/IMEI:/{print $2}' | sed -e "s/'//g" -e "s/ *//g"`
+        MANUF=$(${QMICTL} --dms-get-manufacturer | awk -F [:] '/Manufacturer:/{gsub("'\''|^ ", "");print $2}')
+        MODEL="$($QMICTL --dms-get-model | awk -F [:] '/Model/{gsub("'\''|^ ", "");print $2}')"
+	if [ -n "$(echo "${MODEL}" | grep -i ${MANUF})" ]; then
+		DEVICE="${MODEL}"
+	else
+	        DEVICE="${MANUF} ${MODEL}"
+	fi
+        IMEI=`$QMICTL --dms-get-ids | awk -F [:] '/IMEI:/{gsub("'\''|\*", ""); print $2}'`
 }
 
 get_signal_info(){
-        NETWORK=`$QMICTL --nas-get-home-network | awk -F [:] '/MCC|MNC|Description/{print $2}' | sed "s/'//g"`
+        NETWORK=`$QMICTL --nas-get-home-network | awk -F [:] '/MCC|MNC|Description/{gsub("'\''|^ ", "");print $2}'`
         COPS_MCC=$(echo ${NETWORK} |awk '{print $1}')
         COPS_MNC_RAW=$(echo ${NETWORK} |awk '{print $2}')
         if [ $COPS_MNC_RAW -lt 10 ]; then
                 COPS_MNC=0${COPS_MNC_RAW}
-        fi
+        else
+		COPS_MNC=$COPS_MNC_RAW
+	fi
         COPS=$(echo ${NETWORK} |awk '{print $3}')
-        MODE=$($QMICTL --nas-get-signal-info | awk 'NR ==2{print $1}' | sed "s/://g")
-        STRENGTH=`$QMICTL --nas-get-signal-info | awk '/RSSI|RSRQ|RSRP|SNR|ECIO/{print $2}' |sed "s/'//g"`
+	SIGNAL=$($QMICTL --nas-get-signal-info)
+        MODE=$(echo "$SIGNAL" | awk 'NR ==2{gsub("\:", ""); print $1}')
+        STRENGTH=$(echo "$SIGNAL" | awk '/RSSI|RSRQ|RSRP|SNR|ECIO/{gsub("'\''",""); print $2}')
+	SERVING=$($QMICTL --nas-get-serving-system)
+	LACTAC=$(echo "$SERVING" | awk -F [:] '/tracking area code:|3GPP cell ID:/{gsub("'\''",""); print $2}')
+        LAC_NUM=$(echo $LACTAC | awk '{print $2}')
+        LAC=$(echo $LAC_NUM | awk '{printf "%x\n", $1}' |awk '{print toupper($1)}')
+        CID_NUM=$(echo $LACTAC | awk '{print $1}')
+        CID=$(echo $CID_NUM | awk '{printf "%x\n", $1}' |awk '{print toupper($1)}')
         if  [ $MODE == "LTE" ]; then
                 CSQ_RSSI=$(echo ${STRENGTH} | awk '{print $1}')
                 RSRQ=$(echo ${STRENGTH} | awk '{print $2}')
                 RSRP=$(echo ${STRENGTH} | awk '{print $3}')
-                SINR=$(echo ${STRENGTH} | awk '{print $4}')
+                SINR=$(echo ${STRENGTH} | awk '{printf "%.0f\n", $4}')
+		ENBx=$(echo $CID | sed -e 's/..$//')
+		ENBID=$(printf %d 0x$ENBx)
+		BANDCH=$($QMICTL --nas-get-rf-band-info |  awk -F [:] '/Active Band Class:|Active Channel:/{gsub("'\''",""); print $2}')
+		LTE_O=$($QMICTL --nas-get-lte-cphy-ca-info)
+	        LTE_CA=$(echo "$LTE_O" |grep -i '^secondary cell info' | wc -l)
+		BWDL=$(echo "$LTE_O" | grep -A4 'Primary Cell Info' | awk -F [:] '/DL Bandwidth:/{gsub("'\''| ", ""); print $2}')
+		if [ $LTE_CA -ge 1 ]; then
+			BWC=$(echo "$LTE_O" | grep -A4 'Secondary Cell Info' | awk -F [:] '/DL Bandwidth:/{gsub("'\''| ", ""); print $2}')
+			CA=$(echo "$LTE_O" | grep -A4 'Secondary Cell Info' | awk -F [:-]  '/LTE Band:/{gsub("'\''| ", ""); print $NF}')
+			for cc in $CA; do
+				SCC=$SCC+$cc
+			done
+			for BW in $BWC; do
+				BWCA=$(($BWDL+$BW))
+			done
+		fi	
         else
                 CSQ_RSSI=$(echo ${STRENGTH} | awk '{print $1}')
                 SINR=$(echo ${STRENGTH} | awk '{print $2}')
@@ -57,14 +86,8 @@ get_signal_info(){
         elif [ $CSQ_PER -lt 0 ]; then
                 CSQ_PER=0
         fi
-        LACTAC=`$QMICTL --nas-get-serving-system | awk -F [:] '/3GPP location area code:|3GPP cell ID:/{print $2}' | sed "s/'//g"`
-        LAC_NUM=$(echo ${LACTAC} | awk '{print $1}')
-        LAC=$(echo $LAC_NUM | awk '{printf "%x\n", $1}' |awk '{print toupper($1)}')
-        CID_NUM=$(echo ${LACTAC} | awk '{print $2}')
-        CID=$(echo $CID_NUM | awk '{printf "%x\n", $1}' |awk '{print toupper($1)}')
-        BANDCH=$($QMICTL --nas-get-rf-band-info |  awk -F [:] '/Active Band Class:|Active Channel:/{print $2}' | sed "s/'//g")
         EARFCN=$(echo $BANDCH | awk '{print $2}')
-        REG=$($QMICTL --nas-get-serving-system | awk -F [:] '/Registration state:/{print $2}' | sed "s/'//g" | awk '{print $1}')
+        REG=$(echo "$SERVING" | awk -F [:] '/Registration state:/{print $2}' | sed "s/'//g" | awk '{print $1}')
         case $REG in
                 registered)
                         REGST=1
@@ -77,4 +100,8 @@ get_signal_info(){
 function get_data_in(){
         get_hardware_info
         get_signal_info
+}
+
+mmcli_name(){
+	continue
 }
