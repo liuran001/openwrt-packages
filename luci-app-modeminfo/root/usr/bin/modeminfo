@@ -24,8 +24,14 @@ function if_null() {
         done
 }
 
+if [ $(uci -q get modeminfo.@modeminfo[0].qmi_mode) ]; then
+	SCRIPT=/usr/share/modeminfo/scripts/modeminfo-qmi
+else
+	SCRIPT=/usr/share/modeminfo/scripts/modeminfo
+fi
+
 if [ -r /usr/share/modeminfo/scripts/modeminfo ]; then
-	. /usr/share/modeminfo/scripts/modeminfo
+	. $SCRIPT
 else
 	exit 0
 fi
@@ -33,7 +39,6 @@ fi
 
 get_device_info
 get_data_in
-mmcli_name
 if_null
 json_status
 

@@ -92,6 +92,9 @@ get_signal_info(){
                 registered)
                         REGST=1
                 ;;
+		registration-denied)
+			REGST=3
+		;;
         esac
 }
 
