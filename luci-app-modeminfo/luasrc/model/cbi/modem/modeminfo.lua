@@ -14,16 +14,13 @@ m = Map("modeminfo", translate("Modeminfo: Configuration"),
 s = m:section(TypedSection, "modeminfo")
 s.anonymous = true
 
-qmi_mode = s:option(Flag, "qmi_mode", translate("Use QMI"),
-	translate("Get modem data via qmicli"))
-qmi_mode.rmempty = true
-
-name = s:option(Flag, "mmcli_name", translate("Named modem via mmcli"))
+name = s:option(Flag, "mmcli_name", translate("Named modem via mmcli"),
+	translate("Get device model via mmcli utility if aviable."))
 name:depends("qmi_mode", 0)
 name.rmempty = true
 
-dev = s:option(ListValue, "device", translate("Modeminfo AT-port"),
-	translate("In automatic mode detect first answered AT-port."))
+dev = s:option(ListValue, "device", translate("Modeminfo DATA port"),
+	translate("In automatic mode detect first answered DATA port."))
 
 if uci.cursor():get_first("modeminfo", "modeminfo", "qmi_mode") then
 	try_port = nixio.fs.glob("/dev/cdc-wdm*")
@@ -39,5 +36,10 @@ end
 
 dev.default = ""
 dev.rempty = true
+
+qmi_mode = s:option(Flag, "qmi_mode", translate("Use QMI"),
+        translate("Get modem data via qmicli (experimental). qmi-utils will be instelled.<br />Check or uncheck box. After save select DATA port again."))
+qmi_mode.rmempty = true
+
 
 return m

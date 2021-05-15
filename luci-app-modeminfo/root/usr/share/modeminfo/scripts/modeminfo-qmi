@@ -22,7 +22,7 @@ get_device_info(){
 get_hardware_info(){
         MANUF=$(${QMICTL} --dms-get-manufacturer | awk -F [:] '/Manufacturer:/{gsub("'\''|^ ", "");print $2}')
         MODEL="$($QMICTL --dms-get-model | awk -F [:] '/Model/{gsub("'\''|^ ", "");print $2}')"
-	if [ -n "$(echo "${MODEL}" | grep -i ${MANUF})" ]; then
+	if [ -n "$(echo "${MODEL}" | grep -Ei "${MANUF}")" ] || [  -n "$(echo "${MANUF}" | grep -Ei QUAL)" ]; then
 		DEVICE="${MODEL}"
 	else
 	        DEVICE="${MANUF} ${MODEL}"
@@ -44,38 +44,50 @@ get_signal_info(){
         MODE=$(echo "$SIGNAL" | awk 'NR ==2{gsub("\:", ""); print $1}')
         STRENGTH=$(echo "$SIGNAL" | awk '/RSSI|RSRQ|RSRP|SNR|ECIO/{gsub("'\''",""); print $2}')
 	SERVING=$($QMICTL --nas-get-serving-system)
-	LACTAC=$(echo "$SERVING" | awk -F [:] '/tracking area code:|3GPP cell ID:/{gsub("'\''",""); print $2}')
-        LAC_NUM=$(echo $LACTAC | awk '{print $2}')
-        LAC=$(echo $LAC_NUM | awk '{printf "%x\n", $1}' |awk '{print toupper($1)}')
-        CID_NUM=$(echo $LACTAC | awk '{print $1}')
-        CID=$(echo $CID_NUM | awk '{printf "%x\n", $1}' |awk '{print toupper($1)}')
         if  [ $MODE == "LTE" ]; then
+		LACTAC=$(echo "$SERVING" | awk -F [:] '/tracking area code:|3GPP cell ID:/{gsub("'\''",""); print $2}')
+		LAC_NUM=$(echo $LACTAC | awk '{print $2}')
+		CID_NUM=$(echo $LACTAC | awk '{print $1}')
+		CID=$(echo $CID_NUM | awk '{printf "%x\n", $1}' |awk '{print toupper($1)}')
+		LAC=$(echo $LAC_NUM | awk '{printf "%x\n", $1}' |awk '{print toupper($1)}')
                 CSQ_RSSI=$(echo ${STRENGTH} | awk '{print $1}')
                 RSRQ=$(echo ${STRENGTH} | awk '{print $2}')
                 RSRP=$(echo ${STRENGTH} | awk '{print $3}')
                 SINR=$(echo ${STRENGTH} | awk '{printf "%.0f\n", $4}')
 		ENBx=$(echo $CID | sed -e 's/..$//')
 		ENBID=$(printf %d 0x$ENBx)
-		BANDCH=$($QMICTL --nas-get-rf-band-info |  awk -F [:] '/Active Band Class:|Active Channel:/{gsub("'\''",""); print $2}')
 		LTE_O=$($QMICTL --nas-get-lte-cphy-ca-info)
-	        LTE_CA=$(echo "$LTE_O" |grep -i '^secondary cell info' | wc -l)
+	        LTE_CA=$(echo "$LTE_O" |grep -i '^secondary cell' | wc -l)
 		BWDL=$(echo "$LTE_O" | grep -A4 'Primary Cell Info' | awk -F [:] '/DL Bandwidth:/{gsub("'\''| ", ""); print $2}')
 		if [ $LTE_CA -ge 1 ]; then
-			BWC=$(echo "$LTE_O" | grep -A4 'Secondary Cell Info' | awk -F [:] '/DL Bandwidth:/{gsub("'\''| ", ""); print $2}')
-			CA=$(echo "$LTE_O" | grep -A4 'Secondary Cell Info' | awk -F [:-]  '/LTE Band:/{gsub("'\''| ", ""); print $NF}')
+			BWC=$(echo "$LTE_O" | grep -A4 '^Secondary Cell' | awk -F [:] '/DL Bandwidth:/{gsub("'\''| ", ""); printf "+"$2}')
+                        BWCA=$(($BWDL$BWC))
+			BANDCH=$(echo "$LTE_O" | grep -A4 '^Primary Cell' | awk -F [:] '/RX Channel:/{gsub("'\''| ", ""); print $2}')
+			# Fix qmicli band
+			case $MANUF in
+				*DEL*) CA=$(echo "$LTE_O" | grep -A4 '^Secondary Cell' | awk -F [:-]  '/LTE Band:/{gsub("'\''| ", ""); printf " "$NF-1}') ;;
+				*) CA=$(echo "$LTE_O" | grep -A4 '^Secondary Cell' | awk -F [:-]  '/LTE Band:/{gsub("'\''| ", ""); print $NF}') ;;
+			esac
 			for cc in $CA; do
 				SCC=$SCC+$cc
 			done
-			for BW in $BWC; do
-				BWCA=$(($BWDL+$BW))
-			done
+		else
+			BANDCH=$($QMICTL --nas-get-rf-band-info |  awk -F [:] '/Active Channel:/{gsub("'\''",""); print $2}')
 		fi	
+		EARFCN=$BANDCH
         else
+		LACTAC=$(echo "$SERVING" | awk -F [:] '/3GPP location area code:|3GPP cell ID:/{gsub("'\''",""); print $2}')
+		LAC_NUM=$(echo $LACTAC | awk '{print $1}')
+                CID_NUM=$(echo $LACTAC | awk '{print $2}')
+		LAC=$(echo $LAC_NUM | awk '{printf "%x\n", $1}' |awk '{print toupper($1)}')
+		CID=$(echo $CID_NUM | awk '{printf "%x\n", $1}' |awk '{print toupper($1)}')
                 CSQ_RSSI=$(echo ${STRENGTH} | awk '{print $1}')
-                SINR=$(echo ${STRENGTH} | awk '{print $2}')
+		if [ $(echo  ${STRENGTH} | awk '{print$2}') ]; then
+	                SINR=$(echo ${STRENGTH} | awk '{printf "%.0f\n", $2}')
+		fi
+		BANDCH=$($QMICTL --nas-get-rf-band-info |  awk -F [:] '/Active Channel:/{gsub("'\''| ",""); print $2}')
+		EARFCN=$(echo $BANDCH | awk '{print $2}')
         fi
-
-        RSSI_INV=$(echo $CSQ_RSSI | sed "s/-//g")
         CSQ_PER=$(echo $CSQ_RSSI |awk '{printf "%d\n", (100*(1-(-50 - $1)/(-50 - -120)))}')
         [ $CSQ_RSSI -ge -100 ] && CSQ_COL="black"
         [ $CSQ_RSSI -ge -94 ] && CSQ_COL="red"
@@ -86,7 +98,7 @@ get_signal_info(){
         elif [ $CSQ_PER -lt 0 ]; then
                 CSQ_PER=0
         fi
-        EARFCN=$(echo $BANDCH | awk '{print $2}')
+        EARFCN=$BANDCH
         REG=$(echo "$SERVING" | awk -F [:] '/Registration state:/{print $2}' | sed "s/'//g" | awk '{print $1}')
         case $REG in
                 registered)

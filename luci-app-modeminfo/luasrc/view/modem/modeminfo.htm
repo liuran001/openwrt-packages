@@ -183,7 +183,11 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				} else {
 					scc = "";
 					bcc = " B" + band;
-					bca = " (" + bw + " MHz)";
+					if (bw) {
+						bca = " (" + bw + " MHz)";
+					} else{
+						bca = ""
+					}
 					arfcn = data.arfcn + " " + bca;
 					freq = dlfreq + " / " + ulfreq + " MHz"
 				}
@@ -198,7 +202,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				var bcc = " " + band;
 				var freq = dlfreq + " / " + ulfreq + " MHz"
 				var arfcn = data.arfcn;
-				var lactac = data.lac + " / " + data.lac_num;
+				var lactac = data.lac + "  (" + data.lac_num + ")";
 				
 			} else {
 				var namech = "ARFCN";
@@ -207,7 +211,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				var bcc = " " + band;
 				var arfcn = data.arfcn;
 				var freq = dlfreq + " / " + ulfreq + " MHz"
-				var lactac = data.lac + " / " + data.lac_num;
+				var lactac = data.lac + " (" + data.lac_num + ")";
 			}
 
 			// stuff

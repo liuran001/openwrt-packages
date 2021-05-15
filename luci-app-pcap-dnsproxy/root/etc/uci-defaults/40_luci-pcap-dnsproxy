@@ -18,6 +18,12 @@ if [ ."$(uci -q get ${pkgname}.@${type1name}[-1])" != ."${type1name}" ]; then
 		commit $pkgname
 	EOF
 fi
+if [ ."$(uci -q get ${pkgname}.@${type2name}[-1])" != ."${type2name}" ]; then
+	uci -q batch <<-EOF >/dev/null
+		add $pkgname $type2name
+		commit $pkgname
+	EOF
+fi
 if [ ."$(uci -q get ${pkgname}.@${type3name}[-1])" != ."${type3name}" ]; then
 	uci -q batch <<-EOF >/dev/null
 		add $pkgname $type3name
