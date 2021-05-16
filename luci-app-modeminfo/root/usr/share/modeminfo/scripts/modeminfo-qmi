@@ -58,10 +58,17 @@ get_signal_info(){
 		ENBID=$(printf %d 0x$ENBx)
 		LTE_O=$($QMICTL --nas-get-lte-cphy-ca-info)
 	        LTE_CA=$(echo "$LTE_O" |grep -i '^secondary cell' | wc -l)
-		BWDL=$(echo "$LTE_O" | grep -A4 'Primary Cell Info' | awk -F [:] '/DL Bandwidth:/{gsub("'\''| ", ""); print $2}')
+		BWDx=$(echo "$LTE_O" | grep -A4 'Primary Cell Info' | awk -F [:] '/DL Bandwidth:/{gsub("'\''| ", ""); print $2}')
+		case $BWDx in
+                        3) BWDL=1 ;;
+                        5) BWDL=2 ;;
+                        10) BWDL=3 ;;
+                        15) BWDL=4 ;;
+                        20) BWDL=5 ;;
+                esac
 		if [ $LTE_CA -ge 1 ]; then
 			BWC=$(echo "$LTE_O" | grep -A4 '^Secondary Cell' | awk -F [:] '/DL Bandwidth:/{gsub("'\''| ", ""); printf "+"$2}')
-                        BWCA=$(($BWDL$BWC))
+                        BWCA=$(($BWDx$BWC))
 			BANDCH=$(echo "$LTE_O" | grep -A4 '^Primary Cell' | awk -F [:] '/RX Channel:/{gsub("'\''| ", ""); print $2}')
 			# Fix qmicli band
 			case $MANUF in

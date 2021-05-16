@@ -39,6 +39,7 @@ fi
 
 get_device_info
 get_data_in
+mmcli_name
 if_null
 json_status
 
