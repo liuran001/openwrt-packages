@@ -1,12 +1,12 @@
--- Copyright 2008 Yanira <forum-2008@email.de>
--- Licensed to the public under the Apache License 2.0.
+-- Copyright 2020-2021 Rafał Wabik (IceG) - From eko.one.pl forum
+-- Licensed to the GNU General Public License v3.0.
 
 require("nixio.fs")
 
 local m
 local s
 local dev, pin, lang
-local try_devices = nixio.fs.glob("/dev/ttyUSB*") or nixio.fs.glob("/dev/ttyACM*") or nixio.fs.glob("/dev/cdc*")
+local try_devices = nixio.fs.glob("/dev/tty[A-Z][A-Z]*")
 
 m = Map("3ginfo", translate("Configuration 3ginfo"),
 	translate("Configuration panel for the 3ginfo application."))

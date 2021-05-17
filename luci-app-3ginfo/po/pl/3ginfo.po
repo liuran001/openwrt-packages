@@ -76,3 +76,9 @@ msgstr "PIN dla SIM (opcjonalny)"
 #: applications/luci-app-3ginfo/luasrc/model/cbi/modem/3gconfig.lua:31
 msgid "Language"
 msgstr "Język"
+
+msgid "CONNECTED"
+msgstr "Połączony"
+
+msgid "DISCONNECTED"
+msgstr "Rozłączony"

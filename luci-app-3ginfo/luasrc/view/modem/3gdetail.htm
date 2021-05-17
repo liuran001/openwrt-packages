@@ -11,6 +11,14 @@ XHR.poll(0, '<%=build_url("admin/modem/3ginfo/devicedata")%>', null,
 					var icon2;
 					var p = (data.signal);
 
+					// conn data status
+					var conn;
+					var cn = (data.status)
+					if (cn == "CONNECTED")
+					conn = "<%:CONNECTED%>";
+					else
+					conn = "<%:DISCONNECTED%>";
+
 					if (data.signal < 0)
 						icon2 = "<%=resource%>/icons/3ginfo-0.png";
 					else if (data.signal == 0)
@@ -34,7 +42,7 @@ XHR.poll(0, '<%=build_url("admin/modem/3ginfo/devicedata")%>', null,
 			if (e = document.getElementById('statu'))
 				{
 
-						e.innerHTML = (data.status);
+						e.innerHTML = (conn);
 
 				}
 
