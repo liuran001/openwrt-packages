@@ -35,7 +35,7 @@ function get_device_info() {
 }
 
 function get_port() {
-	devices="$(ls /dev/ttyUSB* /dev/cdc-wdm* /dev/ttyACM* /dev/ttyHS* 2>/dev/null | sort -r)"
+	devices="$(ls /dev/ttyUSB* /dev/ttyACM* /dev/ttyHS* 2>/dev/null | sort -r)"
 		for d in $devices; do
 			DEVPORT=$d gcom -s $RES/scripts/probeport.gcom > /dev/null 2>&1
 			if [ $? = 0 ]; then
@@ -167,9 +167,9 @@ function get_cops_mikrotik() {
 # Get Registarion data MikroTik
 function get_reg_data_mikrotik() {
 	CREG="CREG:"
-	LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/ {printf "%s", toupper($3)}' | sed 's/[^A-F0-9]//g')
+	LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($3)}')
 	LAC_NUM=$(printf %d 0x$LAC)
-	CID=$(echo "$O" | awk -F[','] '/\'CREG:'/ {printf "%s", toupper($4)}' | sed 's/[^A-F0-9]//g')
+	CID=$(echo "$O" | awk -F[','] '/\'$CREG:'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($4)}')
 	ENBx=$(echo $CID | sed -e 's/..$//')
 	ENBID=$(printf %d 0x$ENBx)
 	if [ "x$CID" != "x" ]; then
@@ -187,18 +187,18 @@ function get_reg_data_mikrotik() {
 function get_reg_data(){
 	# CREG
 	CREG="+CGREG"
-	LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/ {printf "%s", toupper($3)}' | sed 's/[^A-F0-9]//g')
+	LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($3)}')
 	if [ "x$LAC" != "x" ]; then
 		if [ $MODE = "LTE" ]; then
 			CREG="+CEREG"
 		else
 			CREG="+CGREG"
 		fi
-		LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/ {printf "%s", toupper($3)}' | sed 's/[^A-F0-9]//g')
+		LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($3)}')
 		LAC_NUM=$(printf %d 0x$LAC)
 	fi
 	CREG="+CGREG"
-	CID=$(echo "$O" | awk -F[,] '/\'$CREG'/ {printf "%s", toupper($4)}' | sed 's/[^A-F0-9]//g')
+	CID=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($4)}'
 	ENBx=$(echo $CID | sed -e 's/..$//')
 	ENBID=$(printf %d 0x$ENBx)
 	if [ "x$CID" != "x" ]; then
@@ -317,12 +317,12 @@ function sierra_data(){
 		LTE_CA=$(echo "$O" | awk '/SCC RxM RSSI:/{print $0}' |wc -l)
 		BWDx=$(echo "$O" | awk '/LTE bw/{print $6}')
 		if [ $LTE_CA -ge 1 ]; then
-			CA=$(echo "$O" | awk -F [:] '/LTE Scell band/{print $3}' | sed -e 's/B//g')
+			CA=$(echo "$O" | awk -F [:] '/LTE Scell band/{gsub("B","");print $3}')
 			for cc in "$CA"; do
 				SC=$cc
 				SCC="$SCC+$cc"
 			done
-			bw=$(echo "$O" |awk '/LTE Scell bw:/{print $3}' | sed -e 's/bw://g')
+			bw=$(echo "$O" |awk '/LTE Scell bw:/{gsub("bw:","");print $3}')
 			for bwc in $bw; do	
 				bwcc="$bwcc+$bwc"
 			done
