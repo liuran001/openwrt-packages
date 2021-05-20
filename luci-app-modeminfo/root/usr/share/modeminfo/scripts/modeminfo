@@ -169,7 +169,7 @@ function get_reg_data_mikrotik() {
 	CREG="CREG:"
 	LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($3)}')
 	LAC_NUM=$(printf %d 0x$LAC)
-	CID=$(echo "$O" | awk -F[','] '/\'$CREG:'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($4)}')
+	CID=$(echo "$O" | awk -F[','] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($4)}')
 	ENBx=$(echo $CID | sed -e 's/..$//')
 	ENBID=$(printf %d 0x$ENBx)
 	if [ "x$CID" != "x" ]; then
@@ -198,7 +198,7 @@ function get_reg_data(){
 		LAC_NUM=$(printf %d 0x$LAC)
 	fi
 	CREG="+CGREG"
-	CID=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($4)}'
+	CID=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($4)}')
 	ENBx=$(echo $CID | sed -e 's/..$//')
 	ENBID=$(printf %d 0x$ENBx)
 	if [ "x$CID" != "x" ]; then
