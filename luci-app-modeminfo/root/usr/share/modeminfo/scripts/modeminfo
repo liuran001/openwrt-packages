@@ -164,12 +164,12 @@ function get_cops_mikrotik() {
 	fi
 }
 
-# Get Registarion data MikroTik
+# Get Registration data MikroTik
 function get_reg_data_mikrotik() {
 	CREG="CREG:"
-	LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($3)}')
+	LAC=$(echo "$O" | awk -F[,] '/\'$CEREG:'/ {gsub("^A-F0-9|\"", ""); printf "%s", toupper($3)}')
 	LAC_NUM=$(printf %d 0x$LAC)
-	CID=$(echo "$O" | awk -F[','] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($4)}')
+	CID=$(echo "$O" | awk -F[','] '/\'CEREG:'/ {gsub("^A-F0-9|\"", ""); printf "%s", toupper($4)}')
 	ENBx=$(echo $CID | sed -e 's/..$//')
 	ENBID=$(printf %d 0x$ENBx)
 	if [ "x$CID" != "x" ]; then
@@ -180,10 +180,10 @@ function get_reg_data_mikrotik() {
 			T=$CID
 		fi
 	fi
-	REGST=$(echo "$O"  | awk -F[,] '/^\+CREG:/ {print $2}')
+	REGST=$(echo "$O" | awk -F[,] '/^\+CEREG:/ {print $2}')
 }
 
-# Get Registarion data
+# Get Registration data
 function get_reg_data(){
 	# CREG
 	CREG="+CGREG"
@@ -579,23 +579,46 @@ function intel_data(){
 	fi
 }
 
-# MikroTik R11e-LTE modem (plat.ver."OpenWrt-18.06.7" router: MikroTik RBM33")
+# MikroTik R11e-LTE, R11e-LTE6 modem (plat.ver."OpenWrt-18.06.7" router: MikroTik RBM33")
 function mikrotik_data() {	
 	TECH=$(echo "$O" | awk -F[,] '/^\+COPS/ {print $4}')
+	EEMGSTATE=-1
 	case "$TECH" in
-		0*|1*) MODE="GSM";;   # GSM, GSM Compact
-		2*) MODE="UMTS";;     # UTRAN
-		3*) MODE= "EDGE";;    # GSM w/EGPRS
-		4*|5*) MODE="HSDPA";; # UTRAN w/HSDPA, UTRAN w/HSUPA
-		6*) MODE="HSUPA";;    # UTRAN w/HSDPA and HSUPA
-		7*) MODE="LTE";;      # E-UTRAN
-		8*) MODE="HSPA";;     # UTRAN HSPA+
-		 *) MODE="--";;
+		0*|1*) # GSM, GSM Compact
+			MODE="GSM"
+			EEMGSTATE=0
+		;;   
+		2*) # UTRAN
+			MODE="UMTS" 
+			EEMGSTATE=0
+		;;    
+		3*) # GSM w/EGPRS
+			MODE="EDGE"
+			EEMGSTATE=0
+		;;    
+		4*|5*) # UTRAN w/HSDPA, UTRAN w/HSUPA
+			MODE="HSDPA"
+			EEMGSTATE=1
+		;;
+		6*) # UTRAN w/HSDPA and HSUPA
+			MODE="HSUPA"
+			EEMGSTATE=1
+		;;    
+		7*) # E-UTRAN
+			MODE="LTE"
+			EEMGSTATE=2
+		;;      
+		8*) # UTRAN HSPA+
+			MODE="HSPA"
+			EEMGSTATE=2
+		;;    
+		 *) 
+			MODE="--"
+		;;
 	esac
 	DEVx="$(echo "$O" | awk -F [:,] '/CGMI:|GMM:/{gsub("\"|\r","",$0);print substr($2,2);}')"
 	DEVICE=$(echo $DEVx)
 	IMEI=$(echo echo "$O" | awk -F [:,] '/\+CGSN:/{gsub(" ","", $2); print $2}')
-	EEMGSTATE=$(echo "$O" | awk -F[','] '/\+EEMGINFO/ {print $2}')
 	# LTE Engineering Mode
 	if [ $EEMGSTATE -eq 2 ]; then
 		EEMGINFO=$(echo "$O" | awk -F[':'] '/^\+EEMLTESVC:/ {print $2}')

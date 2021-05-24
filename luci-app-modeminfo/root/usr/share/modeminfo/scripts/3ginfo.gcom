@@ -75,20 +75,35 @@ opengt
  goto next
 
 :mikrotik
- # Activate query mode
- send "AT+EEMOPT=1^m"
- # Return information of model
+ let $c="AT+COPS?^m"
+ let $r="+COPS"
+ gosub readatcmd
+
+ let $c="AT+CEREG?^m"
+ let $r="+CEREG"
+ gosub readatcmd
+# Return information of model
  let $c="AT+CGMM^m"
  let $r="+CGMM"
  gosub readatcmd
- # Return information of serial number
- let $c="AT+CGSN^m"
- let $r="+CGSN"
- gosub readatcmd
- # Query GSM/UMTS/LTE information in Engineer
- send "AT+EEMGINFO?^m"
+# Return information of serial number
+ send "AT+CGSN^m"
  get 1 "" $s
- print $s
+ print '\n',"+CGSN: ",$mid($s,25,18)
+# Activate query mode
+ send "AT+EEMOPT=1^m"
+# Query LTE information in Engineer
+ let $c="AT+EEMGINFO?^m"
+ let $r="+EEMLTESVC:"
+ gosub readatcmd
+# Query UMTS information in Engineer
+ let $c="AT+EEMGINFO?^m"
+ let $r="+EEMUMTSSV:"
+ gosub readatcmd
+# Query GSM information in Engineer
+ let $c="AT+EEMGINFO?^m"
+ let $r="+EEMGINFOSVC:"
+ gosub readatcmd
  goto next
 
 :option
