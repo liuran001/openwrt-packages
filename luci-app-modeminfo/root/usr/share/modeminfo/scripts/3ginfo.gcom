@@ -78,6 +78,10 @@ opengt
  let $c="AT+COPS?^m"
  let $r="+COPS"
  gosub readatcmd
+# Returns received signal quality parameters
+ let $c="AT+CESQ^m"
+ let $r="+CESQ:"
+ gosub readatcmd
 
  let $c="AT+CEREG?^m"
  let $r="+CEREG"

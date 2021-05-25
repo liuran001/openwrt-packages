@@ -554,6 +554,7 @@ function dell_data(){
 	CHIPTEMP=$(echo "$O" | awk -F [:] '/xo_therm_buf:/{print $2}')
 }
 
+# Intel XMM modems (need changes)
 function intel_data(){
 	generic_data
 	DEVx="$(echo "$O" | awk -F [:,] '/CGMI:|GMM:/{gsub("\"|\r","",$0);print substr($2,2);}')"
@@ -619,6 +620,15 @@ function mikrotik_data() {
 	DEVx="$(echo "$O" | awk -F [:,] '/CGMI:|GMM:/{gsub("\"|\r","",$0);print substr($2,2);}')"
 	DEVICE=$(echo $DEVx)
 	IMEI=$(echo echo "$O" | awk -F [:,] '/\+CGSN:/{gsub(" ","", $2); print $2}')
+	CSQ_RSSI=$(echo "$O" | awk -F[':,'] '/^\+CESQ:/ {print $2}')
+	ECIO=$(echo "$O" | awk -F[':,'] '/^\+CESQ:/ {print $5}')
+	# If less than 11 -> error
+	if [ "x$CSQ_RSSI" != "x" ]; then
+		CSQ_RSSI=$(echo $CSQ_RSSI | awk '{if((110 - $1) > 11) print 110 - $1; else print "";}')
+	fi
+	if [ "x$ECIO" != "x" ]; then
+		ECIO=$(echo $ECIO | awk '($1 < 255) {print 25 - $1 * 0.5}')
+	fi
 	# LTE Engineering Mode
 	if [ $EEMGSTATE -eq 2 ]; then
 		EEMGINFO=$(echo "$O" | awk -F[':'] '/^\+EEMLTESVC:/ {print $2}')
@@ -628,10 +638,9 @@ function mikrotik_data() {
 			RSRP=$(echo $EEMGINFO | awk -F[','] '{print $11}')
 			RSRQ=$(echo $EEMGINFO | awk -F[','] '{print $12}')
 			SINR=$(echo $EEMGINFO | awk -F[','] '{print $13}')
-			EARFCN=$(echo $EEMGINFO | awk -F[','] '{print $6}')
 			COPS_MCC=$(echo $EEMGINFO | awk -F[','] '{print $1}')
 			COPS_MNC=$(echo $EEMGINFO | awk -F[','] '{print $3}')
-			CSQ_RSSI=$(echo $EEMGINFO | awk -F[','] '{print $18}')
+			EARFCN=$(echo $EEMGINFO | awk -F[','] '{print $6}')
 		fi
 	# UMTS Engineering Mode
 	elif [ $EEMGSTATE -eq 1 ]; then
@@ -639,12 +648,15 @@ function mikrotik_data() {
 		if [ "x$EEMGINFO" != "x" ]; then
 			COPS_MCC=$(echo $EEMGINFO | awk -F[','] '{print $11}')
 			COPS_MNC=$(echo $EEMGINFO | awk -F[','] '{print $12}')
+			SINR=$ECIO
 		fi
 	# GSM Engineering Mode
 	elif [ $EEMGSTATE -eq 0 ]; then
 		COPS_NUM=$(echo "$O" | awk -F[":"] '/^\+EEMGINFOSVC:/ {print $2}')
-		COPS_MCC=$(echo $EEMGINFO | awk -F[','] '{print $1}')
-		COPS_MNC=$(echo $EEMGINFO | awk -F[','] '{print $2}')
+		if [ "x$EEMGINFO" != "x" ]; then
+			COPS_MCC=$(echo $EEMGINFO | awk -F[','] '{print $1}')
+			COPS_MNC=$(echo $EEMGINFO | awk -F[','] '{print $2}')
+		fi
 	fi
 }
 

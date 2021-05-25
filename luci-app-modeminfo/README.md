@@ -22,7 +22,7 @@ Tested devices:
 
  - Dell DW5821e
  
- - MikroTik R11e-LTE/R11e-LTE6 (LTE only network)
+ - MikroTik R11e-LTE/R11e-LTE6
 
 Сompiled old version https://inf.labz.ru/repo/
 
