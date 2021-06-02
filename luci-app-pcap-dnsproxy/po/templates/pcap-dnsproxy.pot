@@ -51,7 +51,7 @@ msgid ""
 "added preferentially."
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:152
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:169
 msgid "Aliyun"
 msgstr ""
 
@@ -68,7 +68,7 @@ msgid "All request to enable"
 msgstr ""
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:56
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:166
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:183
 msgid "Alternate Data source"
 msgstr ""
 
@@ -84,7 +84,7 @@ msgstr ""
 msgid "Alternate Server Reset Time"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:173
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:190
 msgid "Alternate Update"
 msgstr ""
 
@@ -97,8 +97,8 @@ msgstr ""
 msgid "Auto Update"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:143
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:204
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:160
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:221
 msgid "Cleanup"
 msgstr ""
 
@@ -250,6 +250,10 @@ msgstr ""
 msgid "Enable"
 msgstr ""
 
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:124
+msgid "Enable Proxy"
+msgstr ""
+
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:440
 msgid "Enable request below list"
 msgstr ""
@@ -270,7 +274,7 @@ msgid ""
 "Request - DNSCurve - TCP - UDP"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:150
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:167
 msgid "Fast in China but not provide Zip download"
 msgstr ""
 
@@ -315,7 +319,7 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:151
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:168
 msgid "Gitee"
 msgstr ""
 
@@ -359,7 +363,7 @@ msgstr ""
 msgid "Hello World"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:153
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:170
 msgid "HuaweiCloud"
 msgstr ""
 
@@ -388,7 +392,7 @@ msgstr ""
 msgid "IPv4 Alternate Provider Public Key"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:210
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:227
 msgid "IPv4 Data source"
 msgstr ""
 
@@ -471,7 +475,7 @@ msgstr ""
 msgid "IPv6 Alternate Provider Public Key"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:218
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:235
 msgid "IPv6 Data source"
 msgstr ""
 
@@ -556,18 +560,18 @@ msgid ""
 "DNSCurve + TCP + UDP"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:167
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:184
 msgid "Just in case if you can't use 'git-http'"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:138
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:199
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:244
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:155
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:216
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:261
 msgid "Last update"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:142
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:203
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:159
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:220
 msgid "List Cleanup"
 msgstr ""
 
@@ -614,7 +618,7 @@ msgid "Logfile"
 msgstr ""
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:55
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:149
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:166
 msgid "Main Data source"
 msgstr ""
 
@@ -642,7 +646,7 @@ msgstr ""
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:34
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:36
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:191
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:208
 msgid "None"
 msgstr ""
 
@@ -712,6 +716,14 @@ msgstr ""
 msgid "Proxy mode"
 msgstr ""
 
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:129
+msgid "Proxy protocol"
+msgstr ""
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:136
+msgid "Proxy server"
+msgstr ""
+
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:270
 msgid "Queue"
 msgstr ""
@@ -754,8 +766,8 @@ msgid "RoutingList"
 msgstr ""
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:34
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:192
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:193
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:209
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:210
 msgid "Rules"
 msgstr ""
 
@@ -817,12 +829,12 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:124
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:125
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:181
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:182
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:232
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:233
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:141
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:142
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:198
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:199
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:249
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:250
 msgid "Save & Apply"
 msgstr ""
 
@@ -964,12 +976,12 @@ msgstr ""
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:25
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:49
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:60
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:156
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:174
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:224
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:225
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:248
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:249
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:173
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:191
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:241
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:242
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:265
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:266
 msgid "Update"
 msgstr ""
 

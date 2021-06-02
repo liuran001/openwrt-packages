@@ -121,6 +121,23 @@ aauto_time:value("23", "23:00")
 aauto_time.rmempty = true
 aauto_time:depends("aauto", "1")
 
+proxy_enabled = a:option(Flag, "proxy_enabled", translate("Enable Proxy"))
+proxy_enabled.rmempty = true
+proxy_enabled:depends("aauto", "1")
+proxy_enabled:depends("aauto", "2")
+
+proxy_protocol = a:option(ListValue, "proxy_protocol", translate("Proxy protocol"))
+proxy_protocol:value("http", "HTTP")
+proxy_protocol:value("https", "HTTPS")
+proxy_protocol:value("socks5", "SOCKS5")
+proxy_protocol.rmempty = true
+proxy_protocol:depends("proxy_enabled", "1")
+
+proxy_server = a:option(Value, "proxy_server", translate("Proxy server"))
+proxy_server.placeholder = "192.168.1.10:1080"
+proxy_server.rmempty = true
+proxy_server:depends("proxy_enabled", "1")
+
 aauto_apply = a:option(Button, "_aauto_apply", translate("Save & Apply"))
 aauto_apply.inputtitle = translate("Save & Apply")
 aauto_apply.inputstyle = "apply"

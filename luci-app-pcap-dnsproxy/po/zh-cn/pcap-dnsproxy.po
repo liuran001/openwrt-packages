@@ -56,7 +56,7 @@ msgid ""
 "added preferentially."
 msgstr "启用后将优先添加 'EDNS 客户端子网转发' 参数的 EDNS 子网地址"
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:152
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:169
 msgid "Aliyun"
 msgstr "阿里云"
 
@@ -73,7 +73,7 @@ msgid "All request to enable"
 msgstr "为所有请求启用"
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:56
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:166
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:183
 msgid "Alternate Data source"
 msgstr "备选数据源"
 
@@ -89,7 +89,7 @@ msgstr "备用服务器失败次数阈值"
 msgid "Alternate Server Reset Time"
 msgstr "备用服务器重置切换时间"
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:173
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:190
 msgid "Alternate Update"
 msgstr "备选方式更新"
 
@@ -102,8 +102,8 @@ msgstr "应用到系统"
 msgid "Auto Update"
 msgstr "自动更新"
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:143
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:204
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:160
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:221
 msgid "Cleanup"
 msgstr "清空"
 
@@ -255,6 +255,10 @@ msgstr "文件为空."
 msgid "Enable"
 msgstr "启用"
 
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:124
+msgid "Enable Proxy"
+msgstr "启用代理"
+
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:440
 msgid "Enable request below list"
 msgstr "为下方列表中的请求启用"
@@ -277,7 +281,7 @@ msgstr ""
 "排除格式: All - Local - SOCKS Proxy - HTTP CONNECT Proxy - Direct Request - "
 "DNSCurve - TCP - UDP"
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:150
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:167
 msgid "Fast in China but not provide Zip download"
 msgstr "在中国访问快速但不提供Zip下载"
 
@@ -324,7 +328,7 @@ msgstr "常规"
 msgid "General Settings"
 msgstr "常规设置"
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:151
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:168
 msgid "Gitee"
 msgstr "码云"
 
@@ -368,7 +372,7 @@ msgstr "HTTP CONNECT 协议版本"
 msgid "Hello World"
 msgstr ""
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:153
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:170
 msgid "HuaweiCloud"
 msgstr "华为云"
 
@@ -397,7 +401,7 @@ msgstr "IPv4 备用供应商名称"
 msgid "IPv4 Alternate Provider Public Key"
 msgstr "IPv4 备用供应商公钥"
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:210
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:227
 msgid "IPv4 Data source"
 msgstr "IPv4 数据源"
 
@@ -484,7 +488,7 @@ msgstr "IPv6 备用供应商名称"
 msgid "IPv6 Alternate Provider Public Key"
 msgstr "IPv6 备用供应商公钥"
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:218
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:235
 msgid "IPv6 Data source"
 msgstr "IPv6 数据源"
 
@@ -571,18 +575,18 @@ msgstr ""
 "包含格式: Local + SOCKS Proxy + HTTP CONNECT Proxy + Direct Request + "
 "DNSCurve + TCP + UDP"
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:167
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:184
 msgid "Just in case if you can't use 'git-http'"
 msgstr "以防万一您无法使用 'git-http'"
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:138
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:199
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:244
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:155
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:216
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:261
 msgid "Last update"
 msgstr "最后更新"
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:142
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:203
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:159
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:220
 msgid "List Cleanup"
 msgstr "规则清空"
 
@@ -629,7 +633,7 @@ msgid "Logfile"
 msgstr "日志文件"
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:55
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:149
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:166
 msgid "Main Data source"
 msgstr "主数据源"
 
@@ -659,7 +663,7 @@ msgstr "尚无 pcap-dnsproxy 错误日志！"
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:34
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:36
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:191
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:208
 msgid "None"
 msgstr "无"
 
@@ -729,6 +733,14 @@ msgstr "私有网络模式"
 msgid "Proxy mode"
 msgstr "回环模式"
 
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:129
+msgid "Proxy protocol"
+msgstr "代理协议"
+
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:136
+msgid "Proxy server"
+msgstr "代理服务器"
+
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/general.lua:270
 msgid "Queue"
 msgstr "队列型"
@@ -771,8 +783,8 @@ msgid "RoutingList"
 msgstr "路由规则"
 
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:34
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:192
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:193
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:209
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:210
 msgid "Rules"
 msgstr "条规则"
 
@@ -834,12 +846,12 @@ msgstr "周六"
 msgid "Save"
 msgstr "保存"
 
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:124
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:125
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:181
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:182
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:232
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:233
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:141
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:142
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:198
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:199
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:249
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:250
 msgid "Save & Apply"
 msgstr ""
 
@@ -985,12 +997,12 @@ msgstr "串行不可靠协议端口超时时间"
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:25
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:49
 #: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:60
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:156
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:174
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:224
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:225
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:248
-#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:249
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:173
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:191
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:241
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:242
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:265
+#: applications/luci-app-pcap-dnsproxy/luasrc/model/cbi/pcap-dnsproxy/rules.lua:266
 msgid "Update"
 msgstr "更新"
 
