@@ -18,7 +18,7 @@ function byte_format(byte)
   end
 end
 
-local map_dockerman = Map("dockerman", translate("Docker"), translate("DockerMan is a Simple Docker manager client for LuCI, If you have any issue please visit:") .. " ".. [[<a href="https://github.com/lisaac/luci-app-dockerman" target="_blank">]] ..translate("Github") .. [[</a>]])
+local m = Map("dockerd", translate("Docker"), translate("DockerMan is a Simple Docker manager client for LuCI, If you have any issue please visit:") .. " ".. [[<a href="https://github.com/lisaac/luci-app-dockerman" target="_blank">]] ..translate("Github") .. [[</a>]])
 local docker_info_table = {}
 -- docker_info_table['0OperatingSystem'] = {_key=translate("Operating System"),_value='-'}
 -- docker_info_table['1Architecture'] = {_key=translate("Architecture"),_value='-'}
@@ -31,10 +31,10 @@ docker_info_table['7DockerRootDir'] = {_key=translate("Docker Root Dir"),_value=
 docker_info_table['8IndexServerAddress'] = {_key=translate("Index Server Address"),_value='-'}
 docker_info_table['9RegistryMirrors'] = {_key=translate("Registry Mirrors"),_value='-'}
 
-local s = map_dockerman:section(Table, docker_info_table)
+local s = m:section(Table, docker_info_table)
 s:option(DummyValue, "_key", translate("Info"))
 s:option(DummyValue, "_value")
-s = map_dockerman:section(SimpleSection)
+s = m:section(SimpleSection)
 s.containers_running = '-'
 s.images_used = '-'
 s.containers_total = '-'
@@ -86,7 +86,7 @@ if (require "luci.model.docker").new():_ping().code == 200 then
 end
 s.template = "dockerman/overview"
 
-local section_dockerman = map_dockerman:section(NamedSection, "local", "section", translate("Setting"))
+local section_dockerman = m:section(NamedSection, "dockerman", "section", translate("Setting"))
 section_dockerman:tab("daemon", translate("Docker Daemon"))
 section_dockerman:tab("ac", translate("Access Control"))
 section_dockerman:tab("dockerman",  translate("DockerMan"))
@@ -116,7 +116,7 @@ remote_port.default = "2375"
 -- debug.disabled="false"
 -- local debug_path = section_dockerman:taboption("dockerman", Value, "debug_path", translate("Debug Tempfile Path"), translate("Where you want to save the debug tempfile"))
 
-if nixio.fs.access("/usr/bin/dockerd") then
+-- if nixio.fs.access("/usr/bin/dockerd") then
   local allowed_interface = section_dockerman:taboption("ac", DynamicList, "ac_allowed_interface", translate("Allowed access interfaces"), translate("Which interface(s) can access containers under the bridge network, fill-in Interface Name"))
   local interfaces = luci.sys and luci.sys.net and luci.sys.net.devices() or {}
   for i, v in ipairs(interfaces) do
@@ -132,9 +132,9 @@ if nixio.fs.access("/usr/bin/dockerd") then
     end
   end
 
-  local dockerd_enable = section_dockerman:taboption("daemon", Flag, "daemon_ea", translate("Enable"))
-  dockerd_enable.enabled = "true"
-  dockerd_enable.rmempty = true
+  -- local dockerd_enable = section_dockerman:taboption("daemon", Flag, "daemon_ea", translate("Enable"))
+  -- dockerd_enable.enabled = "true"
+  -- dockerd_enable.rmempty = true
   local data_root = section_dockerman:taboption("daemon", Value, "daemon_data_root", translate("Docker Root Dir"))
   data_root.placeholder = "/opt/docker/"
   local registry_mirrors = section_dockerman:taboption("daemon", DynamicList, "daemon_registry_mirrors", translate("Registry Mirrors"))
@@ -150,5 +150,16 @@ if nixio.fs.access("/usr/bin/dockerd") then
   hosts:value("unix:///var/run/docker.sock", "unix:///var/run/docker.sock")
   hosts:value("tcp://0.0.0.0:2375", "tcp://0.0.0.0:2375")
   hosts.rmempty = true
+-- end
+
+m.on_before_save = function(self)
+  m.uci:set("dockerd", "globals", "hosts", m.uci:get("dockerd", "dockerman", "daemon_hosts"))
+  m.uci:set("dockerd", "globals", "data_root", m.uci:get("dockerd", "dockerman", "daemon_data_root"))
+  m.uci:set("dockerd", "globals", "log_level", m.uci:get("dockerd", "dockerman", "daemon_log_level"))
+  m.uci:set("dockerd", "globals", "registry_mirrors", m.uci:get("dockerd", "dockerman", "daemon_registry_mirrors"))
 end
-return map_dockerman
+
+m.on_after_apply = function(self)
+  luci.util.exec("/etc/init.d/dockerman start")
+end
+return m

@@ -48,11 +48,15 @@ function get_containers()
     -- end
     if v.Ports and next(v.Ports) ~= nil then
       data[index]["_ports"] = nil
+      local ip = require "luci.ip"
       for _,v2 in ipairs(v.Ports) do
-        data[index]["_ports"] = (data[index]["_ports"] and (data[index]["_ports"] .. ", ") or "")
-        .. ((v2.PublicPort and v2.Type and v2.Type == "tcp") and ('<a href="javascript:void(0);" onclick="window.open((window.location.origin.match(/^(.+):\\d+$/) && window.location.origin.match(/^(.+):\\d+$/)[1] || window.location.origin) + \':\' + '.. v2.PublicPort ..', \'_blank\');">') or "")
-        .. (v2.PublicPort and (v2.PublicPort .. ":") or "")  .. (v2.PrivatePort and (v2.PrivatePort .."/") or "") .. (v2.Type and v2.Type or "")
-        .. ((v2.PublicPort and v2.Type and v2.Type == "tcp")and "</a>" or "")
+        -- display ipv4 only
+        if ip.new(v2.IP):is4() then
+          data[index]["_ports"] = (data[index]["_ports"] and (data[index]["_ports"] .. ", ") or "")
+          .. ((v2.PublicPort and v2.Type and v2.Type == "tcp") and ('<a href="javascript:void(0);" onclick="window.open((window.location.origin.match(/^(.+):\\d+$/) && window.location.origin.match(/^(.+):\\d+$/)[1] || window.location.origin) + \':\' + '.. v2.PublicPort ..', \'_blank\');">') or "")
+          .. (v2.PublicPort and (v2.PublicPort .. ":") or "")  .. (v2.PrivatePort and (v2.PrivatePort .."/") or "") .. (v2.Type and v2.Type or "")
+          .. ((v2.PublicPort and v2.Type and v2.Type == "tcp")and "</a>" or "")
+        end
       end
     end
     for ii,iv in ipairs(images) do

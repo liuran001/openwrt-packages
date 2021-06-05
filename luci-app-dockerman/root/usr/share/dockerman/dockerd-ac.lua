@@ -5,7 +5,7 @@ dk = docker.new({socket_path = "/var/run/docker.sock"})
 
 if dk:_ping().code ~= 200 then return end
 containers_list = dk.containers:list({query = {all=true}}).body
-allowed_container = uci:get("dockerman", "local", "ac_allowed_container")
+allowed_container = uci:get("dockerd", "dockerman", "ac_allowed_container")
 
 if not allowed_container or next(allowed_container)==nil then return end
 allowed_ip = {}

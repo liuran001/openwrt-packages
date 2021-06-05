@@ -85,8 +85,10 @@ local get_memory = function(d)
   -- local limit = string.format("%.2f", tonumber(d["memory_stats"]["limit"]) / 1024 / 1024)
   -- local usage = string.format("%.2f", (tonumber(d["memory_stats"]["usage"]) - tonumber(d["memory_stats"]["stats"]["total_cache"])) / 1024 / 1024)
   -- return usage .. "MB / " .. limit.. "MB" 
+  -- luci.util.perror(luci.jsonc.stringify(d))
   local limit =tonumber(d["memory_stats"]["limit"])
-  local usage = tonumber(d["memory_stats"]["usage"]) - tonumber(d["memory_stats"]["stats"]["total_cache"])
+  local usage = tonumber(d["memory_stats"]["usage"])
+  -- - tonumber(d["memory_stats"]["stats"]["total_cache"])
   return usage, limit
 end
 
