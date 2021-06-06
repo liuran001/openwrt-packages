@@ -14,7 +14,7 @@ Tested devices:
 
  - SimCom SIM7600E-H
 
- - Huawei E3372
+ - Huawei E3372/ME909u-521
 
  - Sierra Wireless EM7455
 

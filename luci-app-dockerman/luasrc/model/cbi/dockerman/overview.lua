@@ -42,7 +42,7 @@ s.images_total = '-'
 s.networks_total = '-'
 s.volumes_total = '-'
 local containers_list
--- local socket = luci.model.uci.cursor():get("dockerman", "local", "socket_path")
+-- local socket = luci.model.uci.cursor():get("dockerd", "dockerman", "socket_path")
 if (require "luci.model.docker").new():_ping().code == 200 then
   local dk = docker.new()
   containers_list = dk.containers:list({query = {all=true}}).body
@@ -153,10 +153,21 @@ remote_port.default = "2375"
 -- end
 
 m.on_before_save = function(self)
-  m.uci:set("dockerd", "globals", "hosts", m.uci:get("dockerd", "dockerman", "daemon_hosts"))
-  m.uci:set("dockerd", "globals", "data_root", m.uci:get("dockerd", "dockerman", "daemon_data_root"))
-  m.uci:set("dockerd", "globals", "log_level", m.uci:get("dockerd", "dockerman", "daemon_log_level"))
-  m.uci:set("dockerd", "globals", "registry_mirrors", m.uci:get("dockerd", "dockerman", "daemon_registry_mirrors"))
+  local conf = m.uci:get("dockerd", "dockerman", "daemon_hosts")
+  if conf then
+    m.uci:set("dockerd", "globals", "hosts", conf)
+  else
+    m.uci:delete("dockerd", "globals", "hosts")
+  end
+  conf = m.uci:get("dockerd", "dockerman", "daemon_registry_mirrors")
+  if conf then
+    m.uci:set("dockerd", "globals", "registry_mirrors", conf)
+  else
+    m.uci:delete("dockerd", "globals", "registry_mirrors")
+  end
+  m.uci:set("dockerd", "globals", "data_root", m.uci:get("dockerd", "dockerman", "daemon_data_root") or "/opt/docker")
+  m.uci:set("dockerd", "globals", "log_level", m.uci:get("dockerd", "dockerman", "daemon_log_level") or "warn")
+  -- m.uci:commit("dockerd")
 end
 
 m.on_after_apply = function(self)

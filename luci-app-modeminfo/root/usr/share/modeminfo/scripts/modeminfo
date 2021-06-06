@@ -266,6 +266,11 @@ function huawei_data(){
 		esac
 	fi
 	CHIPTEMP=$(echo "$O" | awk -F[,] '/^\^CHIPTEMP/ {print $4}')
+	# 65535 -> Not supported currently
+	if [ $CHIPTEMP -eq 65535 ]; then
+		# CHIPTEMP for Huawei ME909u-521
+		CHIPTEMP=$(echo "$O" | awk -F[,] '/^\^CHIPTEMP/ {print $6 * 0.1}')
+	fi
 	case $BWDx in
 		1400) BWDL=0 ;;
 		3000) BWDL=1 ;;

@@ -51,7 +51,7 @@ function get_containers()
       local ip = require "luci.ip"
       for _,v2 in ipairs(v.Ports) do
         -- display ipv4 only
-        if ip.new(v2.IP):is4() then
+        if ip.new(v2.IP or "0.0.0.0"):is4() then
           data[index]["_ports"] = (data[index]["_ports"] and (data[index]["_ports"] .. ", ") or "")
           .. ((v2.PublicPort and v2.Type and v2.Type == "tcp") and ('<a href="javascript:void(0);" onclick="window.open((window.location.origin.match(/^(.+):\\d+$/) && window.location.origin.match(/^(.+):\\d+$/)[1] || window.location.origin) + \':\' + '.. v2.PublicPort ..', \'_blank\');">') or "")
           .. (v2.PublicPort and (v2.PublicPort .. ":") or "")  .. (v2.PrivatePort and (v2.PrivatePort .."/") or "") .. (v2.Type and v2.Type or "")
@@ -67,7 +67,24 @@ function get_containers()
     if type(v.Mounts) == "table" and next(v.Mounts) then
       for _, v2 in pairs(v.Mounts) do
         if v2.Type ~= "volume" then
-          data[index]["_mounts"] = (data[index]["_mounts"] and (data[index]["_mounts"] .. "<br>") or "") .. v2.Source .. "￫" .. v2.Destination
+          local v_sorce_d, v_dest_d
+          local v_sorce = ""
+          local v_dest = ""
+          for v_sorce_d in v2["Source"]:gmatch('[^/]+') do
+            if v_sorce_d and #v_sorce_d > 12 then
+              v_sorce = v_sorce .. "/" .. v_sorce_d:sub(1,8) .. ".."
+            else
+              v_sorce = v_sorce .."/".. v_sorce_d
+            end
+          end
+          for v_dest_d in v2["Destination"]:gmatch('[^/]+') do
+            if v_dest_d and #v_dest_d > 12 then
+              v_dest = v_dest .. "/" .. v_dest_d:sub(1,8) .. ".."
+            else
+              v_dest = v_dest .."/".. v_dest_d
+            end
+          end
+          data[index]["_mounts"] = '<span title="'.. v2.Source.. "￫" .. v2.Destination .. '" >' ..(data[index]["_mounts"] and (data[index]["_mounts"] .. "<br>") or "") .. v_sorce .. "￫" .. v_dest..'</span>'
         end
       end
     end

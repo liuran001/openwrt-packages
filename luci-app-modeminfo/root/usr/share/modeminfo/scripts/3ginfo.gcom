@@ -218,11 +218,14 @@ opengt
  let $c="AT\^FHVER^m"
  let $r="\^FHVER"
  gosub readatcmd
+
+ if $s="\nERROR" goto jumprm
 # remove ^FHVER:" from start of string & " from end of string
  let $s=$mid($s,9,len($s)-10)
  gosub strfindfspace
  let $m=$mid($s,0,i)
 
+:jumprm
  let $c="AT\^SYSINFOEX^m"
  let $r="\^SYSINFOEX"
  gosub readatcmd
