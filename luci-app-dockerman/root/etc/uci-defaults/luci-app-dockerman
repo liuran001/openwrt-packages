@@ -1,5 +1,9 @@
 #!/bin/sh
 
+[ -x "$(which dockerd)" ] && chmod +x /etc/init.d/dockerman && /etc/init.d/dockerman enable >/dev/null 2>&1
+sed -i 's/self:cfgvalue(section) or {}/self:cfgvalue(section) or self.default or {}/' /usr/lib/lua/luci/view/cbi/dynlist.htm
+/etc/init.d/uhttpd restart >/dev/null 2>&1
+rm -fr /tmp/luci-indexcache /tmp/luci-modulecache >/dev/null 2>&1
 touch /etc/config/dockerd
 uci -q batch <<-EOF >/dev/null
 	set uhttpd.main.script_timeout="3600"
@@ -11,14 +15,11 @@ uci -q batch <<-EOF >/dev/null
 	set dockerd.dockerman.debug_path='/tmp/.docker_debug'
 	set dockerd.dockerman.remote_endpoint='false'
 
-	set dockerd.dockerman.ac_allowed_interface='br-lan'
+	del_list dockerd.dockerman.ac_allowed_interface='br-lan'
+	add_list dockerd.dockerman.ac_allowed_interface='br-lan'
 
 	set dockerd.dockerman.daemon_data_root='/opt/docker/'
 	set dockerd.dockerman.daemon_log_level='warn'
 	commit dockerd
 EOF 
-[ -x "$(which dockerd)" ] && chmod +x /etc/init.d/dockerman && /etc/init.d/dockerman enable >/dev/null 2>&1
-sed -i 's/self:cfgvalue(section) or {}/self:cfgvalue(section) or self.default or {}/' /usr/lib/lua/luci/view/cbi/dynlist.htm
-/etc/init.d/uhttpd restart >/dev/null 2>&1
-rm -fr /tmp/luci-indexcache /tmp/luci-modulecache >/dev/null 2>&1
 exit 0

@@ -166,6 +166,7 @@ if cmd_line and cmd_line:match("^DOCKERCLI.+") then
 elseif cmd_line and cmd_line:match("^duplicate/[^/]+$") then
   local container_id = cmd_line:match("^duplicate/(.+)")
   create_body = dk:containers_duplicate_config({id = container_id}) or {}
+  luci.util.perror(luci.jsonc.stringify(create_body))
   if not create_body.HostConfig then create_body.HostConfig = {} end
   if next(create_body) ~= nil then
     default_config.name = nil
@@ -203,7 +204,9 @@ elseif cmd_line and cmd_line:match("^duplicate/[^/]+$") then
     if create_body.HostConfig.PortBindings and type(create_body.HostConfig.PortBindings) == "table" then
       default_config.publish = {}
       for k, v in pairs(create_body.HostConfig.PortBindings) do
-        table.insert( default_config.publish, v[1].HostPort..":"..k:match("^(%d+)/.+").."/"..k:match("^%d+/(.+)") )
+        for x, y in ipairs(v) do
+          table.insert( default_config.publish, y.HostPort..":"..k:match("^(%d+)/.+").."/"..k:match("^%d+/(.+)") )
+        end
       end
     end
 

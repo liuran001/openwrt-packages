@@ -13,7 +13,7 @@ for i, v in ipairs(containers_list) do
   for ii, vv in ipairs(allowed_container) do
     if v.Id:sub(1,12) == vv and v.NetworkSettings and v.NetworkSettings.Networks and v.NetworkSettings.Networks.bridge and v.NetworkSettings.Networks.bridge.IPAddress then
       print(v.NetworkSettings.Networks.bridge.IPAddress)
-      luci.util.exec("iptables -I DOCKER-MAN -d "..v.NetworkSettings.Networks.bridge.IPAddress.." -o docker0 -j RETURN")
+      luci.util.exec("iptables -I DOCKER-MAN -d "..v.NetworkSettings.Networks.bridge.IPAddress.." -o docker0 -j ACCEPT")
       table.remove(allowed_container, ii)
     end
   end
