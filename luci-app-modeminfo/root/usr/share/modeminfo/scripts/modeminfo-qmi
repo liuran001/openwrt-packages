@@ -3,27 +3,30 @@
 
 get_device_info(){
 	DEVPORT=$(uci -q get modeminfo.@modeminfo[0].device)
-        for qmi in $(ls /dev/cdc-wdm*); do
-                if [ $qmi == $DEVPORT ]; then
-                        QMI_DEVICE=$qmi
-                        if [ -n $(which qmicli) ]; then
-                                export QMICTL="qmicli -p -d ${QMI_DEVICE}"
-                        else
-                                logger -t "luci-app-modeminfo" "qmi-utils not found or installed!"
-                                exit 0
-                        fi
-                else
-                        logger -t "luci-app-modeminfo" "Device is no QMI mode or not found!"
-                        exit 0
-                fi
-        done
-	if [ ! -n $DERVPORT ]; then
-		if [ $qmi ]; then
-			uci set modeminfo.@modeminfo[0].device="$qmi"
-			uci commit modeminfo
-			break
-		fi
-	fi
+	case $DEVPORT in
+		cdc-wdm*) export QMICTL="qmicli -p -d $DEVPORT" ;;
+		*)
+	        	for qmi in $(ls /dev/cdc-wdm*); do
+        	        	if [ $qmi ]; then
+                	        	QMI_DEVICE=$qmi
+	                	        if [ -n $(which qmicli) ]; then
+        	                	        export QMICTL="qmicli -p -d ${QMI_DEVICE}"
+	                	        else
+		                                logger -t "luci-app-modeminfo" "qmi-utils not found or installed!"
+        		                        exit 0
+	                	        fi
+		                else
+        		                logger -t "luci-app-modeminfo" "Device is no QMI mode or not found!"
+                		        exit 0
+		                fi
+        		done
+			if [ $qmi ]; then
+				uci set modeminfo.@modeminfo[0].device="$qmi"
+				uci commit modeminfo
+				break
+			fi
+		;;
+	esac
 		
 }
 
@@ -105,10 +108,10 @@ get_signal_info(){
 		EARFCN=$(echo $BANDCH | awk '{print $2}')
         fi
         CSQ_PER=$(echo $CSQ_RSSI |awk '{printf "%d\n", (100*(1-(-50 - $1)/(-50 - -120)))}')
-        [ $CSQ_RSSI -ge -100 ] && CSQ_COL="black"
-        [ $CSQ_RSSI -ge -94 ] && CSQ_COL="red"
-        [ $CSQ_RSSI -ge -85 ] && CSQ_COL="orange"
-        [ $CSQ_RSSI -ge -73 ] && CSQ_COL="green"
+        [ $CSQ_RSSI -ge -110 ] && CSQ_COL="black"
+        [ $CSQ_RSSI -ge -105 ] && CSQ_COL="red"
+        [ $CSQ_RSSI -ge -95 ] && CSQ_COL="orange"
+        [ $CSQ_RSSI -ge -75 ] && CSQ_COL="green"
         if [ $CSQ_PER -gt 100 ]; then
                 CSQ_PER=100
         elif [ $CSQ_PER -lt 0 ]; then

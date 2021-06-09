@@ -118,5 +118,5 @@ msgid "Use QMI"
 msgstr "Использовать QMI"
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:41
-msgid "Get modem data via qmicli (experimental). qmi-utils will be instelled.<br />Check or uncheck box. After save select DATA port again."
-msgstr "Получать данные модема через qmicli (экспериментально). qmi-utils должен быть установлен<br />После изменения, выберите порт данных снова."
+msgid "Get modem data via qmicli (experimental). qmi-utils will be installed."
+msgstr "Получать данные модема через qmicli (экспериментально). qmi-utils должен быть установлен."

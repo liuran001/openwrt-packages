@@ -38,7 +38,7 @@ dev.default = ""
 dev.rempty = true
 
 qmi_mode = s:option(Flag, "qmi_mode", translate("Use QMI"),
-        translate("Get modem data via qmicli (experimental). qmi-utils will be instelled.<br />Check or uncheck box. After save select DATA port again."))
+        translate("Get modem data via qmicli (experimental). qmi-utils will be installed."))
 qmi_mode.rmempty = true
 
 
