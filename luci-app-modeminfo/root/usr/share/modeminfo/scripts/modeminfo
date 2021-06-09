@@ -82,21 +82,6 @@ function mmcli_name(){
 	fi
 }
 
-# get path serial port modem
-function getpath() {
-	devname="$(basename "$1")"
-	case "$devname" in
-	'tty'*)
-		devpath="$(readlink -f /sys/class/tty/$devname/device)"
-		P=${devpath%/*/*}
-		;;
-	*)
-		devpath="$(readlink -f /sys/class/usbmisc/$devname/device/)"
-		P=${devpath%/*}
-		;;
-	esac
-}
-
 # get CSQ 
 function get_csq(){
 	CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}')

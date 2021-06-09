@@ -30,7 +30,7 @@ else
 	SCRIPT=/usr/share/modeminfo/scripts/modeminfo
 fi
 
-if [ -r /usr/share/modeminfo/scripts/modeminfo ]; then
+if [ -r $SCRIPT ]; then
 	. $SCRIPT
 else
 	exit 0
