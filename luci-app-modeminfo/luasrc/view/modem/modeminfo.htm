@@ -11,6 +11,57 @@
 
 <script type="text/javascript">//<![CDATA[
 
+	function bar(v, m)
+        {
+                var vn = parseInt(v) || 0;
+                var mn = parseInt(m) || 100;
+		if (vn > -50) { vn = -50 };
+                var pc =  Math.floor(100*(1-(-50 - vn)/(-50 - mn)));
+
+                return String.format(
+                        '<div style="width:100%%; max-width:200px; position:relative; border:1px solid #999999">' +
+                                '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
+                                        '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +
+                                                '<small>%s</small>' +
+                                        '</div>' +
+                                '</div>' +
+                        '</div>', pc, v, m, pc
+                );
+        }
+	
+	function sinr_bar(v, m)                                                                                                                                     
+        {                                                                                                                                                              
+                var vn = parseInt(v) || 0;                                                                                                                             
+                var mn = parseInt(m) || 100;                                                                                                                           
+                var pc = Math.floor(100*(1-(30 - vn)/(20 - mn)));                                                                                                        
+ 
+                return String.format(
+                        '<div style="width:100%%; max-width:200px; position:relative; border:1px solid #999999">' +
+                                '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
+                                        '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +
+                                                '<small>%s</small>' +
+                                        '</div>' +
+                                '</div>' +
+                        '</div>', pc, v, m, pc
+                );
+        }
+
+	function rsrq_bar(v, m)                                                                                                                     
+        {                                                                                                                                           
+                var vn = parseInt(v) || 0;                                                                                                          
+                var mn = parseInt(m) || 100;                                                                                                        
+                var pc = Math.floor(100-(100/mn)*vn);                                                                                               
+                return String.format(                                                                                                               
+                        '<div style="width:100%%; max-width:200px; position:relative; border:1px solid #999999">' +                                 
+                                '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +                   
+                                        '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +           
+                                                '<small>%s</small>' +                                                                               
+                                        '</div>' +                                                                                                  
+                                '</div>' +                                                                                                          
+                        '</div>', pc, v, m, pc                                                                                                      
+                );                                                                                                                                  
+        }
+
 
 XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 		function(x, data)
@@ -242,22 +293,43 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			 	e.innerHTML = String.format(data.csq_per+"%");
 			
 			if (e = document.getElementById('arfcn'))
-	            e.innerHTML = String.format(arfcn);
+				e.innerHTML = String.format(arfcn);
 
 			if (e = document.getElementById('lac'))
 			 	e.innerHTML = String.format(lactac);
 
+			var rssi_min = -110;
 			if (e = document.getElementById('rssi'))
-			 	e.innerHTML = String.format(data.rssi + " dBm");
-
+				if (data.rssi == "--") {
+					e.innerHTML = String.format(data.rssi + " dBm");
+				} else {
+				e.innerHTML = bar(data.rssi + " dBm", rssi_min);
+				}
+			var sinr_min = -20;
 			if (e = document.getElementById('sinr'))
-			 	e.innerHTML = String.format(data.sinr + " dB");
-
+				if (data.sinr == "--") {
+					e.innerHTML = String.format(data.sinr + " dB");
+				} else {
+					if (netmode == "LTE") {
+						e.innerHTML = sinr_bar(data.sinr + " dB", sinr_min);
+					} else {
+						e.innerHTML = rsrq_bar(data.sinr + " dB", sinr_min);
+					}
+				}
+			var rsrp_min = -120;
 			if (e = document.getElementById('rsrp'))
-			 	e.innerHTML = String.format(data.rsrp + " dBm");
-
+				if (data.rsrp == "--") {
+					e.innerHTML = String.format(data.rsrp + " dBm");
+				} else {
+					e.innerHTML = bar(data.rsrp + " dBm", rsrp_min);
+				}
+			var rsrq_min = -20;
 			if (e = document.getElementById('rsrq'))
-			 	e.innerHTML = String.format(data.rsrq + " dB");
+				if (data.rsrq == "--") {
+					e.innerHTML = String.format(data.rsrq + " dB");
+				} else {
+					e.innerHTML = bar(data.rsrq + " dB", rsrq_min);
+				}
 
 			if (e = document.getElementById('imei'))
 			 	e.innerHTML = String.format(data.imei);
