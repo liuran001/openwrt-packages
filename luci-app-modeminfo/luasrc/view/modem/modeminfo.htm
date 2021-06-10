@@ -33,7 +33,7 @@
         {                                                                                                                                                              
                 var vn = parseInt(v) || 0;                                                                                                                             
                 var mn = parseInt(m) || 100;                                                                                                                           
-                var pc = Math.floor(100*(1-(30 - vn)/(20 - mn)));                                                                                                        
+                var pc = Math.floor(100-(100*(1-((mn - vn)/(mn - 30))))); 
  
                 return String.format(
                         '<div style="width:100%%; max-width:200px; position:relative; border:1px solid #999999">' +
@@ -316,7 +316,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 						e.innerHTML = rsrq_bar(data.sinr + " dB", sinr_min);
 					}
 				}
-			var rsrp_min = -120;
+			var rsrp_min = -140;
 			if (e = document.getElementById('rsrp'))
 				if (data.rsrp == "--") {
 					e.innerHTML = String.format(data.rsrp + " dBm");
@@ -328,7 +328,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				if (data.rsrq == "--") {
 					e.innerHTML = String.format(data.rsrq + " dB");
 				} else {
-					e.innerHTML = bar(data.rsrq + " dB", rsrq_min);
+					e.innerHTML = rsrq_bar(data.rsrq + " dB", rsrq_min);
 				}
 
 			if (e = document.getElementById('imei'))
