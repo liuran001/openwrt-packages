@@ -305,14 +305,15 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				} else {
 				e.innerHTML = bar(data.rssi + " dBm", rssi_min);
 				}
-			var sinr_min = -20;
 			if (e = document.getElementById('sinr'))
 				if (data.sinr == "--") {
 					e.innerHTML = String.format(data.sinr + " dB");
 				} else {
 					if (netmode == "LTE") {
+						var sinr_min = -20;
 						e.innerHTML = sinr_bar(data.sinr + " dB", sinr_min);
 					} else {
+						var sinr_min = -24;
 						e.innerHTML = rsrq_bar(data.sinr + " dB", sinr_min);
 					}
 				}

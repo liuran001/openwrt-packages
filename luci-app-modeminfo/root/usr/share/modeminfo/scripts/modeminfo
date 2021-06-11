@@ -520,7 +520,14 @@ function dell_data(){
                 fi
 	else
 		EARFCN=$(echo "$O" | awk -F [\:/] '/Active channel/{gsub(" ","", $2); print $2}')
-		SINR=$(echo "$O" | awk -F [\:./] '/RSSI/{gsub("dBm",""); print $5}')
+		RSCP=$(echo "$O" | awk -F [\:\ ,\)/] '/RSCP/{gsub("dBm|)",""); printf "%.0f\n", $7}')
+                CSQ_RSSI=$(echo "$O" | awk -F [\:\ ,\)/] '/RSSI/{gsub("dBm|)",""); printf "%.0f\n", $7}')
+                SINR=$(echo $CSQ_RSSI $RSCP | awk '{print $2 - $1}')                      
+                if [ $SINR -le -24 ]; then                                    
+                        SINR=-24                            
+                elif [ $SINR -ge 0 ]; then                                      
+                        SINR=0                                                                        
+                fi
 		
 	fi
 	CHIPTEMP=$(echo "$O" | awk -F [:] '/xo_therm_buf:/{print $2}')
