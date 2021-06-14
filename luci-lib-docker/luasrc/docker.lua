@@ -99,7 +99,7 @@ local open_socket = function(req_options)
   end
 end
 
-local send_http_socket = function(docker_socket, req_header, req_body, callback)
+local send_http_socket = function(options, docker_socket, req_header, req_body, callback)
   if docker_socket:send(req_header) == 0 then
     return {
       headers={code=498,message="bad path", protocol="HTTP/1.1"},
@@ -234,7 +234,7 @@ local call_docker = function(options, http_method, api_group, api_action, name_o
   local docker_socket = open_socket(req_options)
 
   if docker_socket then
-    return send_http_socket(docker_socket, req_header, req_body, callback)
+    return send_http_socket(options, docker_socket, req_header, req_body, callback)
   else
     return {
       headers = {code=497, message="bad socket path or host", protocol="HTTP/1.1"},
@@ -335,7 +335,8 @@ gen_api(_docker, "POST", "exec", "resize")
 gen_api(_docker, "GET", "exec", "inspect")
 gen_api(_docker, "GET", "containers", "get_archive")
 gen_api(_docker, "PUT", "containers", "put_archive")
--- TODO: export,attch
+gen_api(_docker, "GET", "containers", "export")
+-- TODO: attch
 
 gen_api(_docker, "GET", "images", "list")
 gen_api(_docker, "POST", "images", "create")

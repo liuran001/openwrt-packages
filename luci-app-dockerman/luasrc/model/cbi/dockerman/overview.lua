@@ -132,9 +132,11 @@ if nixio.fs.access("/usr/bin/dockerd") then
     end
   end
 
-  -- local dockerd_enable = section_dockerman:taboption("daemon", Flag, "daemon_ea", translate("Enable"))
-  -- dockerd_enable.enabled = "true"
-  -- dockerd_enable.rmempty = true
+  local dockerd_enable = section_dockerman:taboption("daemon", Flag, "daemon_ea", translate("Enable"))
+  dockerd_enable.enabled = "true"
+  dockerd_enable.disabled = "false"
+  dockerd_enable.rmempty = true
+
   local data_root = section_dockerman:taboption("daemon", Value, "daemon_data_root", translate("Docker Root Dir"))
   data_root.placeholder = "/opt/docker/"
   local registry_mirrors = section_dockerman:taboption("daemon", DynamicList, "daemon_registry_mirrors", translate("Registry Mirrors"))
@@ -152,7 +154,7 @@ if nixio.fs.access("/usr/bin/dockerd") then
   hosts.rmempty = true
 end
 
-local daemon_changes = false
+local daemon_changes = 0
 
 m.on_before_save = function(self)
   -- daemon {"dockerd":{"dockerman":{"daemon_registry_mirrors":""}}}
@@ -161,25 +163,36 @@ m.on_before_save = function(self)
 
   if m_changes.dockerd.dockerman.daemon_hosts then
     m.uci:set("dockerd", "globals", "hosts", m_changes.dockerd.dockerman.daemon_hosts)
-    daemon_changes = true
+    daemon_changes = 1
   end
   if m_changes.dockerd.dockerman.daemon_registry_mirrors then
     m.uci:set("dockerd", "globals", "registry_mirrors", m_changes.dockerd.dockerman.daemon_registry_mirrors)
-    daemon_changes = true
+    daemon_changes = 1
   end
   if m_changes.dockerd.dockerman.daemon_data_root then
     m.uci:set("dockerd", "globals", "data_root", m_changes.dockerd.dockerman.daemon_data_root)
-    daemon_changes = true
+    daemon_changes = 1
   end
   if m_changes.dockerd.dockerman.daemon_log_level then
     m.uci:set("dockerd", "globals", "log_level", m_changes.dockerd.dockerman.daemon_log_level)
-    daemon_changes = true
+    daemon_changes = 1
+  end
+  if m_changes.dockerd.dockerman.daemon_ea then
+    if m_changes.dockerd.dockerman.daemon_ea == "false" then
+      daemon_changes = -1
+    elseif daemon_changes == 0 then
+      daemon_changes = 1
+    end
   end
 end
 
 m.on_after_commit = function(self)
-  if daemon_changes then
+  if daemon_changes == 1 then
+    luci.util.exec("/etc/init.d/dockerd enable")
     luci.util.exec("/etc/init.d/dockerd restart")
+  elseif daemon_changes == -1 then
+    luci.util.exec("/etc/init.d/dockerd stop")
+    luci.util.exec("/etc/init.d/dockerd disable")
   end
   luci.util.exec("/etc/init.d/dockerman start")
 end

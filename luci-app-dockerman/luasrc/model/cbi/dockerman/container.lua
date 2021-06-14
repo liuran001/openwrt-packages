@@ -191,16 +191,21 @@ btnkill.template = "dockerman/cbi/inlinebutton"
 btnkill.inputtitle=translate("Kill")
 btnkill.inputstyle = "reset"
 btnkill.forcewrite = true
+btnexport=action_section:option(Button, "_export")
+btnexport.template = "dockerman/cbi/inlinebutton"
+btnexport.inputtitle=translate("Export")
+btnexport.inputstyle = "apply"
+btnexport.forcewrite = true
 btnupgrade=action_section:option(Button, "_upgrade")
 btnupgrade.template = "dockerman/cbi/inlinebutton"
 btnupgrade.inputtitle=translate("Upgrade")
 btnupgrade.inputstyle = "reload"
-btnstop.forcewrite = true
+btnupgrade.forcewrite = true
 btnduplicate=action_section:option(Button, "_duplicate")
 btnduplicate.template = "dockerman/cbi/inlinebutton"
 btnduplicate.inputtitle=translate("Duplicate/Edit")
 btnduplicate.inputstyle = "add"
-btnstop.forcewrite = true
+btnduplicate.forcewrite = true
 btnremove=action_section:option(Button, "_remove")
 btnremove.template = "dockerman/cbi/inlinebutton"
 btnremove.inputtitle=translate("Remove")
@@ -227,6 +232,9 @@ btnkill.write = function(self, section)
 end
 btnduplicate.write = function(self, section)
   luci.http.redirect(luci.dispatcher.build_url("admin/docker/newcontainer/duplicate/"..container_id))
+end
+btnexport.write = function(self, section)
+  luci.http.redirect(luci.dispatcher.build_url("admin/docker/container_export/"..container_id))
 end
 
 tab_section = m:section(SimpleSection)

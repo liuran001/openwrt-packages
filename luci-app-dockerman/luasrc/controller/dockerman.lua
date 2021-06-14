@@ -38,6 +38,7 @@ function index()
   entry({"admin","docker","container_stats"},call("action_get_container_stats")).leaf=true
   entry({"admin","docker","container_get_archive"},call("download_archive")).leaf=true
   entry({"admin","docker","container_put_archive"},call("upload_archive")).leaf=true
+  entry({"admin","docker","container_export"},call("export_container")).leaf=true
   entry({"admin","docker","images_save"},call("save_images")).leaf=true
   entry({"admin","docker","images_load"},call("load_images")).leaf=true
   entry({"admin","docker","images_import"},call("import_images")).leaf=true
@@ -170,6 +171,30 @@ function action_confirm()
   luci.http.status(code, msg)
   luci.http.prepare_content("application/json")
   luci.http.write_json({info = data})
+end
+
+function export_container(id)
+  local dk = docker.new()
+  local first
+
+  local cb = function(res, chunk)
+    if res.code == 200 then
+      if not first then
+        first = true
+        luci.http.header('Content-Disposition', 'inline; filename="archive.tar"')
+        luci.http.header('Content-Type', 'application\/x-tar')
+      end
+      luci.ltn12.pump.all(chunk, luci.http.write)
+    else
+      if not first then
+        first = true
+        luci.http.prepare_content("text/plain")
+      end
+      luci.ltn12.pump.all(chunk, luci.http.write)
+    end
+  end
+
+  local res = dk.containers:export({id = id}, cb)
 end
 
 function download_archive()
