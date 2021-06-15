@@ -477,11 +477,12 @@ elseif action == "resources" then
     end
   end
 elseif action == "file" then
-  local filesection= m:section(SimpleSection)
   m.submit = false
   m.reset  = false
-  filesection.template = "dockerman/container_file"
+  local filesection= m:section(SimpleSection)
+  filesection.template = "dockerman/container_file_manager"
   filesection.container = container_id
+  m.redirect = nil
 elseif action == "inspect" then
   local inspectsection= m:section(SimpleSection)
   inspectsection.syslog = luci.jsonc.stringify(container_info, true)

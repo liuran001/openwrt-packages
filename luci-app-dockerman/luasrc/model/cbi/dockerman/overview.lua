@@ -152,48 +152,47 @@ if nixio.fs.access("/usr/bin/dockerd") then
   hosts:value("unix:///var/run/docker.sock", "unix:///var/run/docker.sock")
   hosts:value("tcp://0.0.0.0:2375", "tcp://0.0.0.0:2375")
   hosts.rmempty = true
-end
 
-local daemon_changes = 0
+  local daemon_changes = 0
+  m.on_before_save = function(self)
+    local m_changes = m.uci:changes("dockerd")
+    if not m_changes or not m_changes.dockerd or not m_changes.dockerd.dockerman then return end
 
-m.on_before_save = function(self)
-  -- daemon {"dockerd":{"dockerman":{"daemon_registry_mirrors":""}}}
-  local m_changes = m.uci:changes("dockerd")
-  if not m_changes or not m_changes.dockerd or not m_changes.dockerd.dockerman then return end
-
-  if m_changes.dockerd.dockerman.daemon_hosts then
-    m.uci:set("dockerd", "globals", "hosts", m_changes.dockerd.dockerman.daemon_hosts)
-    daemon_changes = 1
-  end
-  if m_changes.dockerd.dockerman.daemon_registry_mirrors then
-    m.uci:set("dockerd", "globals", "registry_mirrors", m_changes.dockerd.dockerman.daemon_registry_mirrors)
-    daemon_changes = 1
-  end
-  if m_changes.dockerd.dockerman.daemon_data_root then
-    m.uci:set("dockerd", "globals", "data_root", m_changes.dockerd.dockerman.daemon_data_root)
-    daemon_changes = 1
-  end
-  if m_changes.dockerd.dockerman.daemon_log_level then
-    m.uci:set("dockerd", "globals", "log_level", m_changes.dockerd.dockerman.daemon_log_level)
-    daemon_changes = 1
-  end
-  if m_changes.dockerd.dockerman.daemon_ea then
-    if m_changes.dockerd.dockerman.daemon_ea == "false" then
-      daemon_changes = -1
-    elseif daemon_changes == 0 then
+    if m_changes.dockerd.dockerman.daemon_hosts then
+      m.uci:set("dockerd", "globals", "hosts", m_changes.dockerd.dockerman.daemon_hosts)
       daemon_changes = 1
     end
+    if m_changes.dockerd.dockerman.daemon_registry_mirrors then
+      m.uci:set("dockerd", "globals", "registry_mirrors", m_changes.dockerd.dockerman.daemon_registry_mirrors)
+      daemon_changes = 1
+    end
+    if m_changes.dockerd.dockerman.daemon_data_root then
+      m.uci:set("dockerd", "globals", "data_root", m_changes.dockerd.dockerman.daemon_data_root)
+      daemon_changes = 1
+    end
+    if m_changes.dockerd.dockerman.daemon_log_level then
+      m.uci:set("dockerd", "globals", "log_level", m_changes.dockerd.dockerman.daemon_log_level)
+      daemon_changes = 1
+    end
+    if m_changes.dockerd.dockerman.daemon_ea then
+      if m_changes.dockerd.dockerman.daemon_ea == "false" then
+        daemon_changes = -1
+      elseif daemon_changes == 0 then
+        daemon_changes = 1
+      end
+    end
+  end
+
+  m.on_after_commit = function(self)
+    if daemon_changes == 1 then
+      luci.util.exec("/etc/init.d/dockerd enable")
+      luci.util.exec("/etc/init.d/dockerd restart")
+    elseif daemon_changes == -1 then
+      luci.util.exec("/etc/init.d/dockerd stop")
+      luci.util.exec("/etc/init.d/dockerd disable")
+    end
+    luci.util.exec("/etc/init.d/dockerman start")
   end
 end
 
-m.on_after_commit = function(self)
-  if daemon_changes == 1 then
-    luci.util.exec("/etc/init.d/dockerd enable")
-    luci.util.exec("/etc/init.d/dockerd restart")
-  elseif daemon_changes == -1 then
-    luci.util.exec("/etc/init.d/dockerd stop")
-    luci.util.exec("/etc/init.d/dockerd disable")
-  end
-  luci.util.exec("/etc/init.d/dockerman start")
-end
 return m
