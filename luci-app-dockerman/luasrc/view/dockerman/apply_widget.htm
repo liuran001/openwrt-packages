@@ -135,6 +135,9 @@ var buttons = document.querySelectorAll('input[type="submit"]');
 [].slice.call(buttons).forEach(function (el) {
   el.onclick = fnSubmitForm.bind(this, el);
 });
+if(typeof(fnWindowLoad) == "function"){
+  fnWindowLoad()
+}
 }
 
 //]]></script>
