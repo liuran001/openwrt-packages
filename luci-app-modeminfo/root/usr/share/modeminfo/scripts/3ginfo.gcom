@@ -172,30 +172,30 @@ opengt
  get 1 "" $s
  print $s
 
- send "AT+GMM?^m"
- get 1 "" $s
- print $s
+ let $c="AT+GMM?^m"
+ let $r="+GMM"
+ gosub readatcmd
 
- send "AT+XCESQ?^m"
- get 1 "" $s
- print $s
+ let $c="AT+XCESQ?^m"
+ let $r="+XCESQ"
+ gosub readatcmd
 
- send "AT+RSRP?^m"
- get 1 "" $s
- print $s
+ let $c="AT+RSRP?^m"
+ let $r="+RSRP"
+ gosub readatcmd
 
- send "AT+RSRQ?^m"
- get 1 "" $s
- print $s
+ let $c="AT+RSRQ?^m"
+ let $r="+RSRQ"
+ gosub readatcmd
 
- send "AT+XLEC?^m"
- get 1 "" $s
- print $s
+ let $c="AT+XLEC?^m"
+ let $r="+XLEC"
+ gosub readatcmd
 
- send "AT+MTSM=2,10^m"
- send "AT+MTSM?^m"
- get 1 "" $s
- print $s
+ let $c="AT+MTSM?^m"
+ let $r="+MTSM"
+ gosub readatcmd
+ goto next
 
 :zte
  let $c="AT+COPS?^m"

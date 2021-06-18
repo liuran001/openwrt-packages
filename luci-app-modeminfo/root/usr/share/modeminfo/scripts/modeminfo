@@ -14,6 +14,10 @@ function get_device_info() {
         esac
 	O=$(gcom -d $DEVPORT -s $GSCRIPT 2>/dev/null)
 	IMEI=$(echo "$O" | awk -F[:] '/IMEI/ { print $2}')
+	case $IMEI in
+		[0-9][0-9]*) continue ;;
+		*) IMEI="" ;;
+	esac
 }
 
 function get_port() {
@@ -537,7 +541,7 @@ function dell_data(){
 function intel_data(){
 	generic_data
 	DEVx="$(echo "$O" | awk -F [:,] '/CGMI:|GMM:/{gsub("\"|\r","",$0);print substr($2,2);}')"
-	DEVICE=$(echo $DEVx)
+	DEVICE=$(echo $DEVx | awk '{print $2" "$3" "$4" "$5}')
 	if [ $MODE = LTE ]; then
 		EARFCN=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $3}')
 		LTE_Cx=$(echo "$O" | awk -F [:,] '/\+XLEC:/{print $3}')
@@ -545,17 +549,54 @@ function intel_data(){
 		BWDL=$(echo "$O" | awk -F [:,] '/\+XLEC:/{gsub("\r","",$4); print $4}')
 		RSRP=$(echo "$O" | awk -F [:,] '/\+RSRP:/{printf "%.0f\n", $4}')
 		RSRQ=$(echo "$O" | awk -F [:,] '/\+RSRQ:/{printf "%.0f\n", $4}')
-		case $BWDL in
-			0) N=6 ;;
-			1) N=15 ;;
-			2) N=25 ;;
-			3) N=50 ;;
-			4) N=75 ;;
-			5) N=100 ;;
-		esac
+		BWCx=$(echo "$O" | awk -F [:,] '/\+XLEC/{gsub("\r",""); print $4" "$5" "$6" "$7" "$8}')
+		for ca in $BWCx; do
+			case $BWCx in
+				1) N=3 ;;
+				2) N=5 ;;
+				3) N=10 ;;
+				4) N=15 ;;
+				5) N=20 ;;
+				*) N=0 ;;
+			esac
+			BWCA=$(($BWCA+$N))
+		done
+		case $LTE_CA in                           
+                        1) SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6}') ;;          
+                        2) SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6" "$9}') ;;
+                        3) SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6" "$9" "$12}') ;;
+                        4) SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6" "$9" "$12" "$15}') ;;
+                esac
+                for sca in $SCx; do           
+                        if [ $sca -ge 0 ] && [ $sca -le 599 ]; then
+                                SC=1
+                        elif [ $sca -ge 1200 ] && [ $sca -le 1949 ]; then
+                                SC=3                              
+                        elif [ $sca -ge 2750 ] && [ $sca -le 3449 ]; then
+                                SC=7
+                        elif [ $sca -ge 6150 ] && [ $sca -le 6449 ]; then
+                                SC=20
+                        elif [ $sca -ge 9870 ] && [ $sca -le 9919 ]; then
+                                SC=31
+                        elif [ $sca -ge 33750 ] && [ $sca -le 38249 ]; then
+                                SC=38    
+                        elif  [ $sca -ge 38650 ] && [ $sca -le 39649 ]; then
+                                SC=40
+                        fi
+                        SCC=$SCC+$SC
+                done
 		CSQ_RSSI=$(echo $RSRP $RSRQ | awk '{printf "%.0f\n", ($1-$2)}')
-		SINx=$(echo "$O" |  awk -F [:,] '/\+XCESQ:/{print $9}')
-		SINR=$(echo $SINx | awk '{printf "%.0f\n", $1/4+5}')
+		CSQ_PER=$(echo $CSQ_RSSI |awk '{printf "%d\n", (100*(1-(-50 - $1)/(-50 - -120)))}')
+		[ $CSQ_RSSI -ge -110 ] && CSQ_COL="black"
+		[ $CSQ_RSSI -ge -105 ] && CSQ_COL="red"
+		[ $CSQ_RSSI -ge -95 ] && CSQ_COL="orange"
+		[ $CSQ_RSSI -ge -75 ] && CSQ_COL="green"
+		if [ $CSQ_PER -gt 100 ]; then
+			CSQ_PER=100
+		elif [ $CSQ_PER -lt 0 ]; then
+			CSQ_PER=0
+		fi
+		SINR=$(echo "$O" |  awk -F [:,] '/\+XCESQ:/{printf "%.0f\n", ($9/4+5)}')
 	fi
 }
 
