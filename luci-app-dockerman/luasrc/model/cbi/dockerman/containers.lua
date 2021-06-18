@@ -28,11 +28,12 @@ function get_containers()
     data[index]["_selected"] = 0
     data[index]["_id"] = v.Id:sub(1,12)
     -- data[index]["name"] = v.Names[1]:sub(2)
-    data[index]["_name"] = '<a href='..luci.dispatcher.build_url("admin/docker/container/"..v.Id)..'  class="dockerman_link" title="'..translate("Container detail")..'">'.. v.Names[1]:sub(2).."</a>"
     data[index]["_status"] = v.Status
     if v.Status:find("^Up") then
-      data[index]["_status"] = '<font color="green">'.. data[index]["_status"] .. "</font>" .. "<br><font color='#9f9f9f' class='container_cpu_status'></font><br><font color='#9f9f9f' class='container_mem_status'></font><br><font color='#9f9f9f' class='container_network_status'></font>"
+      data[index]["_name"] = "<font color='green'>"..v.Names[1]:sub(2).."</font>"
+      data[index]["_status"] = "<a href='"..luci.dispatcher.build_url("admin/docker/container/"..v.Id).."/stats'><font color='green'>".. data[index]["_status"] .. "</font>" .. "<br><font color='#9f9f9f' class='container_cpu_status'></font><br><font color='#9f9f9f' class='container_mem_status'></font><br><font color='#9f9f9f' class='container_network_status'></font></a>"
     else
+      data[index]["_name"] = "<font color='red'>"..v.Names[1]:sub(2).."</font>"
       data[index]["_status"] = '<font class="container_not_running" color="red">'.. data[index]["_status"] .. "</font>"
     end
     if (type(v.NetworkSettings) == "table" and type(v.NetworkSettings.Networks) == "table") then
@@ -64,7 +65,7 @@ function get_containers()
         data[index]["_image"] = iv.RepoTags and iv.RepoTags[1] or (iv.RepoDigests[1]:gsub("(.-)@.+", "%1") .. ":<none>")
       end
     end
-    data[index]["_id_name"] = data[index]["_name"] .. "<br><font color='#9f9f9f'>ID: " ..  data[index]["_id"] .. "</font><br>Image: " .. data[index]["_image"]
+    data[index]["_id_name"] = '<a href='..luci.dispatcher.build_url("admin/docker/container/"..v.Id)..'  class="dockerman_link" title="'..translate("Container detail")..'">'.. data[index]["_name"] .. "<br><font color='#9f9f9f'>ID: " ..  data[index]["_id"] .. "</font></a><br>Image: " .. data[index]["_image"]
 
     if type(v.Mounts) == "table" and next(v.Mounts) then
       for _, v2 in pairs(v.Mounts) do
@@ -86,7 +87,7 @@ function get_containers()
               v_dest = v_dest .."/".. v_dest_d
             end
           end
-          data[index]["_mounts"] = '<span title="'.. v2.Source.. "￫" .. v2.Destination .. '" >' ..(data[index]["_mounts"] and (data[index]["_mounts"] .. "<br>") or "") .. v_sorce .. "￫" .. v_dest..'</span>'
+          data[index]["_mounts"] = (data[index]["_mounts"] and (data[index]["_mounts"] .. "<br>") or "") .. '<span title="'.. v2.Source.. "￫" .. v2.Destination .. '" ><a href="'..luci.dispatcher.build_url("admin/docker/container/"..v.Id)..'/file?path='..v2["Destination"]..'">' .. v_sorce .. "￫" .. v_dest..'</a></span>'
         end
       end
     end
@@ -113,8 +114,7 @@ if docker_status.err then docker:clear_status() end
 c_table = m:section(Table, c_lists, translate("Containers"))
 c_table.nodescr=true
 c_table.config="containers"
--- v.template = "cbi/tblsection"
--- v.sortable = true
+
 container_selecter = c_table:option(Flag, "_selected","")
 container_selecter.disabled = 0
 container_selecter.enabled = 1

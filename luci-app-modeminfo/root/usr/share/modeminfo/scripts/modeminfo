@@ -165,10 +165,12 @@ function get_reg_data(){
 		else
 			CREG="+CGREG"
 		fi
-		LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($3)}')
-		LAC_NUM=$(printf %d 0x$LAC)
+	else
+		CREG="+CREG"
 	fi
-	CREG="+CGREG"
+	LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($3)}')
+	LAC_NUM=$(printf %d 0x$LAC)
+	#CREG="+CGREG"
 	CID=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($4)}')
 	ENBx=$(echo $CID | sed -e 's/..$//')
 	ENBID=$(printf %d 0x$ENBx)
@@ -180,7 +182,7 @@ function get_reg_data(){
 			T=$CID
 		fi
 	fi
-	REGST=$(echo "$O" | awk -F[,] '/^\+CGREG/ {print $2}')
+	REGST=$(echo "$O" | awk -F[,] '/\'$CREG'/ {print $2}')
 }
 
 # Huawei modems
@@ -541,7 +543,7 @@ function dell_data(){
 function intel_data(){
 	generic_data
 	DEVx="$(echo "$O" | awk -F [:,] '/CGMI:|GMM:/{gsub("\"|\r","",$0);print substr($2,2);}')"
-	DEVICE=$(echo $DEVx | awk '{print $2" "$3" "$4" "$5}')
+	DEVICE=$(echo $DEVx)
 	if [ $MODE = LTE ]; then
 		EARFCN=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $3}')
 		LTE_Cx=$(echo "$O" | awk -F [:,] '/\+XLEC:/{print $3}')
@@ -574,11 +576,13 @@ function intel_data(){
                                 SC=3                              
                         elif [ $sca -ge 2750 ] && [ $sca -le 3449 ]; then
                                 SC=7
+			elif [ $sca -ge 3450 ] && [ $sca -le 3799 ]; then
+				SC=8
                         elif [ $sca -ge 6150 ] && [ $sca -le 6449 ]; then
                                 SC=20
                         elif [ $sca -ge 9870 ] && [ $sca -le 9919 ]; then
                                 SC=31
-                        elif [ $sca -ge 33750 ] && [ $sca -le 38249 ]; then
+                        elif [ $sca -ge 37750 ] && [ $sca -le 38249 ]; then
                                 SC=38    
                         elif  [ $sca -ge 38650 ] && [ $sca -le 39649 ]; then
                                 SC=40
@@ -596,7 +600,20 @@ function intel_data(){
 		elif [ $CSQ_PER -lt 0 ]; then
 			CSQ_PER=0
 		fi
-		SINR=$(echo "$O" |  awk -F [:,] '/\+XCESQ:/{printf "%.0f\n", ($9/4+5)}')
+		SINx=$(echo "$O" | awk -F [:,] '/\+XCESQ:/{print $9}')
+		if [ $SINx -eq 99 ]; then
+			SINR=""
+		else
+			SINR=$(echo "$O" |  awk -F [:,] '/\+XCESQ:/{printf "%.0f\n", ($9/4+5)}')
+		fi
+	else
+		EARFCN=$(echo "$O" | awk -F [:,] '/\+RSCP:/{print $3}')
+		SINx=$(echo "$O" | awk -F [:,] '/\+XCESQ:/{print $6}')
+		if [ $SINx -eq 99 ]; then
+			SINR=""
+		else
+			SINR=$(echo "$O" | awk -F [:,] '/\+XCESQ:/{printf "%.0f\n", ($6-50)/2}')
+		fi
 	fi
 }
 

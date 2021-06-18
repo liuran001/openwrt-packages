@@ -168,9 +168,6 @@ opengt
 
 :intel
  print "\n",$toupper($mid($k,8,3)),"\n"
- send "AT+CGMI?^m"
- get 1 "" $s
- print $s
 
  let $c="AT+GMM?^m"
  let $r="+GMM"
@@ -186,6 +183,10 @@ opengt
 
  let $c="AT+RSRQ?^m"
  let $r="+RSRQ"
+ gosub readatcmd
+
+ let $c="AT+RSCP?^m"
+ let $r="+RSCP"
  gosub readatcmd
 
  let $c="AT+XLEC?^m"
