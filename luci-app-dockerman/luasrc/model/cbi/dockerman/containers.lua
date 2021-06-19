@@ -156,7 +156,7 @@ local start_stop_remove = function(m,cmd)
   for _, c_table_sid in ipairs(c_table_sids) do
     -- 得到选中项的名字
     if c_lists[c_table_sid]._selected == 1 then
-      c_selected[#c_selected+1] = c_lists[c_table_sid].name --container_name:cfgvalue(c_table_sid)
+      c_selected[#c_selected+1] = c_lists[c_table_sid]["_id"] --container_name:cfgvalue(c_table_sid)
     end
   end
   if #c_selected >0 then

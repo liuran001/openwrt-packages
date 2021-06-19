@@ -553,7 +553,7 @@ function intel_data(){
 		RSRQ=$(echo "$O" | awk -F [:,] '/\+RSRQ:/{printf "%.0f\n", $4}')
 		BWCx=$(echo "$O" | awk -F [:,] '/\+XLEC/{gsub("\r",""); print $4" "$5" "$6" "$7" "$8}')
 		for ca in $BWCx; do
-			case $BWCx in
+			case $ca in
 				1) N=3 ;;
 				2) N=5 ;;
 				3) N=10 ;;
