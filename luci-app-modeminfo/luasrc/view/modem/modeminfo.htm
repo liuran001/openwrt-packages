@@ -324,7 +324,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 					e.innerHTML = bar(data.rssi + " dBm", rssi_min);
 				}
 			if (e = document.getElementById('sinr'))
-				if (data.sinr == "--") {
+				if (data.sinr == "--" || netmode == "--") {
 					e.innerHTML = String.format(data.sinr + " dB");
 				} else {
 					if (netmode == "LTE") {
