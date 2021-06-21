@@ -170,6 +170,7 @@ function get_reg_data(){
 	fi
 	LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($3)}')
 	LAC_NUM=$(printf %d 0x$LAC)
+	REGST=$(echo "$O" | awk -F[,] '/\'$CREG'/ {print $2}')
 	CREG="+CREG"
 	CID=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($4)}')
 	ENBx=$(echo $CID | sed -e 's/..$//')
@@ -182,7 +183,6 @@ function get_reg_data(){
 			T=$CID
 		fi
 	fi
-	REGST=$(echo "$O" | awk -F[,] '/\'$CREG'/ {print $2}')
 }
 
 # Huawei modems
