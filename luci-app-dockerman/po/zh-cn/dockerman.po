@@ -468,3 +468,6 @@ msgstr "添加到容器的内核功能列表"
 
 msgid "Sysctls (kernel parameters) options"
 msgstr "Sysctls（内核参数）选项"
+
+msgid "Contaienr Info"
+msgstr "容器信息"

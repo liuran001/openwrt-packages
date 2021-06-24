@@ -478,10 +478,10 @@ m.handle = function(self, state, data)
   local network = data.network
   local ip = (network ~= "bridge" and network ~= "host" and network ~= "none") and data.ip or nil
   local volume = data.volume
-  local memory = data.memory or 0
-  local cpu_shares = data.cpu_shares or 0
-  local cpus = data.cpus or 0
-  local blkio_weight = data.blkio_weight or 500
+  local memory = data.memory or nil
+  local cpu_shares = data.cpu_shares or nil
+  local cpus = data.cpus or nil
+  local blkio_weight = data.blkio_weight or nil
 
   local portbindings = {}
   local exposedports = {}
@@ -545,7 +545,7 @@ m.handle = function(self, state, data)
       command[#command+1] = v
     end 
   end
-  if memory ~= 0 then
+  if memory and memory ~= 0 then
     _,_,n,unit = memory:find("([%d%.]+)([%l%u]+)")
     if n then
       unit = unit and unit:sub(1,1):upper() or "B"
@@ -575,10 +575,10 @@ m.handle = function(self, state, data)
   create_body.HostConfig.RestartPolicy = { Name = restart, MaximumRetryCount = 0 }
   create_body.HostConfig.Privileged = privileged and true or false
   create_body.HostConfig.PortBindings = portbindings
-  create_body.HostConfig.Memory = tonumber(memory)
-  create_body.HostConfig.CpuShares = tonumber(cpu_shares)
-  create_body.HostConfig.NanoCPUs = tonumber(cpus) * 10 ^ 9
-  create_body.HostConfig.BlkioWeight = tonumber(blkio_weight)
+  create_body.HostConfig.Memory = memory and tonumber(memory)
+  create_body.HostConfig.CpuShares = cpu_shares and tonumber(cpu_shares)
+  create_body.HostConfig.NanoCPUs = cpus and tonumber(cpus) * 10 ^ 9
+  create_body.HostConfig.BlkioWeight = blkio_weight and tonumber(blkio_weight)
   create_body.HostConfig.PublishAllPorts = publish_all
   if create_body.HostConfig.NetworkMode ~= network then
     -- network mode changed, need to clear duplicate config

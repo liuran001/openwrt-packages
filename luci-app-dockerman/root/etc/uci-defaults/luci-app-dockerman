@@ -6,6 +6,8 @@ sed -i 's/self:cfgvalue(section) or {}/self:cfgvalue(section) or self.default or
 rm -fr /tmp/luci-indexcache /tmp/luci-modulecache >/dev/null 2>&1
 touch /etc/config/dockerd
 ls /etc/rc.d/*dockerd &> /dev/null && uci set dockerd.dockerman.daemon_ea="true" || uci set dockerd.dockerman.daemon_ea="false"
+uci set dockerd.dockerman.daemon_data_root=`uci get dockerd.globals.data_root 2&> /dev/null || echo ''`
+uci set dockerd.dockerman.daemon_log_level=`uci get dockerd.globals.log_level 2&> /dev/null || echo 'warn'`
 uci -q batch <<-EOF >/dev/null
 	set uhttpd.main.script_timeout="3600"
 	commit uhttpd
@@ -19,8 +21,6 @@ uci -q batch <<-EOF >/dev/null
 	del_list dockerd.dockerman.ac_allowed_interface='br-lan'
 	add_list dockerd.dockerman.ac_allowed_interface='br-lan'
 
-	set dockerd.dockerman.daemon_data_root='/opt/docker/'
-	set dockerd.dockerman.daemon_log_level='warn'
 	commit dockerd
 EOF 
 exit 0
