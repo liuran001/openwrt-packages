@@ -934,7 +934,7 @@ msgstr "VEPA ( 虚拟以太网端口聚合器 )"
 #: applications/luci-app-dockerman/luasrc/controller/dockerman.lua:40
 #: applications/luci-app-dockerman/luasrc/view/dockerman/overview.htm:187
 msgid "Volumes"
-msgstr "卷标"
+msgstr "存储卷"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/volumes.lua:73
 msgid "Volumes overview"
