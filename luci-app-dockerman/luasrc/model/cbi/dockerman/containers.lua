@@ -151,6 +151,9 @@ o.disabled = 0
 o.enabled = 1
 o.default = 0
 o.width = "1%"
+o.write=function(self, section, value)
+	container_list[section]._selected = value
+end
 
 -- o = s:option(DummyValue, "_id", translate("ID"))
 -- o.width="10%"
@@ -161,9 +164,6 @@ o.width = "1%"
 o = s:option(DummyValue, "_id_name", translate("Container Info"))
 o.rawhtml = true
 o.width="15%"
-o.write=function(self, section, value)
-	container_list[section]._selected = value
-end
 
 o = s:option(DummyValue, "_status", translate("Status"))
 o.width="15%"
@@ -185,7 +185,7 @@ o.rawhtml = true
 o = s:option(DummyValue, "_command", translate("Command"))
 o.width="15%"
 
-local start_stop_remove = function(m,cmd)
+local start_stop_remove = function(m, cmd)
 	local container_selected = {}
 	-- 遍历table中sectionid
 	for k in pairs(container_list) do
@@ -194,7 +194,6 @@ local start_stop_remove = function(m,cmd)
 			container_selected[#container_selected + 1] = container_list[k]["_id"]
 		end
 	end
-
 	if #container_selected  > 0 then
 		local success = true
 
@@ -224,7 +223,7 @@ s.rowcolors=false
 s.template="cbi/nullsection"
 
 o = s:option(Button, "_new")
-o.inputtitle= translate("Add")
+o.inputtitle = translate("Add")
 o.template = "dockerman/cbi/inlinebutton"
 o.inputstyle = "add"
 o.forcewrite = true
@@ -234,7 +233,7 @@ end
 
 o = s:option(Button, "_start")
 o.template = "dockerman/cbi/inlinebutton"
-o.inputtitle=translate("Start")
+o.inputtitle = translate("Start")
 o.inputstyle = "apply"
 o.forcewrite = true
 o.write = function(self, section)
@@ -243,7 +242,7 @@ end
 
 o = s:option(Button, "_restart")
 o.template = "dockerman/cbi/inlinebutton"
-o.inputtitle=translate("Restart")
+o.inputtitle = translate("Restart")
 o.inputstyle = "reload"
 o.forcewrite = true
 o.write = function(self, section)
@@ -252,7 +251,7 @@ end
 
 o = s:option(Button, "_stop")
 o.template = "dockerman/cbi/inlinebutton"
-o.inputtitle=translate("Stop")
+o.inputtitle = translate("Stop")
 o.inputstyle = "reset"
 o.forcewrite = true
 o.write = function(self, section)
@@ -261,7 +260,7 @@ end
 
 o = s:option(Button, "_kill")
 o.template = "dockerman/cbi/inlinebutton"
-o.inputtitle=translate("Kill")
+o.inputtitle = translate("Kill")
 o.inputstyle = "reset"
 o.forcewrite = true
 o.write = function(self, section)
@@ -270,11 +269,11 @@ end
 
 o = s:option(Button, "_remove")
 o.template = "dockerman/cbi/inlinebutton"
-o.inputtitle=translate("Remove")
+o.inputtitle = translate("Remove")
 o.inputstyle = "remove"
 o.forcewrite = true
 o.write = function(self, section)
-	start_stop_remove(m,"remove")
+	start_stop_remove(m, "remove")
 end
 
 return m
