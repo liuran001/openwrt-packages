@@ -1,1 +1,0 @@
-# luci-app-nodogsplash
