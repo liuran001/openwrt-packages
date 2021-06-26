@@ -1,0 +1,38 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+
+config_load dockerd
+config_get daemon_ea "dockerman" daemon_ea
+
+init_dockerman_chain(){
+	iptables -N DOCKER-MAN >/dev/null 2>&1
+	iptables -F DOCKER-MAN >/dev/null 2>&1
+	iptables -D DOCKER-USER -j DOCKER-MAN >/dev/null 2>&1
+	iptables -I DOCKER-USER -j DOCKER-MAN >/dev/null 2>&1
+}
+
+add_allowed_interface(){
+	iptables -A DOCKER-MAN -i $1 -o docker0 -j RETURN
+}
+
+add_allowed_ip(){
+	iptables -A DOCKER-MAN -d $1 -o docker0 -j ACCEPT
+}
+
+handle_allowed_interface(){
+	#config_list_foreach "dockerman" allowed_ip add_allowed_ip
+	config_list_foreach "dockerman" ac_allowed_interface add_allowed_interface
+	iptables -A DOCKER-MAN -m conntrack --ctstate ESTABLISHED,RELATED -o docker0 -j RETURN >/dev/null 2>&1
+	iptables -A DOCKER-MAN -m conntrack --ctstate NEW,INVALID -o docker0 -j DROP >/dev/null 2>&1
+	iptables -A DOCKER-MAN -j RETURN >/dev/null 2>&1
+}
+
+start(){
+	[ ! -x "/etc/init.d/dockerd" ] && return 0
+	init_dockerman_chain
+	if [ -n "$daemon_ea" ]; then
+		handle_allowed_interface
+		lua /usr/share/dockerman/dockerd-ac.lua
+	fi
+}

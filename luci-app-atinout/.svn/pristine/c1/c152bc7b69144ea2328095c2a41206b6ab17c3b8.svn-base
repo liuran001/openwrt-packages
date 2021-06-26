@@ -1,0 +1,26 @@
+msgid ""
+msgstr ""
+"Language: ru\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: Konstantine Shevlyakov <shevlakov@132lan.ru>\n"
+
+#: applications/luci-app-atinout/luasrc/controller/atmodem.lua:5
+msgid "AT-Command"
+msgstr "Команды AT"
+
+#: applications/luci-app-atinout/luasrc/view/modem/command.htm:7
+msgid "Modem Web Console"
+msgstr "Панель команд модема"
+
+#: applications/luci-app-atinout/luasrc/view/modem/command.htm:10
+msgid "Execute modem AT-command"
+msgstr "Выполнить команду АТ"
+
+#: applications/luci-app-atinout/luasrc/view/modem/command.htm:11
+msgid "Be Careful"
+msgstr "Это может нарушить работу устройства"
+
+#: applications/luci-app-atinout/luasrc/view/modem/command.htm:12
+msgid "Press Enter to execute"
+msgstr "Нажмите Enter для выполнения"

@@ -1,0 +1,2 @@
+auth strong
+proxy -p3128

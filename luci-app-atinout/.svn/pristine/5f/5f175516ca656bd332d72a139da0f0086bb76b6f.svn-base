@@ -1,0 +1,8 @@
+#!/bin/sh
+
+ARGS=$1
+DEVPORT=$(uci -q get modeminfo.@modeminfo[0].device)
+
+if [ "$DEVPORT" ]; then 
+	echo "${ARGS}" | /usr/bin/atinout - ${DEVPORT} -
+fi
