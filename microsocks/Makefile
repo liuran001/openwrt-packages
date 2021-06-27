@@ -4,16 +4,16 @@ PKG_NAME:=microsocks
 PKG_VERSION=1.0.2
 PKG_RELEASE:=2
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://codeload.github.com/rofl0r/microsocks/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=5ece77c283e71f73b9530da46302fdb4f72a0ae139aa734c07fe532407a6211a
-
-PKG_LICENSE:=MIT
-PKG_LICENSE_FILES:=COPYING
 PKG_MAINTAINER:=lean
+PKG_LICENSE:=MIT
+PKG_LICENSE_FILES:=LICENSE
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/rofl0r/microsocks.git
+PKG_MIRROR_HASH:=eac924eee68679e808b107332d5ca35c2cd4b8e87206b78cf699f2157755c8b0
+PKG_SOURCE_VERSION:=ef6f8e3329736418cade06da9f16c308f7bcd433
 
 PKG_BUILD_PARALLEL:=1
-PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -22,7 +22,7 @@ define Package/microsocks
 	CATEGORY:=Network
 	SUBMENU:=Web Servers/Proxies
 	TITLE:=microsocks for OpenWRT
-	DEPENDS:=+libpthread
+	DEPENDS:=
 endef
 
 define Package/microsocks/description
