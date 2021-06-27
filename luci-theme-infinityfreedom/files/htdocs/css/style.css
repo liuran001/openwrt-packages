@@ -2107,17 +2107,18 @@ pre#strongswanInDocker_download_log_viewer {
 
 
 /* For luci-app-dockerman */
+div#cbi-docker.cbi-map div.pure-g.status,
 div#cbi-dockerd.cbi-map div.pure-g.status
 {
 	margin: 1rem 0rem 1rem 0rem;
 	padding: 0 1rem;
 	background-color: rgba(7,34,62,.4);
 }
+div#cbi-docker.cbi-map div.pure-g.status div.pure-u-1-4,
 div#cbi-dockerd.cbi-map div.pure-g.status div.pure-u-1-4
 {
 	background-color: rgba(7,34,62,.5);
 }
-
 div#cbi-dockerd.cbi-map div.pure-g.status div.pure-u-1-4 div.block.pure-g div.pure-u-2-5 div.img-con svg
 {
 	fill: white;
