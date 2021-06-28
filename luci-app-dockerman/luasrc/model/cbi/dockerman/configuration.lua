@@ -69,25 +69,25 @@ if nixio.fs.access("/usr/bin/dockerd") then
 	o.disabled = "false"
 	o.rmempty = true
 
-	o = s:taboption("daemon", Value, "data_root",
+	o = s:taboption("daemon", Value, "daemon_data_root",
 		translate("Docker Root Dir"))
 	o.placeholder = "/opt/docker/"
 	o:depends("remote_endpoint", 0)
 
-	o = s:option(Value, "bip",
+	o = s:option(Value, "daemon_bip",
 		translate("Default bridge"),
 		translate("Configure the default bridge network"))
 	o.placeholder = "172.17.0.1/16"
 	o.datatype = "ipaddr"
 	o:depends("remote_endpoint", 0)
 
-	o = s:taboption("daemon", DynamicList, "registry_mirrors",
+	o = s:taboption("daemon", DynamicList, "daemon_registry_mirrors",
 		translate("Registry Mirrors"),
 		translate("It replaces the daemon registry mirrors with a new set of registry mirrors"))
 	o.placeholder = translate("Example: https://hub-mirror.c.163.com")
 	o:depends("remote_endpoint", 0)
 
-	o = s:taboption("daemon", ListValue, "log_level",
+	o = s:taboption("daemon", ListValue, "daemon_log_level",
 		translate("Log Level"),
 		translate('Set the logging level'))
 	o:value("debug", translate("Debug"))
@@ -98,7 +98,7 @@ if nixio.fs.access("/usr/bin/dockerd") then
 	o.rmempty = true
 	o:depends("remote_endpoint", 0)
 
-	o = s:taboption("daemon", DynamicList, "hosts",
+	o = s:taboption("daemon", DynamicList, "daemon_hosts",
 		translate("Client connection"),
 		translate('Specifies where the Docker daemon will listen for client connections (default: unix:///var/run/docker.sock)'))
 	o.placeholder = translate("Example: tcp://0.0.0.0:2375")
@@ -112,6 +112,10 @@ if nixio.fs.access("/usr/bin/dockerd") then
 
 		if m_changes.dockerd.dockerman.daemon_hosts then
 			m.uci:set("dockerd", "globals", "hosts", m_changes.dockerd.dockerman.daemon_hosts)
+			daemon_changes = 1
+		end
+		if m_changes.dockerd.dockerman.daemon_bip then
+			m.uci:set("dockerd", "globals", "bip", m_changes.dockerd.dockerman.daemon_bip)
 			daemon_changes = 1
 		end
 		if m_changes.dockerd.dockerman.daemon_registry_mirrors then

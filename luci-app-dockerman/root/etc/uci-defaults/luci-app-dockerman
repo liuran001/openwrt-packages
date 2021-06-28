@@ -8,6 +8,7 @@ touch /etc/config/dockerd
 ls /etc/rc.d/*dockerd &> /dev/null && uci set dockerd.dockerman.daemon_ea="true" || uci set dockerd.dockerman.daemon_ea="false"
 uci set dockerd.dockerman.daemon_data_root=`uci get dockerd.globals.data_root 2&> /dev/null || echo ''`
 uci set dockerd.dockerman.daemon_log_level=`uci get dockerd.globals.log_level 2&> /dev/null || echo 'warn'`
+uci set dockerd.dockerman.daemon_bip=`uci get dockerd.globals.bip 2&> /dev/null || echo ''`
 uci -q batch <<-EOF >/dev/null
 	set uhttpd.main.script_timeout="3600"
 	commit uhttpd

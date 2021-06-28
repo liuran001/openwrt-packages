@@ -122,7 +122,7 @@ msgstr "CPU 共享相对权重，如果设置为 0，则系统将忽略该值并
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/newcontainer.lua:611
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/overview.lua:28
 msgid "CPUs"
-msgstr "线程数量"
+msgstr "CPU数量"
 
 #: applications/luci-app-dockerman/luasrc/view/dockerman/newcontainer_resolve.htm:91
 msgid "Cancel"
@@ -148,7 +148,7 @@ msgstr "命令行错误"
 
 #: applications/luci-app-dockerman/luasrc/controller/dockerman.lua:16
 msgid "Configuration"
-msgstr ""
+msgstr "配置"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/configuration.lua:42
 msgid "Configure the default bridge network"
@@ -205,15 +205,15 @@ msgstr ""
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/newnetwork.lua:84
 msgid "Create macvlan interface"
-msgstr "创建 macvlan 界面"
+msgstr "创建 macvlan 接口"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/newcontainer.lua:450
 msgid "Create new docker container"
-msgstr ""
+msgstr "创建 docker 容器"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/newnetwork.lua:23
 msgid "Create new docker network"
-msgstr ""
+msgstr "创建 docker 网络"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/container.lua:304
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/images.lua:148
@@ -227,7 +227,7 @@ msgstr "DNS"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/configuration.lua:56
 msgid "Debug"
-msgstr ""
+msgstr "调试"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/configuration.lua:41
 msgid "Default bridge"
@@ -304,10 +304,6 @@ msgstr "Docker 执行完成。"
 msgid "DockerMan is a simple docker manager client for LuCI"
 msgstr ""
 
-#: applications/luci-app-dockerman/luasrc/view/dockerman/container_file.htm:14
-msgid "Download"
-msgstr "下载"
-
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/networks.lua:79
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/newnetwork.lua:32
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/volumes.lua:85
@@ -382,7 +378,7 @@ msgstr "网关"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/configuration.lua:10
 msgid "Global settings"
-msgstr ""
+msgstr "全局设定"
 
 #: applications/luci-app-dockerman/luasrc/view/dockerman/cbi/inlinevalue.htm:4
 msgid "Go to relevant configuration page"
@@ -402,7 +398,7 @@ msgstr "主机名"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/configuration.lua:19
 msgid "Host or IP Address for the connection to a remote docker instance"
-msgstr ""
+msgstr "需要连接的远程 docker 实例主机地址"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/container.lua:292
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/containers.lua:122
@@ -642,7 +638,7 @@ msgstr "选项"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/newnetwork.lua:37
 msgid "Overlay network"
-msgstr "覆盖网络"
+msgstr "Overlay 网络"
 
 #: applications/luci-app-dockerman/luasrc/controller/dockerman.lua:36
 msgid "Overview"
@@ -674,7 +670,7 @@ msgstr "请输入路径并选择文件！"
 
 #: applications/luci-app-dockerman/luasrc/view/dockerman/newcontainer_resolve.htm:91
 msgid "Plese input <docker create/run> command line:"
-msgstr "请输入 <docker 创建/运行> 的命令行："
+msgstr "请输入 <docker create/run> 的命令行："
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/container.lua:347
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/containers.lua:135
@@ -687,7 +683,7 @@ msgstr "专用 ( 阻止 MAC VLAN 之间的通信 )"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/newcontainer.lua:489
 msgid "Privileged"
-msgstr "权限"
+msgstr "特权模式"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/newcontainer.lua:546
 msgid "Publish container's port(s) to the host"
@@ -708,7 +704,7 @@ msgstr "注册表镜像"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/configuration.lua:13
 msgid "Remote Endpoint"
-msgstr "远程终端"
+msgstr "远程实例"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/configuration.lua:18
 msgid "Remote Host"
@@ -841,7 +837,7 @@ msgstr "系统控制(内核参数)选项"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/container.lua:783
 msgid "TOP"
-msgstr "顶部"
+msgstr "TOP"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/newcontainer.lua:468
 msgid "TTY (-t)"
