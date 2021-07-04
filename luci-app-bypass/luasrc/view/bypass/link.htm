@@ -1,6 +1,6 @@
 <%+cbi/valueheader%>
 <%
-local dsp = require "luci.dispatcher"
+local api = require "luci.model.cbi.bypass.api"
 -%>
 <script type="text/javascript">//<![CDATA[
 	function padright(str, cnt, pad) {
@@ -80,18 +80,18 @@ local dsp = require "luci.dispatcher"
 		var opt = {
 			base: "cbid.bypass",
 			client : true,
-			fallback: "dummy",
+					 
 			get: function(opt) {
 				var id = this.base + "." + opt;
 				var obj = document.getElementsByName(id)[0] || document.getElementsByClassName(id)[0] || document.getElementById(id)
 				if (obj) {
 					return obj;
 				} else {
-					obj = document.getElementById(this.fallback);
-					if  (opt === "server") obj.value = "0.0.0.0";
-					else if (opt === "mux") obj.value = "0";
-					if (this.client || (opt !== "server" && opt !== "mux")) alert("<%:Faltal on get option: %>" + opt);
-					return obj;
+												  
+												  
+											 
+																										
+					return null;
 				}
 			},
 			getlist: function(opt) {
@@ -103,7 +103,7 @@ local dsp = require "luci.dispatcher"
 						ret[i] = objs[i].value;
 					}
 				} else {
-					alert("<%:Faltal on get option: %>" + opt);
+					alert("<%:Faltal on get option, please help in debug: %>" + opt);
 				}
 				return ret;
 			},
@@ -128,11 +128,39 @@ local dsp = require "luci.dispatcher"
 		}
 		opt.base = 'cbid.bypass.' + sid;
 		opt.client = urlname.indexOf("server") === -1;
-		opt.fallback = urlname + "-dummy";
+									
 		var v_type = opt.get("type").value;
 		var v_alias = opt.get("alias");
 		var url = null;
-		if (v_type === "ssr") {
+		if (v_type === "ss") {
+			var v_server = opt.get("server");
+			var v_port = opt.get("server_port");
+			var v_method = opt.get("encrypt_method_ss");
+			var v_password = opt.get("password");
+			
+			url = b64encsafe(v_method.value + ":" + v_password.value) + "@" +
+				v_server.value + ":" +
+				v_port.value + "/?";
+			
+			var params = "";
+			var v_plugin = opt.get("plugin").value;
+			if (v_plugin && v_plugin != "none") {
+				if (v_plugin == "simple-obfs" || v_plugin == "obfs-local") {
+					v_plugin = "obfs-local";
+				}
+				var v_plugin_opts = opt.get("plugin_opts").value;
+				if (v_plugin_opts && v_plugin_opts != "") {
+					v_plugin += encodeURI(";" + v_plugin_opts);
+				}
+				params += "&plugin=" + encodeURI(v_plugin);
+			}
+			params += "&group="
+			params += "#" + encodeURI(v_alias.value);
+			if (params[0] == "&") {
+				params = params.substring(1);
+			}
+			url += params;
+		} else if (v_type === "ssr") {
 			var v_server = opt.get("server");
 			var v_port = opt.get("server_port");
 			var v_protocol = opt.get("protocol");
@@ -151,23 +179,121 @@ local dsp = require "luci.dispatcher"
 				"&protoparam=" + b64encsafe(v_protocol_param.value) +
 				"&remarks=" + b64encutf8safe(v_alias.value);
 			url = b64encsafe(ssr_str);
-		} else if (v_type === "trojan" || v_type === "trojan-go") {
+		} else if (v_type === "vmess") {
+			v_type = "vmess";
+			var info = {};
+			info.v = "2";
+			info.ps = v_alias.value;
+			info.add = opt.get("server").value;
+			info.port = opt.get("server_port").value;
+			info.id = opt.get("uuid").value;
+			info.aid = opt.get("alter_id").value;
+			
+			var v_transport = opt.get("transport").value;
+			if (v_transport === "ws") {
+				info.host = opt.get("ws_host").value;
+				info.path = opt.get("ws_path").value;
+			} else if (v_transport === "h2") {
+				info.host = opt.get("h2_host").value;
+				info.path = opt.get("h2_path").value;
+			} else if (v_transport === "tcp") {
+				info.type = opt.get("tcp_guise").value;
+				info.host = opt.get("http_host").value;
+				info.path = opt.get("http_path").value;
+			} else if (v_transport === "mkcp") {
+				v_transport = "kcp";
+				info.type = opt.get("kcp_guise").value;
+			} else if (v_transport === "quic") {
+				info.type = opt.get("quic_guise").value;
+				info.key = opt.get("quic_key").value;
+				info.securty = opt.get("quic_security").value;
+			} else if (v_transport === "grpc") {
+				info.path = opt.get("grpc_serviceName").value;
+			}
+			if (info.path && info.path != "") {
+				info.path = encodeURI(info.path);
+			}
+			info.net = v_transport;
+			
+			info.security = opt.get("security").value || "auto";
+			if (opt.get("tls").checked) {
+				var v_security = "tls";
+				info.tls = "tls";
+				info.sni = opt.get("tls_host").value;
+			}
+			url = b64EncodeUnicode(JSON.stringify(info));
+		} else if (v_type === "vless") {
+			v_type = "vless";
+			var v_password = opt.get("uuid");
+			var v_server = opt.get("server");
+			var v_port = opt.get("server_port");
+			url = encodeURIComponent(v_password.value) +
+				"@" + v_server.value +
+				":" + v_port.value + "?";
+			
+			var params = "";
+			var v_transport = opt.get("transport").value;
+			if (v_transport === "ws") {
+				params += opt.query("host", "ws_host");
+				params += opt.query("path", "ws_path");
+			} else if (v_transport === "h2") {
+				params += opt.query("host", "h2_host");
+				params += opt.query("path", "h2_path");
+			} else if (v_transport === "tcp") {
+				params += opt.query("headerType", "tcp_guise");
+				params += opt.query("host", "http_host");
+				params += opt.query("path", "http_path");
+			} else if (v_transport === "mkcp") {
+				v_transport = "kcp";
+				params += opt.query("headerType", "kcp_guise");
+			} else if (v_transport === "quic") {
+				params += opt.query("headerType", "quic_guise");
+				params += opt.query("key", "quic_key");
+				params += opt.query("quicSecurity", "quic_security");
+			} else if (v_transport === "grpc") {
+				//不知道是用path还是serviceName，这里先这样吧
+				params += opt.query("path", "grpc_serviceName");
+				params += opt.query("serviceName", "grpc_serviceName");
+			}
+			params += "&type=" + v_transport;
+			
+			params += opt.query("encryption", "encryption");
+			if (opt.get("xtls").checked) {
+				v_security = "xtls";
+				var v_flow = "xtls-rprx-direct";
+				if (opt.get("vless_flow").value) {
+					v_flow = opt.get("vless_flow").value;
+				}
+				params += "&flow=" + v_flow;
+				params += "&security=" + v_security;
+				params += opt.query("sni", "tls_host");
+			}
+			params += "#" + encodeURI(v_alias.value);
+			if (params[0] == "&") {
+				params = params.substring(1);
+			}
+			url += params;
+		} else if ((v_type === "xray" && opt.get("protocol").value === "trojan") || v_type === "trojan" || v_type === "trojan" || v_type === "trojan-go") {
+			if (v_type === "xray" && opt.get("protocol").value === "trojan") {
+				v_type = "trojan";
+			}
 			var v_password = opt.get(!opt.client && v_type === "trojan-go"  ? "passwords" : "password");
 			var v_server = opt.get("server");
 			var v_port = opt.get("server_port");
 			url = encodeURIComponent(v_password.value) +
 				"@" + v_server.value +
 				":" + v_port.value + "/?";
+			var params = "";
 			if (opt.get("tls").checked) {
-				url += "tls=1";
-				if (opt.query("sni", "tls_host") == "&sni=") {
-					url += opt.query("sni", "server");
-				} else {
-					url += opt.query("sni", "tls_host");
+				   
+				params += opt.query("sni", "tls_host");
+				if (v_type !== "trojan-go") {
+					params += "&tls=1"
+					params += opt.query("allowinsecure", "insecure");
 				}
-				url += opt.query("allowinsecure", "insecure");
-			} else if (v_type === "trojan-go") {
-				url += "tls=0";
+												  
+									   
+				   
 			}
 			if (v_type === "trojan-go") {
 				if (!opt.get("tls").checked && opt.get("trojan_transport").value === "original") {
@@ -178,17 +304,17 @@ local dsp = require "luci.dispatcher"
 						plugin.option = opt.get("plugin_option").value;
 						plugin.arg = opt.getlist("plugin_arg");
 					}
-					url += "&plugin=" + encodeURIComponent(JSON.stringify(plugin));
+					params += "&plugin=" + encodeURIComponent(JSON.stringify(plugin));
 				}
-				url += opt.query("type", "trojan_transport");
+				params += opt.query("type", "trojan_transport");
 				var ws = (opt.get("trojan_transport").value.indexOf("ws") !== -1);
 				var h2 = (opt.get("trojan_transport").value.indexOf("h2") !== -1);
 				if (ws) {
-					url += opt.query("host", "ws_host");
-					url += opt.query("path", "ws_path");
+					params += opt.query("host", "ws_host");
+					params += opt.query("path", "ws_path");
 				} else if (h2) {
-					url += opt.query("host", "h2_host");
-					url += opt.query("path", "h2_path");
+					params += opt.query("host", "h2_host");
+					params += opt.query("path", "h2_path");
 				}
 				var enc = "none";
 				if (opt.get("ss_aead").checked === true) {
@@ -196,10 +322,14 @@ local dsp = require "luci.dispatcher"
 						opt.get("ss_aead_method").value +
 						":" + opt.get("ss_aead_pwd").value;
 				}
-				url += "&encryption=" + encodeURIComponent(enc);
-				url += opt.query("mux", "mux");
+				params += "&encryption=" + encodeURIComponent(enc);
+								   
 			}
-			url += "#" + encodeURI(v_alias.value);
+			params += "#" + encodeURI(v_alias.value);
+			if (params[0] == "&") {
+				params = params.substring(1);
+			}
+			url += params;
 		}
 		if (url) {
 			url = v_type.toLowerCase() + "://" + url;
@@ -210,12 +340,13 @@ local dsp = require "luci.dispatcher"
 			textarea.select();
 			try {
 				document.execCommand("copy"); // Security exception may be thrown by some browsers.
-				s.innerHTML = "<font color='green'><%:Share to clipboard successfully %></font>";
+				s.innerHTML = "<font color='green'><%:Share URL to clipboard successfully.%></font>";
 			} catch (ex) {
-				s.innerHTML = "<font color='red'><%:Unable share to clipboard %></font>";
+				s.innerHTML = "<font color='red'><%:Share URL to clipboard unable.%></font>";
 			} finally {
 				document.body.removeChild(textarea);
 			}
+			//alert(url);
 		} else {
 			alert("<%:Not a supported scheme:%> " + v_type);
 		}
@@ -226,7 +357,7 @@ local dsp = require "luci.dispatcher"
 		var opt = {
 			base: 'cbid.bypass',
 			client : true,
-			fallback: 'dummy',
+					 
 			get: function(opt) {
 				var obj;
 				var id = this.base + '.' + opt;
@@ -234,8 +365,8 @@ local dsp = require "luci.dispatcher"
 				if (obj) {
 					return obj;
 				} else {
-					if (this.client || (opt !== "server" && opt !== "mux")) alert('<%:Faltal on get option: %>' + opt);
-					return document.getElementById(this.fallback);
+																										
+					return null;
 				}
 			},
 			set: function(opt, val) {
@@ -251,7 +382,7 @@ local dsp = require "luci.dispatcher"
 						obj.value = val;
 					}
 				} else {
-					alert('<%:Faltal on set option: %>' + opt + ' = ' + val);
+					//alert('<%:Faltal on set option, please help in debug: %>' + opt + ' = ' + val);
 				}
 			},
 			setlist: function(opt, vlist) {
@@ -264,7 +395,7 @@ local dsp = require "luci.dispatcher"
 					}
 					alert("Manually input the option:\n" + opt + "s:\n[" + values + "]");
 				} else {
-					alert("<%:Faltal on set option: %>" + opt);
+					//alert("<%:Faltal on set option, please help in debug: %>" + opt);
 				}
 			}
 		}
@@ -276,10 +407,10 @@ local dsp = require "luci.dispatcher"
 		}
 		opt.base = 'cbid.bypass.' + sid;
 		opt.client = urlname.indexOf("server") === -1;
-		opt.fallback = urlname + '-dummy';
-		var ssrurl = prompt('<%:Paste Share URL Here%> ssr:// | ss:// | vmess:// | trojan:// | trojan-go://', '');
+									
+		var ssrurl = prompt('<%:Paste Share URL Here%>', '');
 		if (ssrurl === null || ssrurl === "") {
-			s.innerHTML = "<font color='red'><%:User cancelled%></font>";
+																
 			return false;
 		}
 		s.innerHTML = "";
@@ -334,7 +465,7 @@ local dsp = require "luci.dispatcher"
 			} else {
 				url0 = ssu[1];
 			}
-			console.log(param);
+					  
 			if (sipIndex !== -1) {
 				// SIP002
 				var userInfo = b64decsafe(url0.substr(0, sipIndex));
@@ -361,8 +492,12 @@ local dsp = require "luci.dispatcher"
 				opt.set('server_port', port);
 				opt.set('password', password || "");
 				opt.set('encrypt_method_ss', method || "");
-				opt.set('plugin', plugin || "");
-				opt.set('plugin_opts', pluginOpts || "");
+				opt.set('plugin', plugin || "none");
+				if (plugin && plugin != "none") {
+					opt.get('plugin').dispatchEvent(event);
+					opt.set('plugin_opts', pluginOpts || "");
+					opt.get('plugin_opts').dispatchEvent(event);
+				}
 				if (param !== undefined) {
 					opt.set('alias', decodeURI(param));
 				}
@@ -377,8 +512,9 @@ local dsp = require "luci.dispatcher"
 				opt.set('server_port', part2[1]);
 				opt.set('password', part1[1]);
 				opt.set('encrypt_method_ss', part1[0]);
-				opt.set('plugin', "");
-				opt.set('plugin_opts', "");
+				opt.set('plugin', "none");
+				opt.get('plugin').dispatchEvent(event);
+				//opt.set('ss_plugin_opts', "");
 				if (param !== undefined) {
 					opt.set('alias', decodeURI(param));
 				}
@@ -474,8 +610,10 @@ local dsp = require "luci.dispatcher"
 			opt.set('server', m.hostname);
 			opt.set('server_port', m.port || "443");
 			opt.set(opt.client ? 'password' : 'passwords', decodeURIComponent(password));
-			opt.set('tls', (queryParam.tls && queryParam.tls === '1'));
+			opt.set('tls', '1');
 			opt.get('tls').dispatchEvent(event);
+			opt.set('insecure', '0');
+			opt.set('tls_host', queryParam.peer || queryParam.sni || '');
 			var plugin = queryParam.plugin !== undefined;
 			if (plugin) {
 				opt.set('trojan_transport', 'original');
@@ -492,13 +630,13 @@ local dsp = require "luci.dispatcher"
 				} else
 					alert(queryParam.plugin);
 			}
-			var tls = !plugin && queryParam.tls === '1';
-			opt.set('tls', tls);
-			opt.get('tls').dispatchEvent(event);
-			if (tls) {
-				opt.set('tls_host', queryParam.peer || queryParam.sni || '');
-				opt.set('insecure', queryParam.allowinsecure === '1');
-			}
+											   
+					   
+									   
+			 
+																								 
+														  
+	
 			var tran = 'original';
 			var or = queryParam.type === undefined || queryParam.type === 'original';
 			var ws = queryParam.type.indexOf('ws') !== -1;
@@ -531,7 +669,7 @@ local dsp = require "luci.dispatcher"
 				opt.set('ss_aead_method', enc.method.toLowerCase() || '');
 				opt.set('ss_aead_pwd', enc.password || '');
 			}
-			opt.set('mux', queryParam.mux === '1');
+			opt.set('mux', '1');
 			if (m.hash) {
 				opt.set('alias', decodeURI(m.hash.substr(1)));
 			}
@@ -555,8 +693,15 @@ local dsp = require "luci.dispatcher"
 			opt.set('tls', ssm.tls === "tls");
 			opt.get('tls').dispatchEvent(event);
 			if (ssm.tls === "tls") {
-				opt.set('tls_host', ssm.host);
+				var tls_host = ssm.host;
+				if (ssm.sni) {
+					tls_host = ssm.sni
+				}
+				opt.set('tls_host', tls_host);
 			}
+			ssm.net = ssm.net.toLowerCase();
+			if (ssm.net === "kcp" || ssm.net === "mkcp")
+				ssm.net = "mkcp"
 			opt.set('transport', ssm.net);
 			opt.get('transport').dispatchEvent(event);
 			if (ssm.net === "tcp") {
@@ -575,9 +720,89 @@ local dsp = require "luci.dispatcher"
 			} else if (ssm.net === "quic") {
 				opt.set('quic_security', ssm.securty);
 				opt.set('quic_key', ssm.key);
-			} else if (ssm.net === "kcp") {
+			} else if (ssm.net === "kcp" || ssm.net === "mkcp") {
 				opt.set('kcp_guise', ssm.type);
 				opt.get('kcp_guise').dispatchEvent(event);
+			} else if (ssm.net === "grpc") {
+				opt.set('grpc_serviceName', ssm.path);
+			}
+		} else if (ssu[0] === "vless") {
+			opt.set('type', "vless");
+			opt.get('type').dispatchEvent(event);
+			var m = parseNodeUrl(ssrurl);
+			console.log(m.search);
+			var password = m.passwd;
+			if (password === "") {
+				s.innerHTML = "<font color='red'><%:Invalid Share URL Format%></font>";
+				return false;
+			}
+			opt.set('uuid', password);
+			opt.set('server', m.hostname);
+			opt.set('server_port', m.port || "443");
+			var queryParam = {};
+			if (m.search.length > 1) {
+				var query = m.search.split('?');
+				var queryParams = query[1];
+				var queryArray = queryParams.split('&');
+				var params;
+				for (i = 0; i < queryArray.length; i++) {
+					params = queryArray[i].split('=');
+					queryParam[decodeURIComponent(params[0])] = decodeURIComponent(params[1] || '');
+				}
+			}
+			
+			opt.set('encryption', queryParam.encryption);
+			if (queryParam.security) {
+				if (queryParam.security == "tls" || queryParam.security == "xtls") {
+					opt.set('tls', true);
+					opt.get('tls').dispatchEvent(event);
+					if (queryParam.security == "xtls") {
+						opt.set('xtls', true);
+						opt.get('xtls').dispatchEvent(event);
+						opt.set('flow', queryParam.flow || "xtls-rprx-direct");
+					}
+					opt.set('tls_host', queryParam.sni || '');
+					
+					opt.set('insecure', true);
+					if (queryParam.allowinsecure === '0') {
+						opt.set('insecure', false);
+					}
+					opt.get('insecure').dispatchEvent(event);
+				}
+			}
+			
+			queryParam.type = queryParam.type.toLowerCase();
+			if (queryParam.type === "kcp" || queryParam.type === "mkcp")
+				queryParam.type = "mkcp"
+			opt.set('transport', queryParam.type);
+			opt.get('transport').dispatchEvent(event);
+			if (queryParam.type === "tcp") {
+				opt.set('tcp_guise', queryParam.headerType || "none");
+				opt.get('tcp_guise').dispatchEvent(event);
+				if (queryParam.headerType && queryParam.headerType != "none") {
+					opt.set('http_host', queryParam.host || "");
+					opt.set('http_path', queryParam.path || "");
+				}
+			} else if (queryParam.type === "ws") {
+				opt.set('ws_host', queryParam.host || "");
+				opt.set('ws_path', queryParam.path || "");
+			} else if (queryParam.type === "h2") {
+				opt.set('h2_host', queryParam.host || "");
+				opt.set('h2_path', queryParam.path || "");
+			} else if (queryParam.type === "quic") {
+				opt.set('quic_guise', queryParam.headerType || "none");
+				opt.get('quic_guise').dispatchEvent(event);
+				opt.set('quic_security', queryParam.quicSecurity);
+				opt.set('quic_key', queryParam.key);
+			} else if (queryParam.type === "kcp" || queryParam.type === "mkcp") {
+				opt.set('kcp_guise', queryParam.headerType || "none");
+				opt.get('kcp_guise').dispatchEvent(event);
+			} else if (queryParam.type === "grpc") {
+				opt.set('grpc_serviceName', (queryParam.serviceName || queryParam.path) || "");
+			}
+			
+			if (m.hash) {
+				opt.set('alias', decodeURI(m.hash.substr(1)));
 			}
 		} else {
 			s.innerHTML = "<font color='red'><%:Invalid Share URL Format%></font>: " + ssu[0];
@@ -588,8 +813,8 @@ local dsp = require "luci.dispatcher"
 	}
 
 //]]></script>
-<input type="text" class="hidden" id='<%=self.option%>-dummy' value="0.0.0.0" />
-<input type="button" class="cbi-button cbi-button-apply" value='<%:From Share URL%>' onclick="return fromUrl(this, '<%=self.option%>', '<%=self.value%>')" />
-<input type="button" class="cbi-button cbi-button-apply" value='<%:Build Share URL%>' onclick="return buildUrl(this, '<%=self.option%>', '<%=self.value%>')" />
+																				
+<input type="button" class="btn cbi-button cbi-button-apply" value='<%:From Share URL%>' onclick="return fromUrl(this, '<%=self.option%>', '<%=self.value%>')" />
+<input type="button" class="btn cbi-button cbi-button-apply" value='<%:Build Share URL%>' onclick="return buildUrl(this, '<%=self.option%>', '<%=self.value%>')" />
 <span id="<%=self.option%>-status"></span>
 <%+cbi/valuefooter%>
