@@ -258,6 +258,14 @@ local api = require "luci.model.cbi.bypass.api"
 			params += "&type=" + v_transport;
 			
 			params += opt.query("encryption", "encryption");
+			if (opt.get("tls")) {
+			if (opt.get("tls").checked) {
+				var v_security = "tls";
+				params += "&security=" + v_security;
+				params += opt.query("sni", "tls_host");
+			}
+			}
+			if (opt.get("xtls")) {
 			if (opt.get("xtls").checked) {
 				v_security = "xtls";
 				var v_flow = "xtls-rprx-direct";
@@ -267,6 +275,7 @@ local api = require "luci.model.cbi.bypass.api"
 				params += "&flow=" + v_flow;
 				params += "&security=" + v_security;
 				params += opt.query("sni", "tls_host");
+			}
 			}
 			params += "#" + encodeURI(v_alias.value);
 			if (params[0] == "&") {
@@ -754,12 +763,14 @@ local api = require "luci.model.cbi.bypass.api"
 			opt.set('encryption', queryParam.encryption);
 			if (queryParam.security) {
 				if (queryParam.security == "tls" || queryParam.security == "xtls") {
-					opt.set('tls', true);
-					opt.get('tls').dispatchEvent(event);
+					if (queryParam.security == "tls") {
+						opt.set('tls', true);
+						opt.get('tls').dispatchEvent(event);
+					}
 					if (queryParam.security == "xtls") {
 						opt.set('xtls', true);
 						opt.get('xtls').dispatchEvent(event);
-						opt.set('flow', queryParam.flow || "xtls-rprx-direct");
+						opt.set('vless_flow', queryParam.flow || "xtls-rprx-direct");
 					}
 					opt.set('tls_host', queryParam.sni || '');
 					
