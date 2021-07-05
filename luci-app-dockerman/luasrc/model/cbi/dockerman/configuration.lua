@@ -16,31 +16,40 @@ s:tab("dockerman", translate("DockerMan"))
 
 o = s:taboption("dockerman", Flag, "remote_endpoint",
 	translate("Remote Endpoint"),
-	translate("Connect to remote endpoint"))
+	translate("Connect to remote docker endpoint"))
 o.rmempty = false
+o.enabled = "true"
+o.disabled = "false"
+o.validate = function(self, value, sid)
+	local res = luci.http.formvaluetable("cbid.dockerd")
+	if res["dockerman.remote_endpoint"] == "true" then
+	 if res["dockerman.remote_port"] and res["dockerman.remote_port"] ~= "" and res["dockerman.remote_host"] and res["dockerman.remote_host"] ~= "" then
+			return "true"
+		else
+			return nil, translate("Please input the PORT or HOST IP of remote docker instance!")
+		end
+	end
+	return "false"
+end
 
 o = s:taboption("dockerman", Value, "socket_path",
 	translate("Docker Socket Path"))
 o.default = "/var/run/docker.sock"
 o.placeholder = "/var/run/docker.sock"
-o:depends("remote_endpoint", 0)
+o:depends("remote_endpoint", false)
 
 o = s:taboption("dockerman", Value, "remote_host",
 	translate("Remote Host"),
 	translate("Host or IP Address for the connection to a remote docker instance"))
 o.datatype = "host"
-o.rmempty = false
-o.optional = false
 o.placeholder = "10.1.1.2"
-o:depends("remote_endpoint", 1)
+o:depends("remote_endpoint", "true")
 
 o = s:taboption("dockerman", Value, "remote_port",
 	translate("Remote Port"))
 o.placeholder = "2375"
 o.datatype = "port"
-o.rmempty = false
-o.optional = false
-o:depends("remote_endpoint", 1)
+o:depends("remote_endpoint", "true")
 
 -- o = s:taboption("dockerman", Value, "status_path", translate("Action Status Tempfile Path"), translate("Where you want to save the docker status file"))
 -- o = s:taboption("dockerman", Flag, "debug", translate("Enable Debug"), translate("For debug, It shows all docker API actions of luci-app-dockerman in Debug Tempfile Path"))
