@@ -17,8 +17,7 @@ function index()
 	entry({"admin", "docker", "config"},cbi("dockerman/configuration"),_("Configuration"), 8).leaf=true
 	
 	local uci = (require "luci.model.uci").cursor()
-	local remote = uci:get_bool("dockerd", "dockerman", "remote_endpoint")
-	if remote then
+	if uci:get_bool("dockerd", "dockerman", "remote_endpoint") then
 		local host = uci:get("dockerd", "dockerman", "remote_host")
 		local port = uci:get("dockerd", "dockerman", "remote_port")
 		if not host or not port then
@@ -70,11 +69,11 @@ function scandir(id, directory)
 	local i, t, popen = 0, {}, io.popen
 	local uci = (require "luci.model.uci").cursor()
 	local remote = uci:get_bool("dockerd", "dockerman", "remote_endpoint")
-	local socket_path = (remote == "false" or not remote) and  uci:get("dockerd", "dockerman", "socket_path") or nil
-	local host = (remote == "true") and uci:get("dockerd", "dockerman", "remote_host") or nil
-	local port = (remote == "true") and uci:get("dockerd", "dockerman", "remote_port") or nil
+	local socket_path = not remote and uci:get("dockerd", "dockerman", "socket_path") or nil
+	local host = remote and uci:get("dockerd", "dockerman", "remote_host") or nil
+	local port = remote and uci:get("dockerd", "dockerman", "remote_port") or nil
 	if remote and host and port then
-		hosts = host .. ':'.. port
+		hosts = "tcp://" .. host .. ':'.. port
 	elseif socket_path then
 		hosts = "unix://" .. socket_path
 	else
@@ -120,11 +119,11 @@ function rename_file(id)
 	end
 	local uci = (require "luci.model.uci").cursor()
 	local remote = uci:get_bool("dockerd", "dockerman", "remote_endpoint")
-	local socket_path = (remote == "false" or not remote) and  uci:get("dockerd", "dockerman", "socket_path") or nil
-	local host = (remote == "true") and uci:get("dockerd", "dockerman", "remote_host") or nil
-	local port = (remote == "true") and uci:get("dockerd", "dockerman", "remote_port") or nil
+	local socket_path = not remote and  uci:get("dockerd", "dockerman", "socket_path") or nil
+	local host = remote and uci:get("dockerd", "dockerman", "remote_host") or nil
+	local port = remote and uci:get("dockerd", "dockerman", "remote_port") or nil
 	if remote and host and port then
-		hosts = host .. ':'.. port
+		hosts = "tcp://" .. host .. ':'.. port
 	elseif socket_path then
 		hosts = "unix://" .. socket_path
 	else
@@ -143,11 +142,11 @@ function remove_file(id)
 	end 
 	local uci = (require "luci.model.uci").cursor()
 	local remote = uci:get_bool("dockerd", "dockerman", "remote_endpoint")
-	local socket_path = (remote == "false" or not remote) and  uci:get("dockerd", "dockerman", "socket_path") or nil
-	local host = (remote == "true") and uci:get("dockerd", "dockerman", "remote_host") or nil
-	local port = (remote == "true") and uci:get("dockerd", "dockerman", "remote_port") or nil
+	local socket_path = not remote and  uci:get("dockerd", "dockerman", "socket_path") or nil
+	local host = remote and uci:get("dockerd", "dockerman", "remote_host") or nil
+	local port = remote and uci:get("dockerd", "dockerman", "remote_port") or nil
 	if remote and host and port then
-		hosts = host .. ':'.. port
+		hosts = "tcp://" .. host .. ':'.. port
 	elseif socket_path then
 		hosts = "unix://" .. socket_path
 	else

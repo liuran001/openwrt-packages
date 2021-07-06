@@ -275,9 +275,7 @@ _docker.new = function()
 	local socket_path = nil
 	local debug_path = nil
 
-	local remote = uci:get_bool("dockerd", "dockerman", "remote_endpoint")
-
-	if remote then
+	if uci:get_bool("dockerd", "dockerman", "remote_endpoint") then
 		host = uci:get("dockerd", "dockerman", "remote_host") or nil
 		port = uci:get("dockerd", "dockerman", "remote_port") or nil
 	else
@@ -401,7 +399,7 @@ _docker.create_macvlan_interface = function(name, device, gateway, subnet)
 		return
 	end
 
-	if uci:get("dockerd", "dockerman", "remote_endpoint") == "true" then
+	if uci:get_bool("dockerd", "dockerman", "remote_endpoint") then
 		return
 	end
 
@@ -452,7 +450,7 @@ _docker.remove_macvlan_interface = function(name)
 		return
 	end
 
-	if uci:get("dockerd", "dockerman", "remote_endpoint") == "true" then
+	if uci:get_bool("dockerd", "dockerman", "remote_endpoint") then
 		return
 	end
 

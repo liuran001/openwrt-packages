@@ -17,7 +17,7 @@ uci -q batch <<-EOF >/dev/null
 	set dockerd.dockerman.status_path='/tmp/.docker_action_status'
 	set dockerd.dockerman.debug='false'
 	set dockerd.dockerman.debug_path='/tmp/.docker_debug'
-	set dockerd.dockerman.remote_endpoint='false'
+	set dockerd.dockerman.remote_endpoint='0'
 
 	del_list dockerd.dockerman.ac_allowed_interface='br-lan'
 	add_list dockerd.dockerman.ac_allowed_interface='br-lan'
