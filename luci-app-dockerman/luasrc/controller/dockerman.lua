@@ -16,23 +16,23 @@ function index()
 
 	entry({"admin", "docker", "config"},cbi("dockerman/configuration"),_("Configuration"), 8).leaf=true
 	
-	local uci = (require "luci.model.uci").cursor()
-	if uci:get_bool("dockerd", "dockerman", "remote_endpoint") then
-		local host = uci:get("dockerd", "dockerman", "remote_host")
-		local port = uci:get("dockerd", "dockerman", "remote_port")
-		if not host or not port then
-			return
-		end
-	else
-		local socket = uci:get("dockerd", "dockerman", "socket_path") or "/var/run/docker.sock"
-		if socket and not nixio.fs.access(socket) then
-			return
-		end
-	end
+	-- local uci = (require "luci.model.uci").cursor()
+	-- if uci:get_bool("dockerd", "dockerman", "remote_endpoint") then
+	-- 	local host = uci:get("dockerd", "dockerman", "remote_host")
+	-- 	local port = uci:get("dockerd", "dockerman", "remote_port")
+	-- 	if not host or not port then
+	-- 		return
+	-- 	end
+	-- else
+	-- 	local socket = uci:get("dockerd", "dockerman", "socket_path") or "/var/run/docker.sock"
+	-- 	if socket and not nixio.fs.access(socket) then
+	-- 		return
+	-- 	end
+	-- end
 
-	if (require "luci.model.docker").new():_ping().code ~= 200 then
-		return
-	end
+	-- if (require "luci.model.docker").new():_ping().code ~= 200 then
+	-- 	return
+	-- end
 
 	entry({"admin", "docker", "overview"},form("dockerman/overview"),_("Overview"), 2).leaf=true
 	entry({"admin", "docker", "containers"}, form("dockerman/containers"), _("Containers"), 3).leaf=true

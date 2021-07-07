@@ -6,25 +6,25 @@ Copyright 2019 lisaac <https://github.com/lisaac/luci-app-dockerman>
 local docker = require "luci.model.docker"
 local dk = docker.new()
 
-local containers, images, res
+local containers, images, res, lost_state
 local m, s, o
 
-res = dk.images:list()
-if res.code < 300 then
-	images = res.body
+if dk:_ping().code ~= 200 then
+	lost_state = true
 else
-	return
-end
+	res = dk.images:list()
+	if res and res.code and res.code < 300 then
+		images = res.body
+	end
 
-res = dk.containers:list({
-	query = {
-		all=true
-	}
-})
-if res.code < 300 then
-	containers = res.body
-else
-	return
+	res = dk.containers:list({
+		query = {
+			all=true
+		}
+	})
+	if res and res.code and res.code < 300 then
+		containers = res.body
+	end
 end
 
 function get_images()
@@ -66,7 +66,7 @@ function get_images()
 	return data
 end
 
-local image_list = get_images()
+local image_list = not lost_state and get_images() or {}
 
 m = SimpleForm("docker",
 	translate("Docker - Images"),
@@ -100,6 +100,7 @@ o = s:option(Button, "_pull")
 o.inputtitle= translate("Pull")
 o.template = "dockerman/cbi/inlinebutton"
 o.inputstyle = "add"
+o.disable = lost_state
 o.write = function(self, section)
 	local tag = pull_value["_image_tag_name"]
 	local json_stringify = luci.jsonc and luci.jsonc.stringify
@@ -108,7 +109,7 @@ o.write = function(self, section)
 		docker:write_status("Images: " .. "pulling" .. " " .. tag .. "...\n")
 		local res = dk.images:create({query = {fromImage=tag}}, docker.pull_image_show_status_cb)
 
-		if res and res.code == 200 and (res.body[#res.body] and not res.body[#res.body].error and res.body[#res.body].status and (res.body[#res.body].status == "Status: Downloaded newer image for ".. tag)) then
+		if res and res.code and res.code == 200 and (res.body[#res.body] and not res.body[#res.body].error and res.body[#res.body].status and (res.body[#res.body].status == "Status: Downloaded newer image for ".. tag)) then
 			docker:clear_status()
 		else
 			docker:append_status("code:" .. res.code.." ".. (res.body[#res.body] and res.body[#res.body].error or (res.body.message or res.message)).. "\n")
@@ -126,6 +127,7 @@ s = m:section(SimpleSection,
 
 o = s:option(DummyValue, "_image_import")
 o.template = "dockerman/images_import"
+o.disable = lost_state
 
 s = m:section(Table, image_list, translate("Images overview"))
 
@@ -175,7 +177,7 @@ local remove_action = function(force)
 				id = img,
 				query = query
 			})
-			if msg.code ~= 200 then
+			if msg and msg.code ~= 200 then
 				docker:append_status("code:" .. msg.code.." ".. (msg.body.message and msg.body.message or msg.message).. "\n")
 				success = false
 			else
@@ -212,6 +214,7 @@ o.forcewrite = true
 o.write = function(self, section)
 	remove_action()
 end
+o.disable = lost_state
 
 o = s:option(Button, "forceremove")
 o.inputtitle= translate("Force Remove")
@@ -221,6 +224,7 @@ o.forcewrite = true
 o.write = function(self, section)
 	remove_action(true)
 end
+o.disable = lost_state
 
 o = s:option(Button, "save")
 o.inputtitle= translate("Save")
@@ -244,7 +248,7 @@ o.write = function (self, section)
 		end
 
 		local cb = function(res, chunk)
-			if res.code == 200 then
+			if res and res.code and res.code == 200 then
 				if not first then
 					first = true
 					luci.http.header('Content-Disposition', 'inline; filename="images.tar"')
@@ -263,7 +267,7 @@ o.write = function (self, section)
 		docker:write_status("Images: " .. "save" .. " " .. table.concat(image_selected, "\n") .. "...")
 		local msg = dk.images:get({query = {names = names}}, cb)
 
-		if msg.code ~= 200 then
+		if msg and msg.code and msg.code ~= 200 then
 			docker:append_status("code:" .. msg.code.." ".. (msg.body.message and msg.body.message or msg.message).. "\n")
 			success = false
 		else
@@ -271,10 +275,12 @@ o.write = function (self, section)
 		end
 	end
 end
+o.disable = lost_state
 
 o = s:option(Button, "load")
 o.inputtitle= translate("Load")
 o.template = "dockerman/images_load"
 o.inputstyle = "add"
+o.disable = lost_state
 
 return m

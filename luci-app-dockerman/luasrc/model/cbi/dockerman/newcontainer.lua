@@ -10,15 +10,22 @@ local m, s, o
 local dk = docker.new()
 
 local cmd_line = table.concat(arg, '/')
-local create_body = {}
+local images, networks, containers, create_body = {}
 
-local images = dk.images:list().body
-local networks = dk.networks:list().body
-local containers = dk.containers:list({
-	query = {
-		all=true
-	}
-}).body
+if dk:_ping().code ~= 200 then
+	lost_state = true
+	images = {}
+	networks = {}
+	containers ={}
+else
+	images = dk.images:list().body
+	networks = dk.networks:list().body
+	containers = dk.containers:list({
+		query = {
+			all=true
+		}
+	}).body
+end
 
 local is_quot_complete = function(str)
 	local num = 0, w
@@ -443,6 +450,10 @@ end
 
 m = SimpleForm("docker", translate("Docker - Containers"))
 m.redirect = luci.dispatcher.build_url("admin", "docker", "containers")
+if lost_state then
+	m.submit=false
+	m.reset=false
+end
 
 s = m:section(SimpleSection)
 s.template = "dockerman/apply_widget"
@@ -865,7 +876,7 @@ m.handle = function(self, state, data)
 		local json_stringify = luci.jsonc and luci.jsonc.stringify
 		docker:append_status("Images: " .. "pulling" .. " " .. image .. "...\n")
 		local res = dk.images:create({query = {fromImage=image}}, docker.pull_image_show_status_cb)
-		if res and res.code == 200 and (res.body[#res.body] and not res.body[#res.body].error and res.body[#res.body].status and (res.body[#res.body].status == "Status: Downloaded newer image for ".. image or res.body[#res.body].status == "Status: Image is up to date for ".. image)) then
+		if res and res.code and res.code == 200 and (res.body[#res.body] and not res.body[#res.body].error and res.body[#res.body].status and (res.body[#res.body].status == "Status: Downloaded newer image for ".. image or res.body[#res.body].status == "Status: Image is up to date for ".. image)) then
 			docker:append_status("done\n")
 		else
 			res.code = (res.code == 200) and 500 or res.code
@@ -895,7 +906,7 @@ m.handle = function(self, state, data)
 
 	docker:append_status("Container: " .. "create" .. " " .. name .. "...")
 	local res = dk.containers:create({name = name, body = create_body})
-	if res and res.code == 201 then
+	if res and res.code and res.code == 201 then
 		docker:clear_status()
 		luci.http.redirect(luci.dispatcher.build_url("admin/docker/containers"))
 	else

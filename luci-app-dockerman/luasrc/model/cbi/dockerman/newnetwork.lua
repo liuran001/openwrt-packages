@@ -8,9 +8,17 @@ local docker = require "luci.model.docker"
 local m, s, o
 
 local dk = docker.new()
+if dk:_ping().code ~= 200 then
+	lost_state = true
+end
 
 m = SimpleForm("docker", translate("Docker - Network"))
 m.redirect = luci.dispatcher.build_url("admin", "docker", "networks")
+if lost_state then
+	m.submit=false
+	m.reset=false
+end
+
 
 s = m:section(SimpleSection)
 s.template = "dockerman/apply_widget"
@@ -222,6 +230,8 @@ m.handle = function(self, state, data)
 
 			if driver == "macvlan" and
 				data.op_macvlan ~= 0 and
+				res and
+				res.code and
 				res.code == 200 and
 				res.body and
 				res.body.IPAM and

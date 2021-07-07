@@ -8,7 +8,7 @@ local dk = docker.new()
 
 local m, s, o
 
-local res, containers, volumes
+local res, containers, volumes, lost_state
 
 function get_volumes()
 	local data = {}
@@ -46,25 +46,25 @@ function get_volumes()
 	return data
 end
 
-res = dk.volumes:list()
-if res.code <300 then
-	volumes = res.body.Volumes
+if dk:_ping().code ~= 200 then
+	lost_state = true
 else
-	return
+	res = dk.volumes:list()
+	if res and res.code and res.code <300 then
+		volumes = res.body.Volumes
+	end
+
+	res = dk.containers:list({
+		query = {
+			all=true
+		}
+	})
+	if res and res.code and res.code <300 then
+		containers = res.body
+	end
 end
 
-res = dk.containers:list({
-	query = {
-		all=true
-	}
-})
-if res.code <300 then
-	containers = res.body
-else
-	return
-end
-
-local volume_list = get_volumes()
+local volume_list = not lost_state and get_volumes() or {}
 
 m = SimpleForm("docker", translate("Docker - Volumes"))
 m.submit=false
@@ -109,6 +109,7 @@ o.inputtitle= translate("Remove")
 o.template = "dockerman/cbi/inlinebutton"
 o.inputstyle = "remove"
 o.forcewrite = true
+o.disable = lost_state
 o.write = function(self, section)
 	local volume_selected = {}
 
@@ -124,7 +125,7 @@ o.write = function(self, section)
 		for _,vol in ipairs(volume_selected) do
 			docker:append_status("Volumes: " .. "remove" .. " " .. vol .. "...")
 			local msg = dk.volumes["remove"](dk, {id = vol})
-			if msg.code ~= 204 then
+			if msg and msg.code and msg.code ~= 204 then
 				docker:append_status("code:" .. msg.code.." ".. (msg.body.message and msg.body.message or msg.message).. "\n")
 				success = false
 			else

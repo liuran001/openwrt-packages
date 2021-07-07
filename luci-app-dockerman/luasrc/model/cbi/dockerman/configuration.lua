@@ -20,12 +20,15 @@ o = s:taboption("dockerman", Flag, "remote_endpoint",
 o.rmempty = false
 o.validate = function(self, value, sid)
 	local res = luci.http.formvaluetable("cbid.dockerd")
-	luci.util.perror(luci.jsonc.stringify(res))
 	if res["dockerman.remote_endpoint"] == "1" then
 	 if res["dockerman.remote_port"] and res["dockerman.remote_port"] ~= "" and res["dockerman.remote_host"] and res["dockerman.remote_host"] ~= "" then
 			return 1
 		else
 			return nil, translate("Please input the PORT or HOST IP of remote docker instance!")
+		end
+	else
+		if not res["dockerman.socket_path"] or not nixio.fs.access(res["dockerman.socket_path"]) then
+			return nil, translate("Please input the SOCKET PATH of docker daemon!")
 		end
 	end
 	return 0

@@ -100,6 +100,8 @@ if docker.new():_ping().code == 200 then
 	s.images_total = tostring(#images_list)
 	s.networks_total = tostring(#networks_list)
 	s.volumes_total = tostring(#volumes_list)
+else
+	docker_info_table['3ServerVersion']._value = translate("Can NOT connect to docker daemon, please check!!")
 end
 
 return m
