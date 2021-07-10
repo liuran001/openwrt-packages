@@ -6,7 +6,12 @@ Copyright 2019 lisaac <https://github.com/lisaac/luci-app-dockerman>
 local docker = require "luci.model.docker"
 local uci = require "luci.model.uci"
 
-local m, s, o
+local m, s, o, lost_state
+local dk = docker.new()
+
+if dk:_ping().code ~= 200 then
+	lost_state = true
+end
 
 function byte_format(byte)
 	local suff = {"B", "KB", "MB", "GB", "TB"}
@@ -19,7 +24,7 @@ function byte_format(byte)
 	end
 end
 
-m = SimpleForm("docker",
+m = SimpleForm("dockerd",
 	translate("Docker - Overview"),
 	translate("An overview with the relevant data is displayed here with which the LuCI docker client is connected.")
 ..
@@ -42,6 +47,57 @@ docker_info_table['7DockerRootDir'] = {_key=translate("Docker Root Dir"),_value=
 docker_info_table['8IndexServerAddress'] = {_key=translate("Index Server Address"),_value='-'}
 docker_info_table['9RegistryMirrors'] = {_key=translate("Registry Mirrors"),_value='-'}
 
+if nixio.fs.access("/usr/bin/dockerd") and not uci:get_bool("dockerd", "dockerman", "remote_endpoint")  then
+	s = m:section(SimpleSection)
+	s.template = "dockerman/apply_widget"
+	s.err=docker:read_status()
+	s.err=s.err and s.err:gsub("\n","<br>"):gsub(" ","&nbsp;")
+	if s.err then
+		docker:clear_status()
+	end
+	s = m:section(Table,{{}})
+	s.notitle=true
+	s.rowcolors=false
+	s.template = "cbi/nullsection"
+
+	o = s:option(Button, "_start")
+	o.template = "dockerman/cbi/inlinebutton"
+	o.inputtitle = lost_state and translate("Start") or translate("Stop")
+	o.inputstyle = lost_state and "add" or "remove"
+	o.forcewrite = true
+	o.write = function(self, section)
+		docker:clear_status()
+
+		if lost_state then
+			docker:append_status("Docker daemon: starting")
+			luci.util.exec("/etc/init.d/dockerd start")
+			luci.util.exec("sleep 5")
+			luci.util.exec("/etc/init.d/dockerman start")
+
+		else
+			docker:append_status("Docker daemon: stopping")
+			luci.util.exec("/etc/init.d/dockerd stop")
+		end
+		docker:clear_status()
+		luci.http.redirect(luci.dispatcher.build_url("admin/docker/overview"))
+	end
+
+	o = s:option(Button, "_restart")
+	o.template = "dockerman/cbi/inlinebutton"
+	o.inputtitle = translate("Restart")
+	o.inputstyle = "reload"
+	o.forcewrite = true
+	o.write = function(self, section)
+		docker:clear_status()
+		docker:append_status("Docker daemon: restarting")
+		luci.util.exec("/etc/init.d/dockerd restart")
+		luci.util.exec("sleep 5")
+		luci.util.exec("/etc/init.d/dockerman start")
+		docker:clear_status()
+		luci.http.redirect(luci.dispatcher.build_url("admin/docker/overview"))
+	end
+end
+
 s = m:section(Table, docker_info_table)
 s:option(DummyValue, "_key", translate("Info"))
 s:option(DummyValue, "_value")
@@ -57,8 +113,7 @@ s.networks_total = '-'
 s.volumes_total = '-'
 
 -- local socket = luci.model.uci.cursor():get("dockerd", "dockerman", "socket_path")
-if docker.new():_ping().code == 200 then
-	local dk = docker.new()
+if not lost_state then
 	local containers_list = dk.containers:list({query = {all=true}}).body
 	local images_list = dk.images:list().body
 	local vol = dk.volumes:list()

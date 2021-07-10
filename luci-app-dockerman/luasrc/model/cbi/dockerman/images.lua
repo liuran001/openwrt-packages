@@ -230,6 +230,7 @@ o = s:option(Button, "save")
 o.inputtitle= translate("Save")
 o.template = "dockerman/cbi/inlinebutton"
 o.inputstyle = "edit"
+o.disable = lost_state
 o.forcewrite = true
 o.write = function (self, section)
 	local image_selected = {}
@@ -241,17 +242,21 @@ o.write = function (self, section)
 	end
 
 	if next(image_selected) ~= nil then
-		local names, first
+		local names, first, show_name
 
 		for _, img in ipairs(image_selected) do
 			names = names and (names .. "&names=".. img) or img
 		end
-
+		if #image_selected > 1 then
+			show_name = "images"
+		else
+			show_name = image_selected[1]
+		end
 		local cb = function(res, chunk)
 			if res and res.code and res.code == 200 then
 				if not first then
 					first = true
-					luci.http.header('Content-Disposition', 'inline; filename="images.tar"')
+					luci.http.header('Content-Disposition', 'inline; filename="'.. show_name .. '.tar"')
 					luci.http.header('Content-Type', 'application\/x-tar')
 				end
 				luci.ltn12.pump.all(chunk, luci.http.write)
@@ -266,16 +271,13 @@ o.write = function (self, section)
 
 		docker:write_status("Images: " .. "save" .. " " .. table.concat(image_selected, "\n") .. "...")
 		local msg = dk.images:get({query = {names = names}}, cb)
-
 		if msg and msg.code and msg.code ~= 200 then
 			docker:append_status("code:" .. msg.code.." ".. (msg.body.message and msg.body.message or msg.message).. "\n")
-			success = false
 		else
 			docker:clear_status()
 		end
 	end
 end
-o.disable = lost_state
 
 o = s:option(Button, "load")
 o.inputtitle= translate("Load")

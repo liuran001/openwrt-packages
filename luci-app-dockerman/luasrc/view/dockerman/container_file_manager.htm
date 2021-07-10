@@ -203,7 +203,7 @@
 		};
 
 		async function file2Tar(tarFile, fileToLoad) {
-			if (fileToLoad == null) return
+			if (! fileToLoad) return
 			function file2Byte(file) {
 				return new Promise((resolve, reject) => {
 					var fileReader = new FileReader();
@@ -223,11 +223,10 @@
 
 		function fileByte2Tar(tarFile, fileName, fileBytes) {
 			if (!tarFile) tarFile = TarFile.create(fileName)
-
 			var tarHeader = TarFileEntryHeader.default();
 			var tarFileEntryHeader = new TarFileEntryHeader
 				(
-					fileName,
+					ByteHelper.bytesToStringUTF8(fileName),
 					tarHeader.fileMode,
 					tarHeader.userIDOfOwner,
 					tarHeader.userIDOfGroup,
@@ -274,7 +273,9 @@
 				})
 				return
 			}
-			let uploadPromises = new Array()
+			docker_status_message('notice',
+				'<img src="<%=resource%>/icons/loading.gif" style="vertical-align:middle" /> <span style="white-space:pre-line; word-break:break-all; font-family: \'Courier New\', Courier, monospace;">' +
+				'Uploading...' + '</span>');
 			Globals.Instance.tarFile = TarFile.create("Archive.tar")
 			let bytesToWriteAsBlob
 			for (let i = 0; i < uploadArchive.files.length; i++) {
@@ -299,7 +300,9 @@
 					})
 				}
 				else {
-					docker_status_message('warning', "<%:Upload Error%>:" + xhr.statusText)
+					// docker_status_message('warning', "<%:Upload Error%>:" + xhr.statusText)
+					docker_status_message('warning', "<%:Upload Error%>:" + '<span style="white-space:pre-line; word-break:break-all; font-family: \'Courier New\', Courier, monospace;">' +
+						JSON.parse(xhr.response).message + '</span>')
 				}
 				document.getElementById('docker_apply_overlay').addEventListener("click", (e) => {
 					docker_status_message()

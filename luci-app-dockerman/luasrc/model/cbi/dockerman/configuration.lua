@@ -1,5 +1,8 @@
--- Copyright 2021 Florian Eckert <fe@dev.tdt.de>
--- Licensed to the public under the Apache License 2.0.
+--[[
+LuCI - Lua Configuration Interface
+Copyright 2021 Florian Eckert <fe@dev.tdt.de>
+Copyright 2021 lisaac <lisaac.cn@gmail.com>
+]]--
 
 local uci = require "luci.model.uci"
 
@@ -9,8 +12,60 @@ m = Map("dockerd",
 	translate("Docker - Configuration"),
 	translate("DockerMan is a simple docker manager client for LuCI"))
 
-s = m:section(NamedSection, "dockerman", "section", translate("Global settings"))
-s:tab("daemon", translate("Docker Daemon"))
+if nixio.fs.access("/usr/bin/dockerd") and not m.uci:get_bool("dockerd", "dockerman", "remote_endpoint")  then
+	s = m:section(NamedSection, "globals", "section", translate("Docker Daemon settings"))
+
+	o = s:option(Flag, "auto_start", translate("Auto start"))
+	o.rmempty = false
+	o.write = function(self, section, value)
+		if value == "1" then
+			luci.util.exec("/etc/init.d/dockerd enable")
+		else
+			luci.util.exec("/etc/init.d/dockerd disable")
+		end
+		m.uci:set("dockerd", "globals", "auto_start", value)
+	end
+
+	o = s:option(Value, "data_root",
+		translate("Docker Root Dir"))
+	o.placeholder = "/opt/docker/"
+	o:depends("remote_endpoint", 0)
+
+	o = s:option(Value, "bip",
+		translate("Default bridge"),
+		translate("Configure the default bridge network"))
+	o.placeholder = "172.17.0.1/16"
+	o.datatype = "ipaddr"
+	o:depends("remote_endpoint", 0)
+
+	o = s:option(DynamicList, "registry_mirrors",
+		translate("Registry Mirrors"),
+		translate("It replaces the daemon registry mirrors with a new set of registry mirrors"))
+	o:value("https://hub-mirror.c.163.com", "https://hub-mirror.c.163.com")
+	o:depends("remote_endpoint", 0)
+	o.forcewrite = true
+
+	o = s:option(ListValue, "log_level",
+		translate("Log Level"),
+		translate('Set the logging level'))
+	o:value("debug", translate("Debug"))
+	o:value("", translate("Info")) -- This is the default debug level from the deamon is optin is not set
+	o:value("warn", translate("Warning"))
+	o:value("error", translate("Error"))
+	o:value("fatal", translate("Fatal"))
+	o.rmempty = true
+	o:depends("remote_endpoint", 0)
+
+	o = s:option(DynamicList, "hosts",
+		translate("Client connection"),
+		translate('Specifies where the Docker daemon will listen for client connections (default: unix:///var/run/docker.sock)'))
+	o:value("unix:///var/run/docker.sock", "unix:///var/run/docker.sock")
+	o:value("tcp://0.0.0.0:2375", "tcp://0.0.0.0:2375")
+	o.rmempty = true
+	o:depends("remote_endpoint", 0)
+end
+
+s = m:section(NamedSection, "dockerman", "section", translate("DockerMan settings"))
 s:tab("ac", translate("Access Control"))
 s:tab("dockerman", translate("DockerMan"))
 
@@ -27,7 +82,7 @@ o.validate = function(self, value, sid)
 			return nil, translate("Please input the PORT or HOST IP of remote docker instance!")
 		end
 	else
-		if not res["dockerman.socket_path"] or not nixio.fs.access(res["dockerman.socket_path"]) then
+		if not res["dockerman.socket_path"] then
 			return nil, translate("Please input the SOCKET PATH of docker daemon!")
 		end
 	end
@@ -59,7 +114,7 @@ o:depends("remote_endpoint", 1)
 -- o.disabled="false"
 -- o = s:taboption("dockerman", Value, "debug_path", translate("Debug Tempfile Path"), translate("Where you want to save the debug tempfile"))
 
-if nixio.fs.access("/usr/bin/dockerd") then
+if nixio.fs.access("/usr/bin/dockerd") and not m.uci:get_bool("dockerd", "dockerman", "remote_endpoint")  then
 	o = s:taboption("ac", DynamicList, "ac_allowed_interface", translate("Allowed access interfaces"), translate("Which interface(s) can access containers under the bridge network, fill-in Interface Name"))
 	local interfaces = luci.sys and luci.sys.net and luci.sys.net.devices() or {}
 	for i, v in ipairs(interfaces) do
@@ -73,92 +128,6 @@ if nixio.fs.access("/usr/bin/dockerd") then
 				o:value(v.Id:sub(1,12), v.Names[1]:sub(2) .. " | " .. v.NetworkSettings.Networks.bridge.IPAddress)
 			end
 		end
-	end
-
-	o = s:taboption("daemon", Flag, "daemon_ea", translate("Enable"))
-	o.enabled = "true"
-	o.disabled = "false"
-	o.rmempty = true
-
-	o = s:taboption("daemon", Value, "daemon_data_root",
-		translate("Docker Root Dir"))
-	o.placeholder = "/opt/docker/"
-	o:depends("remote_endpoint", 0)
-
-	o = s:option(Value, "daemon_bip",
-		translate("Default bridge"),
-		translate("Configure the default bridge network"))
-	o.placeholder = "172.17.0.1/16"
-	o.datatype = "ipaddr"
-	o:depends("remote_endpoint", 0)
-
-	o = s:taboption("daemon", DynamicList, "daemon_registry_mirrors",
-		translate("Registry Mirrors"),
-		translate("It replaces the daemon registry mirrors with a new set of registry mirrors"))
-	o.placeholder = translate("Example: https://hub-mirror.c.163.com")
-	o:depends("remote_endpoint", 0)
-
-	o = s:taboption("daemon", ListValue, "daemon_log_level",
-		translate("Log Level"),
-		translate('Set the logging level'))
-	o:value("debug", translate("Debug"))
-	o:value("", translate("Info")) -- This is the default debug level from the deamon is optin is not set
-	o:value("warn", translate("Warning"))
-	o:value("error", translate("Error"))
-	o:value("fatal", translate("Fatal"))
-	o.rmempty = true
-	o:depends("remote_endpoint", 0)
-
-	o = s:taboption("daemon", DynamicList, "daemon_hosts",
-		translate("Client connection"),
-		translate('Specifies where the Docker daemon will listen for client connections (default: unix:///var/run/docker.sock)'))
-	o.placeholder = translate("Example: tcp://0.0.0.0:2375")
-	o.rmempty = true
-	o:depends("remote_endpoint", 0)
-	
-	local daemon_changes = 0
-	m.on_before_save = function(self)
-		local m_changes = m.uci:changes("dockerd")
-		if not m_changes or not m_changes.dockerd or not m_changes.dockerd.dockerman then return end
-
-		if m_changes.dockerd.dockerman.daemon_hosts then
-			m.uci:set("dockerd", "globals", "hosts", m_changes.dockerd.dockerman.daemon_hosts)
-			daemon_changes = 1
-		end
-		if m_changes.dockerd.dockerman.daemon_bip then
-			m.uci:set("dockerd", "globals", "bip", m_changes.dockerd.dockerman.daemon_bip)
-			daemon_changes = 1
-		end
-		if m_changes.dockerd.dockerman.daemon_registry_mirrors then
-			m.uci:set("dockerd", "globals", "registry_mirrors", m_changes.dockerd.dockerman.daemon_registry_mirrors)
-			daemon_changes = 1
-		end
-		if m_changes.dockerd.dockerman.daemon_data_root then
-			m.uci:set("dockerd", "globals", "data_root", m_changes.dockerd.dockerman.daemon_data_root)
-			daemon_changes = 1
-		end
-		if m_changes.dockerd.dockerman.daemon_log_level then
-			luci.model.uci.cursor():set("dockerd", "globals", "log_level", m_changes.dockerd.dockerman.daemon_log_level)
-			daemon_changes = 1
-		end
-		if m_changes.dockerd.dockerman.daemon_ea then
-			if m_changes.dockerd.dockerman.daemon_ea == "false" then
-				daemon_changes = -1
-			elseif daemon_changes == 0 then
-				daemon_changes = 1
-			end
-		end
-	end
-
-	m.on_after_commit = function(self)
-		if daemon_changes == 1 then
-			luci.util.exec("/etc/init.d/dockerd enable")
-			luci.util.exec("/etc/init.d/dockerd restart")
-		elseif daemon_changes == -1 then
-			luci.util.exec("/etc/init.d/dockerd stop")
-			luci.util.exec("/etc/init.d/dockerd disable")
-		end
-		luci.util.exec("/etc/init.d/dockerman start")
 	end
 end
 

@@ -10,7 +10,8 @@ local m, s, o
 local dk = docker.new()
 
 local cmd_line = table.concat(arg, '/')
-local images, networks, containers, create_body = {}
+local images, networks, containers
+local create_body = {}
 
 if dk:_ping().code ~= 200 then
 	lost_state = true

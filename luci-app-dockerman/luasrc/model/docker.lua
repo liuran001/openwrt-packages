@@ -287,7 +287,7 @@ _docker.new = function()
 		debug_path = uci:get("dockerd", "dockerman", "debug_path") or "/tmp/.docker_debug"
 	end
 
-	local status_path = uci:get("dockerd", "dockerman", "status_path") or "/tmp/.docker_status"
+	local status_path = uci:get("dockerd", "dockerman", "status_path") or "/tmp/.docker_action_status"
 
 	_docker.options = {
 		host = host,
@@ -304,6 +304,8 @@ _docker.new = function()
 
 	return _new
 end
+
+_docker.options.status_path = uci:get("dockerd", "dockerman", "status_path") or "/tmp/.docker_action_status"
 
 _docker.append_status=function(self,val)
 	if not val then

@@ -5,11 +5,8 @@ sed -i 's/self:cfgvalue(section) or {}/self:cfgvalue(section) or self.default or
 /etc/init.d/uhttpd restart >/dev/null 2>&1
 rm -fr /tmp/luci-indexcache /tmp/luci-modulecache >/dev/null 2>&1
 touch /etc/config/dockerd
+ls /etc/rc.d/*dockerd &> /dev/null && uci set dockerd.globals.auto_start="1" || uci set dockerd.globals.auto_start="0"
 uci set dockerd.dockerman=dockerman &> /dev/null
-ls /etc/rc.d/*dockerd &> /dev/null && uci set dockerd.dockerman.daemon_ea="true" || uci set dockerd.dockerman.daemon_ea="false"
-uci set dockerd.dockerman.daemon_data_root=`uci get dockerd.globals.data_root 2&> /dev/null || echo ''`
-uci set dockerd.dockerman.daemon_log_level=`uci get dockerd.globals.log_level 2&> /dev/null || echo 'warn'`
-uci set dockerd.dockerman.daemon_bip=`uci get dockerd.globals.bip 2&> /dev/null || echo ''`
 uci -q batch <<-EOF >/dev/null
 	set uhttpd.main.script_timeout="3600"
 	commit uhttpd
