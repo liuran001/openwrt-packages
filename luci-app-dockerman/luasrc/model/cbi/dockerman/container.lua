@@ -721,7 +721,7 @@ elseif action == "console" then
 			end
 
 			local hosts
-			local uci = require "luci.model.uci".cursor()
+			local uci = (require "luci.model.uci").cursor()
 			local remote = uci:get_bool("dockerd", "dockerman", "remote_endpoint") or false
 			local host = nil
 			local port = nil

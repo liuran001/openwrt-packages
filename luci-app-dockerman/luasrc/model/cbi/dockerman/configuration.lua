@@ -4,7 +4,7 @@ Copyright 2021 Florian Eckert <fe@dev.tdt.de>
 Copyright 2021 lisaac <lisaac.cn@gmail.com>
 ]]--
 
-local uci = require "luci.model.uci"
+local uci = (require "luci.model.uci").cursor()
 
 local m, s, o
 
