@@ -47,7 +47,7 @@ docker_info_table['7DockerRootDir'] = {_key=translate("Docker Root Dir"),_value=
 docker_info_table['8IndexServerAddress'] = {_key=translate("Index Server Address"),_value='-'}
 docker_info_table['9RegistryMirrors'] = {_key=translate("Registry Mirrors"),_value='-'}
 
-if nixio.fs.access("/usr/bin/dockerd") and not m.uci:get_bool("dockerd", "dockerman", "remote_endpoint") then
+if nixio.fs.access("/usr/bin/dockerd") and not uci:get_bool("dockerd", "dockerman", "remote_endpoint") then
 	s = m:section(SimpleSection)
 	s.template = "dockerman/apply_widget"
 	s.err=docker:read_status()
