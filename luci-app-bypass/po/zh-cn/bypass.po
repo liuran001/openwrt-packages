@@ -717,3 +717,12 @@ msgstr "清除"
 
 msgid "To Top"
 msgstr "置顶"
+
+msgid "Used with AdGuardHome"
+msgstr "与AdGuardHome搭配使用"
+
+msgid "The DNS servers for adguardhome must and can only be set to 127.0.0.1:5337"
+msgstr "请先开启AdGuardHome,AdGuardHome上游DNS服务器必须也只能设置为127.0.0.1:5337,重定向设置为无"
+
+msgid "The DNS port for AdGuardHome"
+msgstr "AdGuardHome的DNS端口"

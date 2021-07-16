@@ -64,6 +64,17 @@ translate("If the domestic DNS does not hijack foreign domain name to domestic I
 o:depends("run_mode","router")
 o.default=1
 
+o=s:option(Flag,"adguardhome",translate("Used with AdGuardHome"),
+translate("The DNS servers for adguardhome must and can only be set to 127.0.0.1:5337"))
+o:depends("run_mode","router")
+o.default=0
+
+o=s:option(Value,"adg_port",translate("The DNS port for AdGuardHome"))
+o.datatype = "uinteger"
+o:depends("adguardhome",true)
+o.optional = false
+o.default="5553"
+
 o=s:option(ListValue,"dports",translate("Proxy Ports"))
 o:value("1",translate("All Ports"))
 o:value("2",translate("Only Common Ports"))
@@ -113,4 +124,5 @@ o:value("114.114.114.114,114.114.115.115","114.114.114.114,114.114.115.115 (114 
 o.default="isp"
 o:depends("dns_mode_d","udp")
 m:section(SimpleSection).template = 'bypass/status_bottom'
+
 return m

@@ -44,6 +44,8 @@ uci_get_by_type(){
 
 GLOBAL_SERVER=$(uci_get_by_type global global_server)
 gfw_mode=$(uci_get_by_type global gfw_mode 0)
+adguardhome=$(uci_get_by_type global adguardhome 0)
+adg_port=$(uci_get_by_type global adg_port 5553)
 run_mode=$(uci_get_by_type global run_mode router)
 SO_SERVER=$(uci_get_by_type socks5_proxy server 0)
 [ $SO_SERVER = same ] && SO_SERVER=$GLOBAL_SERVER
@@ -766,7 +768,7 @@ gen_dns(){
 	case $run_mode in
 	all) port=5335;;
 	gfw|oversea) port=5336;;
-	*) port=5337;;
+	*) [[ $adguardhome == 1 && "$(netstat -tunlp | grep $adg_port | grep -i AdGuardHome)" ]] && port=$adg_port || port=5337;;
 	esac
 	cat >$DNS_FILE <<-EOF
 		no-resolv
@@ -811,6 +813,7 @@ gen_dns(){
 		[ $run_mode = all -a "$dns_c" = 1 ] && echo "server=/$doh_d_dom/127.0.0.1#5336" >$DNS_DIR/white.conf
 		if [ -s $T_FILE/white.list ];then
 			cp -f $T_FILE/white.list $O
+			sed -i "s/\r//g" $O
 			D=$(cat $O)
 			for i in $D;do
 				sed -i -e "/\/$i\//d" -e "/\.$i\//d" $DNS_DIR/black.conf 2>/dev/null
