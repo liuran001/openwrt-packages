@@ -88,7 +88,10 @@ function mmcli_name(){
 
 # get CSQ 
 function get_csq(){
-	CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}')
+	case $FAMILY in
+		INTEL) CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $3}') ;;
+		*) CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}') ;;
+	esac
 	[ "x$CSQ" = "x" ] && CSQ=-1
 	if [ $CSQ -ge 0 -a $CSQ -le 31 ]; then
 		CSQ_PER=$(($CSQ * 100/31))
@@ -585,17 +588,6 @@ function intel_data(){
                         fi
                         SCC=$SCC+$SC
                 done
-		CSQ_RSSI=$(echo $RSRP $RSRQ | awk '{printf "%.0f\n", ($1-$2)}')
-		CSQ_PER=$(echo $CSQ_RSSI |awk '{printf "%d\n", (100*(1-(-50 - $1)/(-50 - -120)))}')
-		[ $CSQ_RSSI -ge -110 ] && CSQ_COL="black"
-		[ $CSQ_RSSI -ge -105 ] && CSQ_COL="red"
-		[ $CSQ_RSSI -ge -95 ] && CSQ_COL="orange"
-		[ $CSQ_RSSI -ge -75 ] && CSQ_COL="green"
-		if [ $CSQ_PER -gt 100 ]; then
-			CSQ_PER=100
-		elif [ $CSQ_PER -lt 0 ]; then
-			CSQ_PER=0
-		fi
 		SINx=$(echo "$O" | awk -F [:,] '/\+XCESQ:/{print $9}')
 		if [ $SINx -eq 99 ]; then
 			SINR=""
