@@ -89,7 +89,12 @@ function mmcli_name(){
 # get CSQ 
 function get_csq(){
 	case $FAMILY in
-		INTEL) CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $3}') ;;
+		INTEL)
+			case $MODE in
+				# Correct CSQ LTE mode on Intel XMM Fibocom modems 
+				LTE*) CSQ=$(echo $RSRQ $RSRP $NP | awk '{printf "%.0f\n", (113+10*log(((-20-$1)/$2)/$3))/2}') ;;
+			esac
+		;;
 		*) CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}') ;;
 	esac
 	[ "x$CSQ" = "x" ] && CSQ=-1
@@ -551,6 +556,14 @@ function intel_data(){
 		RSRP=$(echo "$O" | awk -F [:,] '/\+RSRP:/{printf "%.0f\n", $4}')
 		RSRQ=$(echo "$O" | awk -F [:,] '/\+RSRQ:/{printf "%.0f\n", $4}')
 		BWCx=$(echo "$O" | awk -F [:,] '/\+XLEC/{gsub("\r",""); print $4" "$5" "$6" "$7" "$8}')
+		case $BWDL in
+                        1) NP=15 ;;
+                        2) NP=25 ;;
+                        3) NP=50 ;;
+                        4) NP=75 ;;
+                        5) NP=100 ;;
+                        *) NP=0 ;;
+                esac
 		for ca in $BWCx; do
 			case $ca in
 				1) N=3 ;;
@@ -752,8 +765,8 @@ function get_data_in(){
 		;;
 		INTEL)
 			get_cops
-			get_csq
 			intel_data
+			get_csq
 			get_reg_data
 		;;
 		MIKROTIK)
