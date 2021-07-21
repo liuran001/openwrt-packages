@@ -93,6 +93,7 @@ function get_csq(){
 			case $MODE in
 				# Correct CSQ LTE mode on Intel XMM Fibocom modems 
 				LTE*) CSQ=$(echo $RSRQ $RSRP $NP | awk '{printf "%.0f\n", (113+10*log(((-20-$1)/$2)/$3))/2}') ;;
+				*) CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}') ;;
 			esac
 		;;
 		*) CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}') ;;
