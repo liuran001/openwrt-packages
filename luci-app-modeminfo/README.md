@@ -10,7 +10,7 @@ Supported devices:
 
  - SimCom SIM7600E-H
 
- - Huawei E3372 (LTE)/ME909u-521
+ - Huawei E3372 (LTE)/ME909
 
  - Sierra Wireless EM7455
 

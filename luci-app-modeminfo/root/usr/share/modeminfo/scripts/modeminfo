@@ -246,8 +246,8 @@ function huawei_data(){
 	CHIPTEMP=$(echo "$O" | awk -F[,] '/^\^CHIPTEMP/ {print $4}')
 	# 65535 -> Not supported currently
 	if [ $CHIPTEMP -eq 65535 ]; then
-		# CHIPTEMP for Huawei ME909u-521
-		CHIPTEMP=$(echo "$O" | awk -F[,] '/^\^CHIPTEMP/ {print $6 * 0.1}')
+		# CHIPTEMP for Huawei ME909u series
+		CHIPTEMP=$(echo "$O" | awk -F[,] '/^\^CHIPTEMP/ {printf "%.0f\n", $6 * 0.1}')
 	fi
 	case $BWDx in
 		1400) BWDL=0 ;;
