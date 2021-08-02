@@ -4,7 +4,7 @@ LUCI_TITLE:=Information dashboard for 3G/LTE dongle
 LUCI_DEPENDS:=+comgt +luci-compat
 PKG_LICENSE:=GPLv3
 PKG_VERSION:=0.1.7
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 define Package/luci-app-modeminfo/conffiles
 	/etc/config/modeminfo
