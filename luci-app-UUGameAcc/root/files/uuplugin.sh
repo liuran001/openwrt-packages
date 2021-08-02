@@ -1,2 +1,2 @@
 #!/bin/sh
-cp -a $(1)/tmp/uuplugin/$(uname -m)/* $(1)/usr/bin/uuplugin
+cp -a ./tmp/uuplugin/$(uname -m)/* ./usr/bin/uuplugin
