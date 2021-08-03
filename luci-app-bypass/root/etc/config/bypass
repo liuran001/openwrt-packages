@@ -1,13 +1,13 @@
 
 config global
-	option dports '1'
+	option dports '2'
 	option threads '0'
 	option run_mode 'router'
 	option dns_mode_o 'tcp'
 	option doh_dns_o '1.1.1.1,1.0.0.1'
 	option gfw_mode '1'
-	option dns_mode_d 'udp'
-	option udp_dns_d 'isp'
+	option dns_mode_d 'doh'
+	option doh_dns_d 'alidns'
 	option monitor_enable '1'
 	option enable_switch '1'
 	option switch_time '300'
