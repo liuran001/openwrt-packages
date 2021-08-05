@@ -225,7 +225,7 @@ local function processData(szType, content)
 		local method = userinfo:sub(1, userinfo:find(":") - 1)
 		local password = userinfo:sub(userinfo:find(":") + 1, #userinfo)
 		result.alias = UrlDecode(alias)
-		result.type = ss
+		result.type = v2_ss
 		result.v2ray_protocol = "shadowsocks"
 		result.server = host[1]
 		if host[2]:find("/%?") then
@@ -261,7 +261,7 @@ local function processData(szType, content)
 			result.server = nil
 		end
 	elseif szType == "sip008" then
-		result.type = ss
+		result.type = v2_ss
 		result.v2ray_protocol = "shadowsocks"
 		result.server = content.server
 		result.server_port = content.server_port
@@ -274,7 +274,7 @@ local function processData(szType, content)
 			result.server = nil
 		end
 	elseif szType == "ssd" then
-		result.type = ss
+		result.type = v2_ss
 		result.v2ray_protocol = "shadowsocks"
 		result.server = content.server
 		result.server_port = content.port
@@ -301,7 +301,7 @@ local function processData(szType, content)
 		local userinfo = hostInfo[1]
 		local password = userinfo
 		result.alias = UrlDecode(alias)
-		result.type = trojan
+		result.type = v2_tj
 		result.v2ray_protocol = "trojan"
 		result.server = host[1]
 		-- 按照官方的建议 默认验证ssl证书
