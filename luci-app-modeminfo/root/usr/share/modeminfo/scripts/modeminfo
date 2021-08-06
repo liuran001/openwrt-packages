@@ -507,6 +507,9 @@ function dell_data(){
 		CSQ_RSSI=$(echo "$O" | awk '/^RSSI/{gsub("dBm",""); printf "%.0f\n", $2}')
 		RSRQ=$(echo  "$O" | awk '/^RSRQ/{gsub("dB",""); printf "%.0f\n", $2}')
 		SINR=$(echo  "$O" | awk '/^RS-SINR/{gsub("dB",""); printf "%.0f\n", $2}')
+		if [ ! $SINR ]; then
+			SINR=$(echo  "$O" | awk '/^RS-SNR/{gsub("dB",""); printf "%.0f\n", $2}')
+		fi
 		BW=$(echo "$O" |grep -A2 AT^CA_INFO | awk 'NR ==2{print $0}')
 		BWDx=$(echo "$BW" | awk '{printf "%.0f\n",$8}')
 		LTE_CA=$(echo "$O" | awk '/SCC/{print $0}' | wc -l)
@@ -542,6 +545,9 @@ function dell_data(){
 		
 	fi
 	CHIPTEMP=$(echo "$O" | awk -F [:] '/xo_therm_buf:/{print $2}')
+	if [ ! $CHIPTEMP ]; then
+		CHIPTEMP=$(echo "$O" | awk -F [:] '/^TSENS/{gsub("C", ""); print $2}')
+	fi
 }
 
 # Intel XMM modems (need changes)

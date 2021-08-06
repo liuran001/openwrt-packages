@@ -121,7 +121,7 @@ opengt
  goto next
  
 :quectel
- let $c="AT+COPS?^m"
+ let $c="AT+COPS=3,2;+COPS?^m"
  let $r="+COPS"
  gosub readatcmd
 
@@ -159,6 +159,10 @@ opengt
 
  send "AT+TEMP^m"
  get 1 "" $s
+ print $s
+
+ send "AT\^TEMP^m"                             
+ get 1 "" $s                                    
  print $s
 
  send "AT\^CA_INFO?^m"
