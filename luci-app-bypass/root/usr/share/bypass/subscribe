@@ -26,7 +26,7 @@ local subscribe_url = ucic:get_first(name, 'server_subscribe', 'subscribe_url', 
 local filter_mode=ucic:get_first(name,'server_subscribe','filter_mode','0')
 local filter_words = ucic:get_first(name, 'server_subscribe', 'filter_words', '过期时间/剩余流量')
 local v2_ss = luci.sys.exec('type -t -p ss-redir sslocal') ~= "" and "ss" or "v2ray"
-local v2_tj = luci.sys.exec('type -t -p trojan') ~= "" and "trojan" or "v2ray"
+local v2_tj = luci.sys.exec('type -t -p trojan-plus') ~= "" and "trojan" or "v2ray"
 local log=function(...)
 	local file=io.open("/var/log/bypass.log","a")
 	io.output(file)
