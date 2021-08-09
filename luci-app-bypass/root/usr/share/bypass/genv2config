@@ -110,7 +110,8 @@ outbound = {
 			}
 		} or nil,
 	        grpcSettings = (server.transport == "grpc") and {
-                        serviceName = server.grpc_serviceName
+                        serviceName = server.grpc_serviceName,
+			MultiMode = (server.gRPC_MultiMode == "1") and true or nil
                 } or nil
 	},
 	mux = (server.mux == "1" and server.xtls ~= "1") and {

@@ -161,7 +161,7 @@ opengt
  get 1 "" $s
  print $s
 
- send "AT\^TEMP^m"                             
+ send "AT\^TEMP?^m"                             
  get 1 "" $s                                    
  print $s
 

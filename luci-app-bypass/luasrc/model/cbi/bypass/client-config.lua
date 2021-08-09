@@ -390,6 +390,10 @@ o:value("wireguard", "WireGuard")
 o = s:option(Value, "grpc_serviceName", "ServiceName")
 o:depends("transport", "grpc")
 
+o = s:option(Flag, "gRPC_MultiMode", "MultiMode")
+o.rmempty = true
+o:depends("transport", "grpc")
+
 -- [[ mKCP部分 ]]--
 
 o = s:option(ListValue, "kcp_guise", translate("Camouflage Type"))
