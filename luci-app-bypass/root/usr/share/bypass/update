@@ -12,27 +12,27 @@ log(){
 	[ $A = N ] && echo "$(date +'%Y-%m-%d %H:%M:%S') $*" >> /var/log/bypass.log
 }
 
-if [ $A = Y ];then
-	mkdir -p $TMP
-	while ! B=$(curl -Lfsm 9 https://ispip.clang.cn/all_cn.txt);do
-		sleep 2
-	done
-else
-	B=$(curl -Lfsm 9 https://ispip.clang.cn/all_cn.txt)
-fi
-[ -n "$B" ] && echo "$B" > /tmp/china.txt
-
-if ! cmp -s /tmp/china.txt $TMP/china.txt;then
-	log "Update China IP List!"
-	cp -f /tmp/china.txt $TMP/china.txt
-	[ $A = N ] && ipset list china_v4 >/dev/null 2>&1 && $DIR/chinaipset
-else
-	log "China IPv4 List is up to date!"
-fi
-
 C=$(uci -q get bypass.@global[0].run_mode)
 
 if [ "$C" = router ];then
+	if [ $A = Y ];then
+		mkdir -p $TMP
+		while ! B=$(curl -Lfsm 9 https://ispip.clang.cn/all_cn.txt);do
+			sleep 2
+		done
+	else
+		B=$(curl -Lfsm 9 https://ispip.clang.cn/all_cn.txt)
+	fi
+	[ -n "$B" ] && echo "$B" > /tmp/china.txt
+
+	if ! cmp -s /tmp/china.txt $TMP/china.txt;then
+		log "Update China IP List!"
+		cp -f /tmp/china.txt $TMP/china.txt
+		[ $A = N ] && ipset list china_v4 >/dev/null 2>&1 && $DIR/chinaipset
+	else
+		log "China IPv4 List is up to date!"
+	fi
+
 	if [ $A = Y ];then
 		mkdir -p $TMP
 		while ! D=$(curl -Lfsm 9 https://ispip.clang.cn/all_cn_ipv6.txt);do
