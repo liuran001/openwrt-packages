@@ -40,7 +40,7 @@ local get_smart_info = function(device)
     local attrib, val
     if section == 1 then
         attrib, val = line:match "^(.-):%s+(.+)"
-    elseif section == 2 and device:match("nvme") then
+    elseif section == 2 and smart_info.nvme_ver then
       attrib, val = line:match("^(.-):%s+(.+)")
       if not smart_info.health then smart_info.health = line:match(".-overall%-health.-: (.+)") end
     elseif section == 2 then
@@ -79,6 +79,8 @@ local get_smart_info = function(device)
       smart_info.rota_rate = val
     elseif attrib == "SATA Version is" then
       smart_info.sata_ver = val
+    elseif attrib == "NVMe Version" then
+      smart_info.nvme_ver = val
     end
   end
   return smart_info
@@ -311,7 +313,7 @@ d.get_disk_info = function(device, wakeup)
     disk_info = get_parted_info(device)
     disk_info["sec_size"] = disk_info["logic_sec"] .. "/" .. disk_info["phy_sec"]
     disk_info["size_formated"] = byte_format(tonumber(disk_info["size"]))
-    -- if status is standby, then get smart_info again
+    -- if status is standby, after get part info, the disk is weakuped, then get smart_info again for more informations
     if smart_info.status ~= "ACTIVE" then smart_info = get_smart_info(device) end
   else
     disk_info = {}
