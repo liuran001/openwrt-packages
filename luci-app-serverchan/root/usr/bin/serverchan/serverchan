@@ -737,11 +737,10 @@ function up(){
 	getping ${1} ${up_timeout} "1";local ping_online=$?
 	if [ "$ping_online" -eq "0" ]; then
 		LockFile lock
-		[ ! -z "$serverchan_blacklist" ] && local tmp_mac=`echo "${serverchan_blacklist}"|grep -w ${ip_mac}`
-		[ ! -z "$serverchan_whitelist" ] && local tmp_mac=`echo "${serverchan_whitelist}"|grep -w ${ip_mac}`
-		( cat ${dir}ipAddress|grep -q -w ${tmp_mac} ) && return
-		[ -z "$tmp_mac" ] && local tmp_mac=${ip_mac}
-		[ -f "${dir}tmp_downlist" ] && local tmp_downip=`cat ${dir}tmp_downlist|grep -w ${tmp_mac}|awk '{print $1}'|grep -v "^$"|sort -u|head -n1`
+		[ ! -z "$serverchan_blacklist" ] && local tmp_mac=`echo "${serverchan_blacklist}"|grep -w -i ${ip_mac}`
+		[ ! -z "$serverchan_whitelist" ] && local tmp_mac=`echo "${serverchan_whitelist}"|grep -w -i ${ip_mac}`
+		[ -z "$tmp_mac" ] && local tmp_mac=${ip_mac} || ( cat ${dir}ipAddress|grep -q -w ${tmp_mac} ) && return
+		[ -f "${dir}tmp_downlist" ] && local tmp_downip=`cat ${dir}tmp_downlist|grep -w -i ${tmp_mac}|awk '{print $1}'|grep -v "^$"|sort -u|head -n1`
 		[ -z "$tmp_downip" ] && local tmp_downip=`cat ${dir}tmp_downlist|grep -w ${1}|grep -v "^$"|sort -u|head -n1`
 		if [ ! -z "$tmp_downip" ]; then
 			local olddate=`cat ${dir}tmp_downlist|grep -w ${tmp_downip}|awk '{print $4}'|grep -v "^$"|sort -u|head -n1`
