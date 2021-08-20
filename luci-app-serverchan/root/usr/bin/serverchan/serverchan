@@ -253,8 +253,8 @@ function soc_temp(){
 function usage(){
 	[ ! -f "/usr/sbin/wrtbwmon" ] || [ ! "$1" ] && return
 	if [ $1 == "update" ] ;then
-		function version_le() { test "$(echo "$@"|tr " " "\n"|sort -V|head -n 1)" == "$1"; }
-		function version_ge() { test "$(echo "$@"|tr " " "\n"|sort -rV|head -n 1)" == "$1"; }
+		function version_le() { test "$(echo "$@"|tr " " "\n"|sort -n|head -n 1)" == "$1"; }
+		function version_ge() { test "$(echo "$@"|tr " " "\n"|sort -r|head -n 1)" == "$1"; }
 		[ ! -z "$wr_version" ] && ( version_ge "${wr_version}" "1.2.0" ) && wrtbwmon -f ${dir}usage.db 2>/dev/null && return
 		[ ! -z "$wr_version" ] && ( version_le "${wr_version}" "1.0.0" ) || [ -z "$wr_version" ] && wrtbwmon update ${dir}usage.db 2>/dev/null && return
 	elif [ $1 == "get" ] ;then
@@ -745,14 +745,20 @@ function up(){
 		LockFile lock
 		[ ! -z "$serverchan_blacklist" ] && local tmp_mac=`echo "${serverchan_blacklist}"|grep -w -i ${ip_mac}`
 		[ ! -z "$serverchan_whitelist" ] && local tmp_mac=`echo "${serverchan_whitelist}"|grep -w -i ${ip_mac}`
-		[ ! -z "$tmp_mac" ] && ( cat ${dir}ipAddress|grep -q -w -i ${tmp_mac} ) && LockFile unlock && return
-		local tmp_mac=${ip_mac}
-		[ -f "${dir}tmp_downlist" ] && local tmp_downip=`cat ${dir}tmp_downlist|grep -w -i ${tmp_mac}|awk '{print $1}'|grep -v "^$"|sort -u|head -n1`
-		[ -f "${dir}tmp_downlist" ] && [ -z "$tmp_downip" ] && local tmp_downip=`cat ${dir}tmp_downlist|grep -w ${1}|grep -v "^$"|sort -u|head -n1`
-		if [ ! -z "$tmp_downip" ]; then
-			local olddate=`cat ${dir}tmp_downlist|grep -w ${tmp_downip}|awk '{print $4}'|grep -v "^$"|sort -u|head -n1`
-			echo "$1 ${ip_mac} ${ip_name} ${olddate} ${ip_interface}" >> ${dir}ipAddress
+		if [ ! -z "$tmp_mac" ] && ( cat ${dir}ipAddress|grep -q -w -i ${tmp_mac} ); then
+			usage down $1
+			echo "$1 ${ip_mac} ${ip_name} `date +%s` ${ip_interface}" >> ${dir}ipAddress
+			LockFile unlock && return
+		elif [ ! -z "$tmp_mac" ] && [ -f "${dir}tmp_downlist" ] && ( cat ${dir}tmp_downip|grep -q -w -i ${tmp_mac} ); then
+			local tmp_downip=`cat ${dir}tmp_downlist|grep -w -i ${tmp_mac}|awk '{print $1}'|grep -v "^$"|sort -u|head -n1`
+			usage down $tmp_downip
 			sed -i "/^${tmp_downip} /d" ${dir}tmp_downlist
+			LockFile unlock && return
+		fi
+		[ -f "${dir}tmp_downlist" ] && local tmp_downip=`cat ${dir}tmp_downlist|grep -w ${1}|grep -v "^$"|sort -u|head -n1`
+		if [ ! -z "$tmp_downip" ]; then
+			cat ${dir}tmp_downlist|grep -w ${1}|grep -v "^$"|sort -u|head -n1 >> ${dir}ipAddress
+			sed -i "/^${1} /d" ${dir}tmp_downlist
 		else
 			usage down $1
 			echo "$1 ${ip_mac} ${ip_name} `date +%s` ${ip_interface}" >> ${dir}ipAddress
@@ -958,9 +964,11 @@ function send(){
 		local send_content="${send_content}${str_linefeed}${str_tab}${systemstatustime}"
 	fi
 
-	[ ! -z "$router_temp" ] && [ "$router_temp" -eq "1" ] && local cputemp=`soc_temp`
-	[ ! -z "$cputemp" ] && local send_content="${send_content}${str_splitline}${str_title_start} 设备温度${str_title_end}${str_linefeed}${str_tab}CPU：${cputemp}${str_celsius}"
-	[ ! -z "$router_temp" ] && [ "$router_temp" -eq "1" ] && [ -z "$cputemp" ] && local send_content="${send_content}${str_splitline}${str_title_start} 设备温度${str_title_end}${str_linefeed}${str_tab}无法获取设备温度"
+	if [ ! -z "$router_temp" ] && [ "$router_temp" -eq "1" ]; then
+		local cputemp=`soc_temp`
+		[ ! -z "$cputemp" ] && local send_content="${send_content}${str_splitline}${str_title_start} 设备温度${str_title_end}${str_linefeed}${str_tab}CPU：${cputemp}${str_celsius}"
+		[ -z "$cputemp" ] && local send_content="${send_content}${str_splitline}${str_title_start} 设备温度${str_title_end}${str_linefeed}${str_tab}无法获取设备温度"
+	fi
 
 	if [ ! -z "$router_wan" ] && [ "$router_wan" -eq "1" ]; then
 		local send_wanIP=`getip wanipv4`;local send_hostIP=`getip hostipv4`
