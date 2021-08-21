@@ -411,9 +411,9 @@ local function processData(szType, content)
 	result.switch_enable = switch_enable
 	return result
 end
--- wget
-local function wget(url)
-	local stdout = luci.sys.exec('uclient-fetch -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36" --no-check-certificate -O- "' .. url .. '"')
+-- curl
+local function curl(url)
+	local stdout=luci.sys.exec('curl --retry 3 -m 10 -LfsA "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36" "'..url..'"')
 	return trim(stdout)
 end
 
@@ -436,7 +436,7 @@ local execute = function()
 			luci.sys.init.stop(name)
 		end
 		for k, url in ipairs(subscribe_url) do
-			local raw = wget(url)
+			local raw = curl(url)
 			if #raw > 0 then
 				local nodes, szType
 				local groupHash = md5(url)
