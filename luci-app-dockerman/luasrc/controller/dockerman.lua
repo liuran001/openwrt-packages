@@ -46,6 +46,8 @@ function index()
 	entry({"admin", "docker", "container"}, form("dockerman/container")).leaf=true
 
 	entry({"admin", "docker", "container_stats"}, call("action_get_container_stats")).leaf=true
+	entry({"admin", "docker", "containers_stats"}, call("action_get_containers_stats")).leaf=true
+
 	entry({"admin", "docker", "container_get_archive"}, call("download_archive")).leaf=true
 	entry({"admin", "docker", "container_put_archive"}, call("upload_archive")).leaf=true
 	entry({"admin","docker","container_list_file"},call("list_file")).leaf=true
@@ -206,7 +208,7 @@ local calculate_cpu_percent = function(d)
 	local cpu_count = tonumber(d["cpu_stats"]["online_cpus"])
 	local cpu_percent = 0.0
 	local cpu_delta = tonumber(d["cpu_stats"]["cpu_usage"]["total_usage"]) - tonumber(d["precpu_stats"]["cpu_usage"]["total_usage"])
-	local system_delta = tonumber(d["cpu_stats"]["system_cpu_usage"]) - tonumber(d["precpu_stats"]["system_cpu_usage"])
+	local system_delta = tonumber(d["cpu_stats"]["system_cpu_usage"]) -- tonumber(d["precpu_stats"]["system_cpu_usage"])
 	if system_delta > 0.0 then
 		cpu_percent = string.format("%.2f", cpu_delta / system_delta * 100.0 * cpu_count)
 	end
@@ -249,48 +251,60 @@ local get_rx_tx = function(d)
 	return data
 end
 
-function action_get_container_stats(container_id)
+local function get_stat(container_id)
 	if container_id then
 		local dk = docker.new()
 		local response = dk.containers:inspect({id = container_id})
 		if response.code == 200 and response.body.State.Running then
-			response = dk.containers:stats({id = container_id, query = {stream = false}})
+			response = dk.containers:stats({id = container_id, query = {stream = false,  ["one-shot"] = true}})
+			luci.util.perror(luci.jsonc.stringify(response))
 			if response.code == 200 then
 				local container_stats = response.body
 				local cpu_percent = calculate_cpu_percent(container_stats)
 				local mem_useage, mem_limit = get_memory(container_stats)
 				local bw_rxtx = get_rx_tx(container_stats)
-				luci.http.status(response.code, response.body.message)
-				luci.http.prepare_content("application/json")
-				luci.http.write_json({
+				return response.code, response.body.message, {
 					cpu_percent = cpu_percent,
 					memory = {
 						mem_useage = mem_useage,
 						mem_limit = mem_limit
 					},
 					bw_rxtx = bw_rxtx
-				})
+				}
 			else
-				luci.http.status(response.code, response.body.message)
-				luci.http.prepare_content("text/plain")
-				luci.http.write(response.body.message)
+				return response.code, response.body.message
 			end
 		else
 			if response.code == 200 then
-				luci.http.status(500, "container "..container_id.." not running")
-				luci.http.prepare_content("text/plain")
-				luci.http.write("Container "..container_id.." not running")
+				return 500, "container "..container_id.." not running"
 			else
-				luci.http.status(response.code, response.body.message)
-				luci.http.prepare_content("text/plain")
-				luci.http.write(response.body.message)
+				return response.code, response.body.message
 			end
 		end
 	else
-		luci.http.status(404, "No container name or id")
-		luci.http.prepare_content("text/plain")
-		luci.http.write("No container name or id")
+		return 404, "No container name or id"
 	end
+end
+function action_get_container_stats(container_id)
+	local code, msg, res = get_stat(container_id)
+	luci.http.status(code, msg)
+	luci.http.prepare_content("application/json")
+	luci.http.write_json(res)
+end
+
+function action_get_containers_stats()
+	local res = luci.http.formvalue(containers) or ""
+	local stats = {}
+	res = luci.jsonc.parse(res.containers)
+	if res and type(res) == "table" then
+		for i, v in ipairs(res) do
+			luci.util.perror(v)
+			_,_,stats[v] = get_stat(v)
+		end
+	end
+	luci.http.status(200, "OK")
+	luci.http.prepare_content("application/json")
+	luci.http.write_json(stats)
 end
 
 function action_confirm()

@@ -13,6 +13,7 @@
 		let last_bw_tx = {}
 		let last_bw_rx = {}
 		let interval = 5
+		let containers = []
 		lines.forEach((item) => {
 			let containerId = item.id.match(/cbi-containers-.+_id_(.*)/)
 			if (!containerId) { return }
@@ -40,7 +41,42 @@
 					}
 				})
 			})
+			// containers.push(containerId)
 		})
+		// XHR.post('<%=luci.dispatcher.build_url("admin/docker/containers_stats")%>', {
+		// 	containers: JSON.stringify(containers)
+		// }, (x, info) => {
+		// 	lines.forEach((item) => {
+		// 		if (!info) { return }
+
+		// 		let containerId = item.id.match(/cbi-containers-.+_id_(.*)/)
+		// 		if (!containerId) { return }
+		// 		containerId = containerId[1]
+		// 		if (!info[containerId]) { return }
+		// 		infoC = info[containerId]
+		// 		if (item.getElementsByClassName("container_not_running").length > 0) { return }
+		// 		item.childNodes.forEach((cell) => {
+		// 			if (cell && cell.attributes) {
+		// 				if (cell.getAttribute("data-name") == "_status" || cell.childNodes[1] && cell.childNodes[1].id.match(/_status/)) {
+		// 					let runningStats = cell.getElementsByClassName("container_cpu_status")
+		// 					runningStats[0].innerText = "CPU: " + infoC.cpu_percent + "%"
+		// 					runningStats = cell.getElementsByClassName("container_mem_status")
+		// 					runningStats[0].innerText = "MEM: " + niceBytes(infoC.memory.mem_useage)
+		// 					runningStats = cell.getElementsByClassName("container_network_status")
+		// 					for (var eth in infoC.bw_rxtx) {
+		// 						if (last_bw_tx[containerId] != undefined && last_bw_rx[containerId] != undefined) {
+		// 							runningStats[0].innerText = '￪' + niceBytes((infoC.bw_rxtx[eth].bw_tx - last_bw_tx[containerId]) / interval) + '/s ￬' + niceBytes((infoC.bw_rxtx[eth].bw_rx - last_bw_rx[containerId]) / interval) + '/s'
+		// 						}
+		// 						last_bw_rx[containerId] = infoC.bw_rxtx[eth].bw_rx
+		// 						last_bw_tx[containerId] = infoC.bw_rxtx[eth].bw_tx
+		// 					}
+		// 				}
+		// 			}
+		// 		})
+		// 	})
+		// })
+
+
 		XHR.run()
 		XHR.halt()
 	}

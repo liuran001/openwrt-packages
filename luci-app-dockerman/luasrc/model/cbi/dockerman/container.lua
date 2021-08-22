@@ -392,7 +392,7 @@ if action == "info" then
 		for k,v in pairs(info_networks) do
 			table_info["14network"..k] = {
 				_key = translate("Network"),
-				value = k.. (v~="" and (" | ".. v) or ""),
+				_value = k.. (v~="" and (" | ".. v) or ""),
 				_button=translate("Disconnect")
 			}
 			list_networks[k]=nil
