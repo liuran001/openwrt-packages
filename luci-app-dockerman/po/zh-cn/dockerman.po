@@ -275,40 +275,40 @@ msgstr "Docker"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/configuration.lua:12
 msgid "Docker - Configuration"
-msgstr ""
+msgstr "Docker - 配置"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/container.lua:192
 msgid "Docker - Container (%s)"
-msgstr ""
+msgstr "Docker - 容器 (%s)"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/containers.lua:128
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/newcontainer.lua:452
 msgid "Docker - Containers"
-msgstr ""
+msgstr "Docker - 容器"
 
 #: applications/luci-app-dockerman/luasrc/view/dockerman/logs.htm:3
 msgid "Docker - Events"
-msgstr ""
+msgstr "Docker - 事件"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/images.lua:72
 msgid "Docker - Images"
-msgstr ""
+msgstr "Docker - 镜像"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/newnetwork.lua:15
 msgid "Docker - Network"
-msgstr ""
+msgstr "Docker - 网络"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/networks.lua:54
 msgid "Docker - Networks"
-msgstr ""
+msgstr "Docker - 网络"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/overview.lua:28
 msgid "Docker - Overview"
-msgstr ""
+msgstr "Docker - 概览"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/volumes.lua:69
 msgid "Docker - Volumes"
-msgstr ""
+msgstr "Docker - 存储卷"
 
 #: applications/luci-app-dockerman/luasrc/model/cbi/dockerman/configuration.lua:16
 msgid "Docker Daemon settings"
