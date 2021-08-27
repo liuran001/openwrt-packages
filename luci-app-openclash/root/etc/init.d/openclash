@@ -80,7 +80,7 @@ change_dns() {
       uci -q set dhcp.@dnsmasq[0].cachesize=0
    fi
    
-   if [ "$ipv6_enable" -eq 1 ] && [ -n "$(ip6tables -t mangle -L 2>&1 | grep -o 'Chain')" ]; then
+   if [ "$ipv6_dns" == 1 ] && [ -n "$(ip6tables -t mangle -L 2>&1 | grep -o 'Chain')" ]; then
       #dnsmasq answer ipv6
 	    uci -q set dhcp.@dnsmasq[0].filter_aaaa=0
 	 fi
@@ -301,20 +301,16 @@ yml_dns_get()
    fi
 
    if [ "$type" = "tcp" ]; then
-      dns_type="- tcp://"
+      dns_type="tcp://"
    elif [ "$type" = "tls" ]; then
-      dns_type="- tls://"
+      dns_type="tls://"
    elif [ "$type" = "udp" ]; then
-      dns_type="- "
+      dns_type=""
    elif [ "$type" = "https" ]; then
-      dns_type="- https://"
+      dns_type="https://"
    fi
 
-   if [ -n "$port" ] && [ -n "$(echo $ip |grep ":" 2>/dev/null)" ]; then
-      dns_address="\"$ip:$port\""
-   elif [ -n "$(echo $ip |grep ":" 2>/dev/null)" ]; then
-      dns_address="\"$ip\""
-   elif [ -n "$port" ] && [ -n "$ip" ]; then
+   if [ -n "$port" ] && [ -n "$ip" ]; then
       dns_address="$ip:$port"
    elif [ -z "$port" ] && [ -n "$ip" ]; then
       dns_address="$ip"
@@ -327,12 +323,12 @@ yml_dns_get()
          if [ -z "$(grep "^ \{0,\}nameserver:$" /tmp/yaml_config.namedns.yaml 2>/dev/null)" ]; then
             echo "  nameserver:" >/tmp/yaml_config.namedns.yaml
          fi
-         echo "    $dns_type$dns_address" >>/tmp/yaml_config.namedns.yaml
+         echo "    - \"$dns_type$dns_address\"" >>/tmp/yaml_config.namedns.yaml
       else
          if [ -z "$(grep "^ \{0,\}fallback:$" /tmp/yaml_config.falldns.yaml 2>/dev/null)" ]; then
             echo "  fallback:" >/tmp/yaml_config.falldns.yaml
          fi
-         echo "    $dns_type$dns_address" >>/tmp/yaml_config.falldns.yaml
+         echo "    - \"$dns_type$dns_address\"" >>/tmp/yaml_config.falldns.yaml
       fi
    else
       return
@@ -1357,8 +1353,12 @@ if [ "$china_ip_route" = "1" ] && [ -f "/etc/openclash/china_ip_route.ipset" ]; 
    ipset -! restore </etc/openclash/china_ip_route.ipset 2>/dev/null
 fi
 
-DNSPORT="$(uci -q get dhcp.@dnsmasq[0].port || echo $dns_port)"
 if [ "$enable_redirect_dns" -eq 1 ] && [ -z "$(iptables -t nat -nL PREROUTING --line-number |grep 'dns_hijack')"]; then
+   if [ -z "$(netstat -nlp |grep -E '127.0.0.1:53.*dnsmasq')" ]; then
+      DNSPORT="$dns_port"
+   else
+      DNSPORT="$(uci -q get dhcp.@dnsmasq[0].port || echo 53)"
+   fi
    iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports "$DNSPORT" -m comment --comment dns_hijack
    iptables -t nat -I PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports "$DNSPORT" -m comment --comment dns_hijack
 fi
@@ -1522,7 +1522,6 @@ if [ -n "$en_mode_tun" ]; then
    if [ "$en_mode_tun" -eq 2 ]; then
       ip tuntap add user root mode tun utun
       ip link set utun up
-      ip route replace default dev utun table "$PROXY_ROUTE_TABLE"
    elif [ "$en_mode_tun" -eq 1 ] || [ "$en_mode_tun" -eq 3 ]; then
       TUN_WAIT=0
       while ( [ -n "$(pidof clash)" ] && [ -z "$(ip route list |grep utun)" ] && [ "$TUN_WAIT" -le 3 ] )
@@ -1530,8 +1529,8 @@ if [ -n "$en_mode_tun" ]; then
          let TUN_WAIT++
          sleep 2
       done
-      ip route replace default dev utun table "$PROXY_ROUTE_TABLE"
    fi
+   ip route replace default dev utun table "$PROXY_ROUTE_TABLE"
    ip rule add fwmark "$PROXY_FWMARK" table "$PROXY_ROUTE_TABLE"
    
    #设置防火墙
@@ -1605,13 +1604,13 @@ if [ -n "$en_mode_tun" ]; then
          iptables -t nat -A POSTROUTING -j openclash_post
       fi
    fi
+   #TUN FORWORD
+   iptables -I FORWARD -o utun -j ACCEPT
    #quic
    if [ "$disable_udp_quic" -eq 1 ]; then
    	  iptables -I INPUT -p udp --dport 443 -j REJECT
       iptables -I FORWARD -p udp --dport 443 -j REJECT
    fi
-   #TUN FORWORD
-   iptables -I FORWARD -o utun -j ACCEPT
 fi
 
 #ipv6
@@ -1626,7 +1625,7 @@ if [ "$ipv6_enable" -eq 1 ] && [ -n "$(ip6tables -t mangle -L 2>&1 | grep -o 'Ch
       ipset -! restore </etc/openclash/china_ip6_route.ipset 2>/dev/null
    fi
    
-	 ipset create localnetwork6 hash:net family inet6
+   ipset create localnetwork6 hash:net family inet6
    ipset add localnetwork6 ::/128
    ipset add localnetwork6 ::1/128
    ipset add localnetwork6 ::ffff:0:0/96
@@ -1677,7 +1676,6 @@ if [ "$ipv6_enable" -eq 1 ] && [ -n "$(ip6tables -t mangle -L 2>&1 | grep -o 'Ch
       ip6tables -t mangle -A openclash_output -m set --match-set wan_ac_black_ips dst -j RETURN >/dev/null 2>&1
       ip6tables -t mangle -A openclash_output -m owner ! --uid-owner 65534 -m set ! --match-set common_ports dst -j RETURN >/dev/null 2>&1
       ip6tables -t mangle -A openclash_output -m owner ! --uid-owner 65534 -m set --match-set china_ip6_route dst -j RETURN >/dev/null 2>&1
-      # 防止出现死循环
       ip6tables -t mangle -A openclash_output -p tcp -m owner ! --uid-owner 65534 -j MARK --set-xmark "$PROXY_FWMARK"
       ip6tables -t mangle -A OUTPUT -j openclash_output
    fi
@@ -1780,15 +1778,6 @@ revert_firewall()
    iptables -t mangle -F openclash_output >/dev/null 2>&1
    iptables -t mangle -X openclash_output >/dev/null 2>&1
 
-   ipset destroy localnetwork >/dev/null 2>&1
-   ipset destroy china_ip_route >/dev/null 2>&1
-   ipset destroy lan_ac_white_ips >/dev/null 2>&1
-   ipset destroy lan_ac_black_ips >/dev/null 2>&1
-   ipset destroy lan_ac_white_macs >/dev/null 2>&1
-   ipset destroy lan_ac_black_macs >/dev/null 2>&1
-   ipset destroy wan_ac_black_ips >/dev/null 2>&1
-   ipset destroy common_ports >/dev/null 2>&1
-
    #Revert IPv6 rules
 
    pre_lines=$(ip6tables -nvL PREROUTING -t mangle |sed 1,2d |sed -n '/openclash/=' 2>/dev/null |sort -rn)
@@ -1821,6 +1810,15 @@ revert_firewall()
    ipset destroy lan_ac_white_ipv6s >/dev/null 2>&1
    ipset destroy lan_ac_black_ipv6s >/dev/null 2>&1
    ipset destroy wan_ac_black_ipv6s >/dev/null 2>&1
+   
+   ipset destroy localnetwork >/dev/null 2>&1
+   ipset destroy china_ip_route >/dev/null 2>&1
+   ipset destroy lan_ac_white_ips >/dev/null 2>&1
+   ipset destroy lan_ac_black_ips >/dev/null 2>&1
+   ipset destroy lan_ac_white_macs >/dev/null 2>&1
+   ipset destroy lan_ac_black_macs >/dev/null 2>&1
+   ipset destroy wan_ac_black_ips >/dev/null 2>&1
+   ipset destroy common_ports >/dev/null 2>&1
 }
 
 get_config()
