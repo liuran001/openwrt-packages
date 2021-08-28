@@ -581,6 +581,7 @@ function intel_data(){
 			SINR=$(echo "$O" | awk -F [:,] '/\+XCESQ:/{printf "%.0f\n", ($6-50)/2}')
 		fi
 	fi
+	CHIPTEMP=$(echo "$O" | awk -F[:,] '/\+MTSM:/{print $2}')
 }
 
 # MikroTik R11e-LTE, R11e-LTE6 modem (plat.ver."OpenWrt-18.06.7" router: MikroTik RBM33")
