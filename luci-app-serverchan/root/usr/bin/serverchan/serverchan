@@ -10,7 +10,13 @@ function get_config(){
 
 # 初始化设置信息
 function read_config(){
-	get_config "serverchan_enable" "sckey" "tg_token" "chat_id" "pushplus_token" "serverchan_ipv4" "ipv4_interface" "serverchan_ipv6" "ipv6_interface" "serverchan_up" "serverchan_down" "serverchan_sheep" "serverchan_whitelist" "serverchan_blacklist" "serverchan_interface" "starttime" "endtime" "cpuload_enable" "cpuload" "temperature_enable" "temperature" "device_name" "err_enable" "network_err_event" "err_sheep_enable" "system_time_event" "autoreboot_time" "network_restart_time" "public_ip_event" "public_ip_retry_count" "soc_code" "sleeptime" "up_timeout" "down_timeout" "device_aliases" "debuglevel" "cpuload" "temperature" "send_mode" "regular_time" "regular_time_2" "regular_time_3" "interval_time" "thread_num" "timeout_retry_count" "err_device_aliases" "oui_dir" "oui_data" "client_usage" "client_usage_max" "client_usage_disturb" "client_usage_whitelist" "reset_regularly" "ipv4_urllist" "ipv6_urllist" "lite_enable" "MAC_online_list" "MAC_offline_list" "wxpusher_apptoken" "wxpusher_uids" "wxpusher_topicIds" "jsonpath" "corpid" "userid" "agentid" "corpsecret" "mediapath"
+	get_config "serverchan_enable" "lite_enable" "device_name" "sleeptime" "oui_data" "oui_dir" "reset_regularly" "debuglevel" "device_aliases" \
+	"serverchan_ipv4" "ipv4_interface" "serverchan_ipv6" "ipv6_interface" "serverchan_up" "serverchan_down" "cpuload_enable" "cpuload" "temperature_enable" "temperature" "client_usage" "client_usage_max" "client_usage_disturb" "client_usage_whitelist" \
+	"regular_time" "regular_time_2" "regular_time_3" "interval_time" \
+	"serverchan_sheep" "starttime" "endtime" "serverchan_whitelist" "serverchan_blacklist" "serverchan_interface" "MAC_online_list" "MAC_offline_list" \
+	"up_timeout" "down_timeout" "timeout_retry_count" "thread_num" "soc_code" "err_enable" "err_sheep_enable" "err_device_aliases" "network_err_event" "system_time_event" "autoreboot_time" "network_restart_time" "public_ip_event" "public_ip_retry_count" \
+	"jsonpath" "sckey" "corpid" "userid" "agentid" "corpsecret" "mediapath" "wxpusher_apptoken" "wxpusher_uids" "wxpusher_topicIds" "pushplus_token" "tg_token" "chat_id"
+
 	for str_version in "wrtbwmon" "iputils-arping" "curl" "iw"; do
 		eval `echo ${str_version:0:2}"_version"`=`opkg list-installed|grep -w ^${str_version}|awk '{print $3}'` 2>/dev/null
 	done
@@ -25,6 +31,8 @@ function read_config(){
 	client_usage_whitelist=`echo "$client_usage_whitelist"|sed 's/ /\n/g'` 2>/dev/null
 	mark_mac_list="${MAC_online_list} ${MAC_offline_list}"
 	mark_mac_list=`echo "$mark_mac_list"|sed 's/ /\n/g'|sed 's/-/ /'` 2>/dev/null
+	ipv4_urllist=`cat /usr/bin/serverchan/api/ipv4.list` 2>/dev/null
+	ipv6_urllist=`cat /usr/bin/serverchan/api/ipv6.list` 2>/dev/null
 	[ -z "$serverchan_ipv4" ] && serverchan_ipv4=0
 	[ -z "$serverchan_ipv6" ] && serverchan_ipv6=0
 	[ "$iw_version" ] && wlan_interface=`iw dev|grep Interface|awk '{print $2}'` >/dev/null 2>&1
@@ -124,9 +132,8 @@ function getip(){
 	elif [ $1 == "hostipv4" ] ;then
 		function get_hostipv4()
 		{
-			[ -z "$ipv4_urllist" ] && local ipv4_urllist="www.cip.cc ipv4.ddnspod.com ifcfg.cn speed.neu.edu.cn/getIP.php ddns.oray.com/checkip www.net.cn/static/customercare/yourip.asp"
-			local url_number=`expr $(echo "$ipv4_urllist"|grep -o ' '|wc -l) + 1`
-			local ipv4_URL=`echo "$ipv4_urllist"|awk -v i=$(rand 1 $url_number) '{print $i}'`
+			local url_number=`echo "$ipv4_urllist"|wc -l`
+			local ipv4_URL=`echo "$ipv4_urllist"| sed -n "$(rand 1 $url_number)p"|sed -e 's/\r//g'`
 			[ ! -z "$ipv4_interface" ] && local hostIP=$(curl -k -s -4 --interface ${ipv4_interface} -m 5 ${ipv4_URL}) || local hostIP=$(curl -k -s -4 -m 5 ${ipv4_URL})
 			echo $hostIP|grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'|head -n1
 		}
@@ -141,9 +148,8 @@ function getip(){
 	elif [ $1 == "hostipv6" ] ;then
 		function get_hostipv6()
 		{
-			[ -z "$ipv6_urllist" ] && local ipv6_urllist="ip.sb ipv6.ddnspod.com api-ipv6.ip.sb/ip speed.neu6.edu.cn/getIP.php v6.myip.la/json"
-			local urlv6_number=`expr $(echo "$ipv6_urllist"|grep -o ' '|wc -l) + 1`
-			local ipv6_URL=`echo "$ipv6_urllist"|awk -v i=$(rand 1 $urlv6_number) '{print $i}'`
+			local urlv6_number=`echo "$ipv6_urllist"|wc -l`
+			local ipv6_URL=`echo "$ipv6_urllist"| sed -n "$(rand 1 $urlv6_number)p"|sed -e 's/\r//g'`
 			[ ! -z "$ipv6_interface" ] && local hostIPv6=$(curl -k -s -6 --interface ${ipv6_interface} -m 5 ${ipv6_URL}) || local hostIPv6=$(curl -k -s -6 -m 5 ${ipv6_URL})
 			echo $hostIPv6|grep -oE '([\da-fA-F0-9]{1,4}(:{1,2})){1,15}[\da-fA-F0-9]{1,4}'|head -n1
 		}
@@ -235,8 +241,8 @@ function getcpu(){
 
 # 获取SOC温度 （取所有传感器温度最大值）
 function soc_temp(){
-	[ -z "$soc_code" ] && soc_code="cat /sys/class/thermal/thermal_zone*/temp|sort -nr|head -n1|cut -c-2"
-	[ "$soc_code" == "sensors" ] && soc_code="sensors|grep °C|sed -nr 's#^.*:.*\+(.*)°C .*#\1#gp'|sort -nr|head -n1"
+	[ -z "$soc_code" ] && local soctemp="sensors 2>/dev/null|grep °C|sed -nr 's#^.*:.*\+(.*)°C .*#\1#gp'|sort -nr|head -n1"
+	[ -z "$soc_code" ] && [ -z "$soctemp" ] && local soctemp="cat /sys/class/thermal/thermal_zone*/temp 2>/dev/null|sort -nr|head -n1|cut -c-2"
 	echo "$soc_code"|awk '{run=$0;system(run)}' 2>/dev/null
 }
 
@@ -938,7 +944,7 @@ function cputop(){
 function send(){
 	echo "`date "+%Y-%m-%d %H:%M:%S"` 【定时数据】创建定时任务" >> ${logfile}
 	serverchan_disturb;local send_disturb=$?
-	get_config "send_title" "router_status" "client_list" "router_temp" "router_wan"
+	get_config "send_title" "router_status" "router_temp" "router_wan" "client_list"
 
 	[ -z "$send_title" ] && local send_title="路由状态："
 	[ ! -z "$1" ] && local send_title="发送测试：" && local send_content="${str_splitline}${str_title_start}内容1${str_title_end}${str_linefeed}${str_tab}设备1${str_linefeed}${str_tab}设备2${str_splitline}${str_title_start}内容2${str_title_end}${str_linefeed}${str_tab}设备3${str_linefeed}${str_tab}设备4"

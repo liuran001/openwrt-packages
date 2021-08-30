@@ -26,7 +26,9 @@ endef
 define Package/$(PKG_NAME)/conffiles
 /etc/config/serverchan
 /usr/bin/serverchan/api/diy.json
-/usr/bin/serverchan/api/logo.png
+/usr/bin/serverchan/api/logo.jpg
+/usr/bin/serverchan/api/ipv4.list
+/usr/bin/serverchan/api/ipv6.list
 endef
 
 define Package/$(PKG_NAME)/install
