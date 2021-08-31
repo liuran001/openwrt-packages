@@ -121,9 +121,22 @@ if nixio.fs.access("/usr/bin/dockerd") and not m.uci:get_bool("dockerd", "docker
 		o:value(v, v)
 	end
 	o = s:taboption("ac", DynamicList, "ac_allowed_container", translate("Containers allowed to be accessed"), translate("Which container(s) under bridge network can be accessed, even from interfaces that are not allowed, fill-in Container Id or Name"))
+	local docker = require "luci.model.docker"
+	local containers, res, lost_state
+	local dk = docker.new()
+	if dk:_ping().code ~= 200 then
+		lost_state = true
+	else
+		lost_state = false
+		res = dk.containers:list()
+		if res and res.code and res.code < 300 then
+			containers = res.body
+		end
+	end
+
 	-- allowed_container.placeholder = "container name_or_id"
-	if containers_list then
-		for i, v in ipairs(containers_list) do
+	if containers then
+		for i, v in ipairs(containers) do
 			if	v.State == "running" and v.NetworkSettings and v.NetworkSettings.Networks and v.NetworkSettings.Networks.bridge and v.NetworkSettings.Networks.bridge.IPAddress then
 				o:value(v.Id:sub(1,12), v.Names[1]:sub(2) .. " | " .. v.NetworkSettings.Networks.bridge.IPAddress)
 			end

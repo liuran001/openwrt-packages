@@ -3225,7 +3225,7 @@ display:none !important;
 
 	table {
 		font-size: 0.7rem !important;
-		width: 100% !important;
+		width: 100%;
 	}
 
 	.table .cbi-input-text {

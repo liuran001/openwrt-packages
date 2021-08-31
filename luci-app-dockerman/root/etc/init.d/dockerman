@@ -1,6 +1,7 @@
 #!/bin/sh /etc/rc.common
 
 START=99
+USE_PROCD=1
 
 config_load dockerd
 # config_get daemon_ea "dockerman" daemon_ea
@@ -28,11 +29,19 @@ handle_allowed_interface(){
 	iptables -A DOCKER-MAN -j RETURN >/dev/null 2>&1
 }
 
-start(){
+start_service(){
 	[ ! -x "/etc/init.d/dockerd" ] && return 0
 	init_dockerman_chain
 	# if [ -n "$daemon_ea" ]; then
 	handle_allowed_interface
 	lua /usr/share/dockerman/dockerd-ac.lua
 	# fi
+}
+
+service_triggers() {
+	procd_add_reload_trigger 'dockerd'
+}
+
+reload_service() {
+	start
 }
