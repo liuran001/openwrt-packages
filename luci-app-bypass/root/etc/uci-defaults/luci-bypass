@@ -9,6 +9,7 @@ uci batch <<EOF
 	set firewall.bypass.path=/var/etc/bypass.include
 	set firewall.bypass.reload=1
 	commit firewall
+	chmod +x /etc/init.d/bypass /usr/share/bypass/* >/dev/null 2>&1
 	rm -rf /tmp/luci-modulecache/
 	killall -HUP rpcd 2>/dev/null
 	exit 0
