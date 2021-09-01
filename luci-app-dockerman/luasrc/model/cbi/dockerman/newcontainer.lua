@@ -377,8 +377,6 @@ if cmd_line and cmd_line:match("^DOCKERCLI.+") then
 elseif cmd_line and cmd_line:match("^duplicate/[^/]+$") then
 	local container_id = cmd_line:match("^duplicate/(.+)")
 	create_body = dk:containers_duplicate_config({id = container_id}) or {}
-	luci.util.perror(luci.jsonc.stringify(create_body))
-	
 	if not create_body.HostConfig then
 		create_body.HostConfig = {}
 	end

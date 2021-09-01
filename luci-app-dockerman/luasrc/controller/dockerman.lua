@@ -224,7 +224,6 @@ local get_memory = function(d)
 	-- local limit = string.format("%.2f", tonumber(d["memory_stats"]["limit"]) / 1024 / 1024)
 	-- local usage = string.format("%.2f", (tonumber(d["memory_stats"]["usage"]) - tonumber(d["memory_stats"]["stats"]["total_cache"])) / 1024 / 1024)
 	-- return usage .. "MB / " .. limit.. "MB" 
-	-- luci.util.perror(luci.jsonc.stringify(d))
 
 	local limit =tonumber(d["memory_stats"]["limit"])
 	local usage = tonumber(d["memory_stats"]["usage"]) 
@@ -257,7 +256,6 @@ local function get_stat(container_id)
 		local response = dk.containers:inspect({id = container_id})
 		if response.code == 200 and response.body.State.Running then
 			response = dk.containers:stats({id = container_id, query = {stream = false,  ["one-shot"] = true}})
-			luci.util.perror(luci.jsonc.stringify(response))
 			if response.code == 200 then
 				local container_stats = response.body
 				local cpu_percent = calculate_cpu_percent(container_stats)
@@ -298,7 +296,6 @@ function action_get_containers_stats()
 	res = luci.jsonc.parse(res.containers)
 	if res and type(res) == "table" then
 		for i, v in ipairs(res) do
-			luci.util.perror(v)
 			_,_,stats[v] = get_stat(v)
 		end
 	end
