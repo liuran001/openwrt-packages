@@ -2,7 +2,7 @@
 # (c) 2020-2021 written by Konstantine Shevlakov (c) at <shevlakov@132lan.ru>
 
 get_device_info(){
-	DEVPORT=$(uci -q get modeminfo.@modeminfo[0].device)
+	DEVPORT=$(uci -q get modeminfo.@modeminfo[0].device_qmi)
 	case $DEVPORT in
 		cdc-wdm*) export QMICTL="qmicli -p -d $DEVPORT" ;;
 		*)
@@ -21,7 +21,7 @@ get_device_info(){
 		                fi
         		done
 			if [ $qmi ]; then
-				uci set modeminfo.@modeminfo[0].device="$qmi"
+				uci set modeminfo.@modeminfo[0].device_qmi="$qmi"
 				uci commit modeminfo
 				break
 			fi
