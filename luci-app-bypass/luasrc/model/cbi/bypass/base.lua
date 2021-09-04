@@ -59,14 +59,22 @@ o:value("gfw",translate("GFW List Mode"))
 o:value("all",translate("Global Mode"))
 o:value("oversea",translate("Oversea Mode"))
 
+if luci.sys.call("test -f /lib/modules/*/gcm.ko") ~= 0 then
 o=s:option(Flag,"gfw_mode",translate("Load GFW List"),
 translate("If the domestic DNS does not hijack foreign domain name to domestic IP, No need to be enabled"))
 o:depends("run_mode","router")
 o.default=1
+end
 
+if luci.sys.call("test -f /lib/modules/*/gcm.ko") == 0 then
 o=s:option(Flag,"adguardhome",translate("Used with AdGuardHome"),
 translate("Luci-app-adguardhome require"))
+if luci.sys.call("test `which AdGuardHome` && test -r /etc/init.d/AdGuardHome") == 0 then
+o.default=1
+else
 o.default=0
+end
+end
 
 o=s:option(ListValue,"dports",translate("Proxy Ports"))
 o:value("1",translate("All Ports"))

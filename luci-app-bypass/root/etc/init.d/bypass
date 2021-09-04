@@ -767,32 +767,32 @@ gen_dns(){
 	case $run_mode in
 	all) port=5335;;
 	gfw|oversea) port=5336;;
-	*)
-		port=5337
-		if [[ -f /etc/init.d/AdGuardHome ]]; then
-			if [ $adguardhome == 1 ]; then
-				if [[ ! "$(netstat -tunlp | grep 53 | grep -i AdGuardHome)" ]]; then
-					uci del dhcp.@dnsmasq[0].dns_redirect 2>/dev/null
-					uci add_list dhcp.lan.dhcp_option="6,$(uci get network.lan.ipaddr)"
-					uci commit dhcp
-					masqport="$(uci get AdGuardHome.AdGuardHome.old_port 2>/dev/null)"
-					adgconf="$(uci get AdGuardHome.AdGuardHome.configpath)"	
-					[ "$masqport" ] || masqport="$(grep "  port:.*" $adgconf | cut -f 4 -d " ")"
-					cat $adgconf | tr '\n' '\r' | sed -e "s/upstream_dns:.*upstream_dns_file/upstream_dns:\n  - 127.0.0.1:$masqport\n  upstream_dns_file/" | tr '\r' '\n' >$(uci get AdGuardHome.AdGuardHome.configpath)
-					uci set AdGuardHome.AdGuardHome.enabled='1'
-					uci set AdGuardHome.AdGuardHome.redirect='exchange'
-					uci commit AdGuardHome
-					/etc/init.d/AdGuardHome restart
-				fi
-			else
-				uci set AdGuardHome.AdGuardHome.enabled='0'
-				uci del AdGuardHome.AdGuardHome.redirect
-				uci commit AdGuardHome
-				/etc/init.d/AdGuardHome stop
-			fi
-		fi
-		;;
+	*) port=5337;;
 	esac
+	if [[ -x /etc/init.d/AdGuardHome && "$(which AdGuardHome)" ]]; then
+		if [ $adguardhome == 1 ]; then
+			if [[ ! "$(netstat -tunlp | grep 53 | grep -i AdGuardHome)" ]]; then
+				uci del dhcp.@dnsmasq[0].dns_redirect 2>/dev/null
+				uci add_list dhcp.lan.dhcp_option="6,$(uci get network.lan.ipaddr)"
+				uci commit dhcp
+				masqport="$(uci get AdGuardHome.AdGuardHome.old_port 2>/dev/null)"
+				adgconf="$(uci get AdGuardHome.AdGuardHome.configpath)"	
+				[ "$masqport" ] || masqport="$(grep "  port:.*" $adgconf | cut -f 4 -d " ")"
+				cat $adgconf | tr '\n' '\r' | sed -e "s/upstream_dns:.*upstream_dns_file/upstream_dns:\n  - 127.0.0.1:$masqport\n  upstream_dns_file/" | tr '\r' '\n' >$(uci get AdGuardHome.AdGuardHome.configpath)
+				uci set AdGuardHome.AdGuardHome.enabled='1'
+				uci set AdGuardHome.AdGuardHome.redirect='exchange'
+				uci commit AdGuardHome
+				/etc/init.d/AdGuardHome restart
+			fi
+		else
+			uci set AdGuardHome.AdGuardHome.enabled='0'
+			uci del AdGuardHome.AdGuardHome.redirect
+			uci commit AdGuardHome
+			/etc/init.d/AdGuardHome stop
+		fi
+	elif [ $adguardhome == 1 ]; then
+		log "请确保系统中存在luci-app-adguardhome以及adg主程序!"
+	fi
 	cat >$DNS_FILE <<-EOF
 		no-resolv
 		server=127.0.0.1#$port

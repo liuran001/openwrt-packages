@@ -722,4 +722,4 @@ msgid "Used with AdGuardHome"
 msgstr "与AdGuardHome搭配使用"
 
 msgid "Luci-app-adguardhome require"
-msgstr "请确保luci-app-adguardhome能正常使用"
+msgstr "请确保luci-app-adguardhome能正常启用"
