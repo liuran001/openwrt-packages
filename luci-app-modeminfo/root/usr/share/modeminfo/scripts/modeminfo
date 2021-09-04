@@ -292,8 +292,9 @@ function sierra_data(){
 		# Sierra 73XX series
 		EARFCN=$(echo "$O" | awk '/LTE Rx chan:/{print $4}')
 		RSRP=$(echo "$O" |  awk '/RSRP/{print $3}' | head -1)
-		RSRQ=$(echo "$O" | awk '/RSRQ/{print $3}' |head -1)
-		SINR=$(echo "$O" | awk '/SINR/{print $6}' |head -1)
+		RSRQ=$(echo "$O" | awk '/RSRQ/{printf "%.0f\n", $3}' |head -1)
+		SINx=$(echo "$O" | awk '/SINR/{print $6}' |head -1)
+		SINR=$(echo $SINx | awk {printf "%.0f\n", $0}')
 		CSQ_RSSI=$(echo "$O" | awk '/PCC RxM RSSI:/{print $4}')
 		LTE_CA=$(echo "$O" | awk '/SCC RxM RSSI:/{print $0}' |wc -l)
 		BWDx=$(echo "$O" | awk '/LTE bw/{print $6}')
@@ -317,8 +318,8 @@ function sierra_data(){
 			20) BWDL=5 ;;
 		esac
 		# Sierra 74XX series
-		if [ "x$SINR" = "x" ]; then
-			SINR=$(echo "$O" | awk '/SINR/{print $3}' |head -1)
+		if [ "x$SINx" = "x" ]; then
+			SINR=$(echo "$O" | awk '/SINR/{printf "%.0f\n", $3}' |head -1)
 			RSRP=$(echo "$O" |  awk '/RSRP/{print $7}' | head -1)
 		fi
 	else

@@ -65,15 +65,8 @@ o:depends("run_mode","router")
 o.default=1
 
 o=s:option(Flag,"adguardhome",translate("Used with AdGuardHome"),
-translate("The DNS servers for adguardhome must and can only be set to 127.0.0.1:5337"))
-o:depends("run_mode","router")
+translate("Luci-app-adguardhome require"))
 o.default=0
-
-o=s:option(Value,"adg_port",translate("The DNS port for AdGuardHome"))
-o.datatype = "uinteger"
-o:depends("adguardhome",true)
-o.optional = false
-o.default="5553"
 
 o=s:option(ListValue,"dports",translate("Proxy Ports"))
 o:value("1",translate("All Ports"))
