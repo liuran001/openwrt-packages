@@ -1031,6 +1031,10 @@ stop(){
 		uci del AdGuardHome.AdGuardHome.redirect
 		uci commit AdGuardHome
 		/etc/init.d/AdGuardHome stop
+		if [ "$(uci get dhcp.@dnsmasq[0].port)" != "53" ]; then
+			uci set dhcp.@dnsmasq[0].port='53'
+			uci commit dhcp
+		fi
 	fi
 	rm -rf $DNS_DIR $VAR $DNS_FILE $CON_T /var/lock/bypass-update.lock
 	[ $run_mode = gfw -o $gfw_mode = 1 ] || rm -f $K/gfw.list
