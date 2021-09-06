@@ -33,7 +33,7 @@ opengt
  if $toupper($mid($v,0,3)) = "VOD" goto vodafone
  if $toupper($mid($v,0,3)) = "ZTE" goto zte
  if $toupper($mid($v,0,3)) = "QUE" goto quectel
- if $toupper($mid($v,0,3)) = "DEL" goto qualcomm
+ if $toupper($mid($v,0,3)) = "DEL" goto dell
  if $toupper($mid($k,8,3)) = "XMM" goto intel
  if $toupper($mid($t,9,3)) = "MIK" goto mikrotik
  goto generic
@@ -139,6 +139,20 @@ opengt
  goto next1
  
 :qualcomm
+ let $c="AT\^RFSTS?^m"
+ let $r="\^RFSTS"
+ gosub readatcmd
+
+ send "AT+TEMP^m"
+ get 1 "" $s
+ print $s
+
+ send "AT\^CA_INFO?^m"
+ get 1 "" $s
+ print $s
+ goto next
+
+:dell
  send "AT\^DEBUG?^m"
  get 1 "" $s
  print $s
