@@ -200,6 +200,10 @@ opengt
  let $c="AT+MTSM=1^m"
  let $r="+MTSM"
  gosub readatcmd
+
+ let $c="AT+XMCI=1^m"
+ let $r="+XMCI"
+ gosub readatcmd
  goto next
 
 :zte
