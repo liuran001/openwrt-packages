@@ -234,6 +234,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			var carrier = "";
 			var bcc;
 			var freq;
+			var dist = (data.distance)
 			// name channels and signal/noise  
 			if (netmode == "LTE") {
 				var calte = (data.lteca)
@@ -241,6 +242,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				var scc;
 				var bwca = data.bwca;
 				var arfcn = data.arfcn;
+				distance = " ~"+ dist +" Km";
 				if (calte > 0) {
 					carrier = "+";
 					scc = data.scc;
@@ -264,7 +266,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				var namesnr = "SINR";
 				var nametac = "LAC(dec)/eNB ID";
 				var namecid = "CID(dec)/Cell";
-				var cidpci = data.cid + " (" + data.cid_num + ") / " + data.pci;
+				var cidcell = data.cid + " (" + data.cid_num + ") / " + data.cell;
 				var lactac = data.lac + " (" + data.lac_num + ") / " + data.enbid;
 			} else if (netmode == "3G" || netmode == "UMTS" || netmode == "HSPA" || netmode == "HSUPA" || netmode == "HSDPA" || netmode == "HSPA+" || netmode == "WCDMA" || netmode == "DC-HSPA+") {
 				var namech = "UARFCN";
@@ -274,7 +276,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				var bcc = " " + band;
 				var freq = dlfreq + " / " + ulfreq + " MHz"
 				var arfcn = data.arfcn;
-				var cidpci = data.cid + " (" + data.cid_num + ")";
+				var cidcell = data.cid + " (" + data.cid_num + ")";
 				var lactac = data.lac + "  (" + data.lac_num + ")";
 				
 			} else {
@@ -285,7 +287,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				var bcc = " " + band;
 				var arfcn = data.arfcn;
 				var freq = dlfreq + " / " + ulfreq + " MHz"
-				var cidpci = data.cid + " (" + data.cid_num + ")";
+				var cidcell = data.cid + " (" + data.cid_num + ")";
 				var lactac = data.lac + " (" + data.lac_num + ")";
 			}
 
@@ -298,7 +300,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			 	e.innerHTML = String.format(data.device);
 			
 			if (e = document.getElementById('cid'))
-					e.innerHTML = String.format(cidpci);
+					e.innerHTML = String.format(cidcell);
 
 			if (e = document.getElementById('mccmnc'))
 			 	e.innerHTML = String.format(data.mcc  + " " + data.mnc);
@@ -311,8 +313,11 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 
 			if (e = document.getElementById('csq_pe'))
 			if (e)
-				e.innerHTML = String.format('<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>', icon, p);
-
+				if( dist=="") {
+                                        e.innerHTML = String.format('<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>', icon, p);
+				} else {
+					e.innerHTML = String.format('<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>' + distance, icon, p);
+				}
 			if (e = document.getElementById('csq_per'))
 			 	e.innerHTML = String.format(data.csq_per+"%");
 			
