@@ -34,7 +34,7 @@ name.rmempty = true
 local dev = s:option(ListValue, "device", translate("Modeminfo DATA port"),
 	translate("In automatic mode detect first answered DATA port."))
 dev.default = ""
-dev.rempty = true
+dev.rmempty = true
 dev:depends("qmi_mode", 0)
 if addValues(dev, TTY_PATH) then
     -- message about missing TTY ports
@@ -49,7 +49,7 @@ end
 dev = s:option(ListValue, "device_qmi", translate("Modeminfo DATA port"),
 	translate("In automatic mode detect first answered DATA port."))
 dev.default = ""
-dev.rempty = true
+dev.rmempty = true
 dev:depends("qmi_mode", 1)
 if addValues(dev, QMI_PATH) then
     -- message about missing QMI ports

@@ -234,6 +234,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			var carrier = "";
 			var bcc;
 			var freq;
+			var distance;
 			var dist = (data.distance)
 			// name channels and signal/noise  
 			if (netmode == "LTE") {
@@ -313,7 +314,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 
 			if (e = document.getElementById('csq_pe'))
 			if (e)
-				if( dist=="") {
+				if( dist == "" || dist == "--" || dist == "0.00") {
                                         e.innerHTML = String.format('<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>', icon, p);
 				} else {
 					e.innerHTML = String.format('<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>' + distance, icon, p);
