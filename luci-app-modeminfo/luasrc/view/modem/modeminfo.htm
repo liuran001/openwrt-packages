@@ -133,11 +133,21 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 					var frul = 1920;
 					var offset = 0;
 					var band = "1";
+				} else if (rfcn >= 600 && rfcn <= 1199) {
+					var frdl = 1930;
+					var frul = 1850;
+					var offset = 600;
+					var band = "2";
 				} else if (rfcn >= 1200 && rfcn <= 1949) {
 					var frdl = 1805;
 					var frul = 1710;
 					var offset = 1200;
 					var band = "3";
+				} else if (rfcn >= 1950 && rfcn <= 2399) {
+                                        var frdl = 2110;
+                                        var frul = 1710;
+                                        var offset = 1950;
+                                        var band = "4";
 				} else if (rfcn >= 2400 && rfcn <= 2469) {
 					var rfdl = 869;
 					var frul = 824;
@@ -158,6 +168,11 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 					var frul = 832;
 					var offset = 6150;
 					var band = "20";
+				} else if (rfcn >= 9210 && rfcn <= 9659) {
+                                        var frdl = 758;
+                                        var frul = 703;
+                                        var offset = 9210;
+                                        var band = "28";
 				} else if (rfcn >= 9870 && rfcn <= 9919) {
 					var frdl = 452.5;
 					var frul = 462.5;
