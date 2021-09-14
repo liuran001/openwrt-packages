@@ -85,43 +85,43 @@ msgstr "Частота Вх/Исх:"
 msgid "Chip Temp:"
 msgstr "Температура:"
 
-
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:13
-msgid "Autodetect"
-msgstr "Автоматически"
-
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:23
-msgid "Modeminfo: Configuration"
-msgstr "Modeminfo: Конфигурация"
-
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:24
-msgid "Configuration panel of Мodeminfo."
-msgstr "Панель конфигурации Modeminfo."
-
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:29
-msgid "Named modem via mmcli"
-msgstr "Имя модема через mmcli"
-
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:30
-msgid "Get device model via mmcli utility if aviable."
-msgstr "Если доступно, использовать утилиту mmcli для имени модема."
-
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:34
-msgid "Modeminfo DATA port"
-msgstr "Порт данных"
-
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:35
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:16
 msgid "In automatic mode detect first answered DATA port."
 msgstr "В автоматическом режиме находит первый отвечающий порт данных."
 
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:45
-msgid "<div style=\"color: red;\"><b>No port(s) found! Check the modem connection.</b></div>"
-msgstr "<div style=\"color: red;\"><b>Не обнаружен последовательный порт модема!</b></div>"
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:18
+msgid "Port not found!"
+msgstr "Порт не найден!"
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:25
+msgid "Autodetect"
+msgstr "Автоматически"
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:31
+msgid "Modeminfo: Configuration"
+msgstr "Modeminfo: Конфигурация"
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:32
+msgid "Configuration panel of Мodeminfo."
+msgstr "Панель конфигурации Modeminfo."
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:65
+msgid "Get modem data via qmicli (experimental). Require install qmi-utils."
+msgstr "Получать данные модема через qmicli (экспериментально). qmi-utils должен быть установлен."
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:42
+msgid "Data port"
+msgstr "Порт данных"
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:55
+msgid "Named modem via mmcli"
+msgstr "Имя модема через mmcli"
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:56
+msgid "Get device hardware name via mmcli utility if aviable."
+msgstr "Если доступно, использовать утилиту mmcli для имени модема."
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:64
 msgid "Use QMI"
 msgstr "Использовать QMI"
 
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:65
-msgid "Get modem data via qmicli (experimental). qmi-utils will be installed."
-msgstr "Получать данные модема через qmicli (экспериментально). qmi-utils должен быть установлен."
