@@ -4,65 +4,61 @@
 
 require("nixio.fs")
 
-local TTY_PATH    = "/dev/tty[A-Z][A-Z]*"
-local QMI_PATH    = "/dev/cdc-wdm*"
+local PATH = {
+	"/dev/tty[A-Z][A-Z]*",
+	"/dev/cdc-wdm*"
+	}
+
+-- check devices
+function check_dev(path)
+    local try_port, size = nixio.fs.glob(path)
+    if size > 0 then
+        port = translate("In automatic mode detect first answered DATA port.")
+    else
+	port = translate("Port not found!")
+    end
+end
 
 -- add device in ListValue
-function addValues(dev, path)
-    local try_port, size = nixio.fs.glob(path)
-    dev:value("", translate("Autodetect"))
-    if size > 0 then
-        for node in try_port do
-	    dev:value(node, node)
-        end
-        return false
-    end
-    return true
+function try_port(path)
+   local try_port = nixio.fs.glob(path)
+   dev:value("", translate("Autodetect"))
+   for node in try_port do
+      dev:value(node, node)
+   end
 end
 
 local m = Map("modeminfo", translate("Modeminfo: Configuration"),
-	translate("Configuration panel of Мodeminfo."))
+	translate("Configuration panel of Modeminfo."))
 
 local s = m:section(TypedSection, "modeminfo")
 s.anonymous = true
 
-local name = s:option(Flag, "mmcli_name", translate("Named modem via mmcli"),
-	translate("Get device model via mmcli utility if aviable."))
-name:depends("qmi_mode", 0)
-name.rmempty = true
+local qmi_mode = s:option(Flag, "qmi_mode", translate("Use QMI"),
+        translate("Get modem data via qmicli (experimental). Require install qmi-utils."))
+qmi_mode.rmempty = true
 
-local dev = s:option(ListValue, "device", translate("Modeminfo DATA port"),
-	translate("In automatic mode detect first answered DATA port."))
+check_dev(PATH[1])
+dev = s:option(ListValue, "device", translate("Data port"), port)
 dev.default = ""
 dev.rmempty = true
 dev:depends("qmi_mode", 0)
-if addValues(dev, TTY_PATH) then
-    -- message about missing TTY ports
-    local o = s:option( DummyValue, "tty_nfound")
-    o.rawhtml = true
-    o:depends("qmi_mode", 0)
-    function o.cfgvalue(self, section)
-        return translate("<div style=\"color: red;\"><b>No port(s) found! Check the modem connection.</b></div>")
-    end
-end
+try_port(PATH[1])
 
-dev = s:option(ListValue, "device_qmi", translate("Modeminfo DATA port"),
-	translate("In automatic mode detect first answered DATA port."))
+check_dev(PATH[2])
+dev = s:option(ListValue, "device_qmi", translate("Data port"), port)
 dev.default = ""
 dev.rmempty = true
 dev:depends("qmi_mode", 1)
-if addValues(dev, QMI_PATH) then
-    -- message about missing QMI ports
-    local o = s:option( DummyValue, "qmi_nfound")
-    o.rawhtml = true
-    o:depends("qmi_mode", 1)
-    function o.cfgvalue(self, section)
-        return translate("<div style=\"color: red;\"><b>No port(s) found! Check the modem connection.</b></div>")
-    end
-end
+try_port(PATH[2])
 
-local qmi_mode = s:option(Flag, "qmi_mode", translate("Use QMI"),
-        translate("Get modem data via qmicli (experimental). qmi-utils will be installed."))
-qmi_mode.rmempty = true
+local name = s:option(Flag, "mmcli_name", translate("Name via mmcli"),
+        translate("Get device hardware name via mmcli utility if aviable."))
+name.rmempty = true
+name:depends("qmi_mode", 0)
+
+function m.on_after_commit(Map)
+        luci.sys.call("rm -f /tmp/modemdevice")
+end
 
 return m
