@@ -1,4 +1,4 @@
-# LuCI Theme Infinity Freedom
+# LuCI Theme ifit
 # Copyright 2020 Richard Yu <xiaoqingfengatgm@gmail.com>
 #
 # Licensed under the Apache License v2.0
@@ -10,8 +10,9 @@ THEME_NAME:=ifit
 THEME_TITLE:=ifit
 
 PKG_NAME:=luci-theme-$(THEME_NAME)
-PKG_VERSION:=20200706
-PKG_RELEASE:=0
+PKG_VERSION:=1.5.20210222
+
+PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -20,7 +21,7 @@ define Package/luci-theme-$(THEME_NAME)
   CATEGORY:=LuCI
   SUBMENU:=4. Themes
   DEPENDS:=+libc
-  TITLE:=Infinity Freedom Theme
+  TITLE:=Infit by kenzo
   URL:=https://github.com/kenzok8/luci-theme-ifit
   PKGARCH:=all
 endef
