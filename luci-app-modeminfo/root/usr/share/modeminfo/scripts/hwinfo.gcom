@@ -1,0 +1,28 @@
+opengt
+ set com 115200n81
+ set comecho off
+ set senddelay 0.02
+ waitquiet 0.2 0.2
+
+ send "ATI5^m"
+ get 1 "" $k
+
+ send "ATI^m"
+ get 1 "" $s
+ print $s
+
+ send "AT+CGSN^m"
+ get 1 "" $s
+ print "\nIMEI:",$s,"\n"
+
+ send "AT+CIMI^m"
+ get 1 "" $s
+ print "\nCIMI:",$s,"\n"
+
+ send "AT+ICCID^m"
+ get 1 "" $s
+ print $s
+
+ send "AT+CNUM^m"
+ get 1 "" $s
+ print $s

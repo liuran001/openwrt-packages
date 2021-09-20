@@ -7,7 +7,7 @@
 
 <%+header%>
 
-<h2 name="content"><%:Modeminfo: Signal Overview%></h2>
+<h2 name="content"><%:Modeminfo%></h2>
 
 <script type="text/javascript">//<![CDATA[
 
@@ -19,7 +19,7 @@
 		if (vn < -110) { vn = -110 };
                 var pc =  Math.floor(100*(1-(-50 - vn)/(-50 - mn)));
                 return String.format(
-                        '<div style="width:100%%; max-width:200px; position:relative; border:1px solid #999999">' +
+                        '<div style="width:100%%; max-width:auto; position:relative; border:1px solid #999999">' +
                                 '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
                                         '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +
                                                 '<small>%s</small>' +
@@ -37,7 +37,7 @@
                 if (vn < -140) { vn = -140 };
                 var pc =  Math.floor(100*(1-(-50 - vn)/(-50 - mn)));
                 return String.format(
-                        '<div style="width:100%%; max-width:200px; position:relative; border:1px solid #999999">' +
+                        '<div style="width:100%%; max-width:auto; position:relative; border:1px solid #999999">' +
                                 '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
                                         '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +
                                                 '<small>%s</small>' +
@@ -53,7 +53,7 @@
                 var mn = parseInt(m) || 100;
                 var pc = Math.floor(100-(100*(1-((mn - vn)/(mn - 30)))));
                 return String.format(
-                        '<div style="width:100%%; max-width:200px; position:relative; border:1px solid #999999">' +
+                        '<div style="width:100%%; max-width:auto; position:relative; border:1px solid #999999">' +
                                 '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
                                         '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +
                                                 '<small>%s</small>' +
@@ -70,7 +70,7 @@
                 var pc = Math.floor(100-(100/mn)*vn);
 		if (vn > 0) { vn = 0; };
                 return String.format(
-                        '<div style="width:100%%; max-width:200px; position:relative; border:1px solid #999999">' +
+                        '<div style="width:100%%; max-width:auto; position:relative; border:1px solid #999999">' +
                                 '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
                                         '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +
                                                 '<small>%s</small>' +
@@ -250,71 +250,77 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			var bcc;
 			var freq;
 			var distance;
+			var lactac;
+			var calte;
+			var namebnd;
 			var dist = (data.distance)
+			if (data.enbid && data.cell && data.pci) {
+				var namecid = "LAC/CID/eNB ID-Cell/PCI";
+				var lactac = data.lac + " / " + data.cid + " / " + data.enbid + "-" + data.cell +" / " +data.pci;
+			} else if (data.enbid && data.cell) { 
+				var namecid = "LAC/CID/eNB ID-Cell";
+				var lactac = data.lac + " / " + data.cid + " / " + data.enbid + "-" + data.cell;
+			} else if (data.enbid) {
+				var namecid = "LAC/CID/eNB ID";
+				var lactac = data.lac + " / " + data.cid + " / " + data.enbid;
+			} else {
+				var namecid = "LAC/CID";
+				var lactac = data.lac + " / " + data.cid;
+			}
+			var carrier;
+			var bcc;
+			var bca = "";
+                        var scc;
+			var cid;
+			var arfcn = data.arfcn + " (" + dlfreq + " / " + ulfreq + " MHz)";
 			// name channels and signal/noise  
 			if (netmode == "LTE") {
 				var calte = (data.lteca)
 				var carrier;
 				var scc;
 				var bwca = data.bwca;
-				var arfcn = data.arfcn;
 				distance = " ~"+ dist +" Km";
 				if (calte > 0) {
 					carrier = "+";
 					scc = data.scc;
 					bw = bwca;
-					bca = " (CA: " + bw + " MHz)";
-					arfcn = "PCC: "+ data.arfcn + " " + bca;
-					freq = "PCC: " + dlfreq + " / " + ulfreq + " MHz";
+					bca = " / " + bw + " MHz";
 					bcc = " B" + band + "" + scc;
 				} else {
 					scc = "";
 					bcc = " B" + band;
 					if (bw) {
-						bca = " (" + bw + " MHz)";
+						bca = " / " + bw + " MHz";
 					} else{
 						bca = ""
 					}
-					arfcn = data.arfcn + " " + bca;
-					freq = dlfreq + " / " + ulfreq + " MHz"
 				}
 				var namech = "EARFCN";
 				var namesnr = "SINR";
-				var nametac = "LAC(dec)/eNB ID";
-				var namecid = "CID(dec)/Cell";
-				var cidcell = data.cid + " (" + data.cid_num + ") / " + data.cell;
-				var lactac = data.lac + " (" + data.lac_num + ") / " + data.enbid;
+				//var lactac = data.lac + " (" + data.lac_num + ") / " + data.enbid;
 			} else if (netmode == "3G" || netmode == "UMTS" || netmode == "HSPA" || netmode == "HSUPA" || netmode == "HSDPA" || netmode == "HSPA+" || netmode == "WCDMA" || netmode == "DC-HSPA+") {
 				var namech = "UARFCN";
 				var namesnr = "ECIO";
-				var nametac = "LAC(dec)";
-				var namecid = "CID(dec)";
+				var namecid = "LAC/CID";
+                                var lactac = data.lac + " / " + data.cid;
 				var bcc = " " + band;
-				var freq = dlfreq + " / " + ulfreq + " MHz"
-				var arfcn = data.arfcn;
-				var cidcell = data.cid + " (" + data.cid_num + ")";
-				var lactac = data.lac + "  (" + data.lac_num + ")";
-				
 			} else {
 				var namech = "ARFCN";
 				var namesnr = "SINR/ECIO";
-				var nametac = "LAC(dec)";
-				var namecid = "CID(dec)";
+				var namecid = "LAC/CID";
+                                var lactac = data.lac + " / " + data.cid;
 				var bcc = " " + band;
-				var arfcn = data.arfcn;
-				var freq = dlfreq + " / " + ulfreq + " MHz"
-				var cidcell = data.cid + " (" + data.cid_num + ")";
-				var lactac = data.lac + " (" + data.lac_num + ")";
 			}
-
+			if (data.bwca || data.bwdl) { 
+				namebnd = "<%:Network/Band/Bandwidth%>";
+			} else {
+				namebnd = "<%:Network/Band%>";
+			}
 			// stuff
-			if (e = document.getElementById('status'))
+			if (e = document.getElementById('reg'))
 			if (e)
 				e.innerHTML = String.format(reg);
 
-			if (e = document.getElementById('device'))
-			 	e.innerHTML = String.format(data.device);
-			
 			if (e = document.getElementById('cid'))
 					e.innerHTML = String.format(cidcell);
 
@@ -325,14 +331,24 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 			 	e.innerHTML = String.format(data.cops);
 
 			if (e = document.getElementById('mode'))
-			 	e.innerHTML = String.format(data.mode + "" + carrier + " /"+ bcc);
+			 	e.innerHTML = String.format(data.mode + "" + carrier + " /"+ bcc +""+ bca);
 
-			if (e = document.getElementById('csq_pe'))
+			if (e = document.getElementById('status'))
 			if (e)
-				if( dist == "" || dist == "--" || dist == "0.00") {
-                                        e.innerHTML = String.format('<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>', icon, p);
+				if (rg == 1 || rg == 6 || rg == 9) {
+					if( dist== "--" || dist == "" || dist == "0.00"){
+        	                                e.innerHTML = String.format(data.cops +'<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>', icon, p);
+					} else {
+						e.innerHTML = String.format(data.cops +'<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>' + distance, icon, p);
+					}
+				} else if (rg == 5 || rg == 7 || rg == 10) {
+					if( dist== "--" || dist == "" || dist == "0.00"){
+					e.innerHTML = String.format(data.cops + "(" + reg + ')<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>', icon, p);
+					} else {
+					e.innerHTML = String.format(data.cops + "(" + reg + ')<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>' +distance, icon, p);
+					}
 				} else {
-					e.innerHTML = String.format('<img style="padding-left: 10px;" src="%s"/>'  + " " +  '<span class="ifacebadge"><p style="color:'+ data.csq_col +'"><b>%d%%</b></p></span>' + distance, icon, p);
+					e.innerHTML = String.format(reg);
 				}
 			if (e = document.getElementById('csq_per'))
 			 	e.innerHTML = String.format(data.csq_per+"%");
@@ -376,82 +392,56 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 					var rsrq_min = -20;
 					e.innerHTML = rsrq_bar(data.rsrq + " dB", rsrq_min);
 				}
-
-			if (e = document.getElementById('imei'))
-			 	e.innerHTML = String.format(data.imei);
-
-			if (e = document.getElementById('freq'))
-			 	e.innerHTML = String.format(freq);
 			
-			if (e = document.getElementById('nametac'))
-				e.innerHTML = String.format('<b>'+nametac+':</b>');
+			if (e = document.getElementById('namecid'))
+				e.innerHTML = String.format('<b>'+namecid+':</b>');
 			
 			if (e = document.getElementById('chname'))
 				e.innerHTML = String.format('<b>'+namech+':</b>');
 
 			if (e = document.getElementById('snrname'))
 				e.innerHTML = String.format('<b>'+namesnr+':</b>');
-
-			if (e = document.getElementById('cidname'))
-				e.innerHTML = String.format('<b>'+namecid+':</b>');
-
-            		if (e = document.getElementById('chiptemp'))
-			 	e.innerHTML = String.format(data.chiptemp + " &deg;C");
+			if (e = document.getElementById('namebnd')) 
+				e.innerHTML = String.format('<b>'+namebnd+':</b>');
 
 		}
 	);
 //]]></script>
 
 <fieldset class="cbi-section">
-	<legend><%:Mobile network & Hardware Info%></legend>
+	<legend><%:Cellular network%></legend>
 	<div class="table" width="100%">
 		<div class="tr cbi-rowstyle-2">
-			<div class="td left" width="25%"><b><%:Device:%></b></div>
-			<div class="td left" width="25%" id="device">-</div>
-			<div class="td left" width="25%"><b><%:Status:%></b></div>
+			<div class="td left" width="25%"><b><%:Operator:%></b></div>
 			<div class="td left" width="25%" id="status">-</div>
 		</div>
 		<div class="tr cbi-rowstyle-1">
-			<div class="td left" width="25%"><b><%:MCC MNC:%></b></div>
-			<div class="td left" width="25%" id="mccmnc">-</div>
-			<div class="td left" width="25%"><b><%:Network Desc.:%></b></div>
-			<div class="td left" width="25%" id="cops">-</div>
+			<div class="td left" width="25%" id="namebnd"><b><%:Network/band:%></b></div>
+			<div class="td left" width="25%" id="mode">-</div>
 		</div>
 		<div class="tr cbi-rowstyle-2">
-			<div class="td left" width="25%"><b><%:Network/band:%></b></div>
-			<div class="td left" width="25%" id="mode">-</div>
-			<div class="td left" width="25%"><b><%:Signal strength:%></b></div>
-			<div class="td left" width="25%" id="csq_pe">-</div>
-		</div>
-		<div class="tr cbi-rowstyle-1">
 			<div class="td left" width="25%" id="chname"><b><%:E/U/ARFCN:%></b></div>
 			<div class="td left" width="25%" id="arfcn">-</div>
-			<div class="td left" width="25%"><b><%:Freq. DL/UL:%></b></div>
-			<div class="td left" width="25%" id="freq">-</div>
 		</div>
-		<div class="tr cbi-rowstyle-2"> 
-			<div class="td left" width="25%" id="nametac"><b><%:LAC(dec):%></b></div>
+		<div class="tr cbi-rowstyle-1"> 
+			<div class="td left" width="25%" id="namecid"><b><%:LAC/CID:%></b></div>
 			<div class="td left" width="25%" id="lac">-</div>
-			<div class="td left" width="25%" id="cidname"><b><%:CID(dec):%></b></div>
-			<div class="td left" width="20%" id="cid">-</div>
 		</div>
-		<div class="tr cbi-rowstyle-1">
+		<div class="tr cbi-rowstyle-2">
 			<div class="td left" width="25%"><b><%:RSSI:%></b></div>
 			<div class="td left" width="25%" id="rssi">-</div>
+		</div>
+		<div class="tr cbi-rowstyle-1">
 			<div class="td left" width="25%" id="snrname"><b><%:SINR/ECIO:%></b></div>
 			<div class="td left" width="25%" id="sinr">-</div>
 		</div>
 		<div class="tr cbi-rowstyle-2">
 			<div class="td left" width="25%"><b><%:RSRP:%></b></div>
 			<div class="td left" width="25%" id="rsrp">-</div>
-			<div class="td left" width="25%"><b><%:RSRQ:%></b></div>
-			<div class="td left" width="25%" id="rsrq">-</div>
 		</div>
 		<div class="tr cbi-rowstyle-1">
-			<div class="td left" width="25%"><b><%:IMEI:%></b></div>
-			<div class="td left" width="25%" id="imei">-</div>
-			<div class="td left" width="25%"><b><%:Chip Temp:%></b></div>
-			<div class="td left" width="25%" id="chiptemp">-</div>
+			<div class="td left" width="25%"><b><%:RSRQ:%></b></div>
+			<div class="td left" width="25%" id="rsrq">-</div>
 		</div>
 	</div>
 </fieldset>

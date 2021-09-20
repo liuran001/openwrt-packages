@@ -4,10 +4,10 @@ function json_status() {
         . /usr/share/libubox/jshn.sh
         json_init
         IFS=$'\n'
-        for jvar in device=$DEVICE mcc=$COPS_MCC mnc=$COPS_MNC cops=$COPS mode=$MODE csq_per=$CSQ_PER lac=$LAC lac_num=$LAC_NUM \
-                        cid=$CID cid_num=$CID_NUM rssi=$CSQ_RSSI sinr=$SINR rsrp=$RSRP rsrq=$RSRQ imei=$IMEI \
-                        reg=$REGST csq_col=$CSQ_COL arfcn=$EARFCN chiptemp=$CHIPTEMP bwul=$BWUL bwdl=$BWDL lteca=$LTE_CA enbid=$ENBID \
-			distance=$DISTANCE cell=$CELL scc=$SCC bwca=$BWCA; do
+        for jvar in device=$DEVICE cops=$COPS mode=$MODE csq_per=$CSQ_PER lac=$LAC cid=$CID rssi=$CSQ_RSSI \
+			sinr=$SINR rsrp=$RSRP rsrq=$RSRQ imei=$IMEI reg=$REGST csq_col=$CSQ_COL arfcn=$EARFCN \
+			chiptemp=$CHIPTEMP firmware=$FW bwdl=$BWDL lteca=$LTE_CA enbid=$ENBID \
+			distance=$DISTANCE cell=$CELL scc=$SCC bwca=$BWCA iccid=$ICCID imsi=$IMSI pci=$PCI; do
                 json_add_string ${jvar%=*} ${jvar#*=}
         done
         json_close_object
@@ -15,9 +15,8 @@ function json_status() {
 }
 
 function if_null() {
-        for var in DEVICE COPS_MCC COPS_MNC COPS MODE CSQ_PER \
-                        LAC LAC_NUM CID CID_NUM CSQ_RSSI SINR RSRP \
-                        RSRQ IMEI REGST EARFCN CHIPTEMP BWUL BWDL; do
+        for var in DEVICE COPS MODE CSQ_PER LAC CSQ_RSSI SINR RSRP \
+                        RSRQ IMEI REGST EARFCN CHIPTEMP FW BWDL ICCID IMSI; do
                 if [ "x$(eval echo \${$var})" = "x" ]; then
                         eval $var='--'
                 fi
@@ -36,10 +35,9 @@ else
 	exit 0
 fi
 
-
 get_device_info
 get_data_in
-mmcli_name
+get_hwinfo
 if_null
 json_status
 

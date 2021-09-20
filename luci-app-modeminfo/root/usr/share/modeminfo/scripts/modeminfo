@@ -63,27 +63,50 @@ function modem_family() {
 	fi
 }
 
-# if use ModemManager then get device name via mmcli
-function mmcli_name(){
-	if [ "$(uci -q get modeminfo.@modeminfo[0].mmcli_name)" == 1 ]; then
-		if [ -x /usr/bin/mmcli ] && [ ! -f /tmp/modemdevice ]; then
-			MODEM=$(mmcli -L | awk '{print $1}' | head -1)
-			if [ $MODEM ]; then
-				MANUF=$(mmcli -m $MODEM -J | jsonfilter -e '@["modem"].*["manufacturer"]' | awk '{gsub("\r", ""); print $0}')
-				MODEL=$(mmcli -m $MODEM -J | jsonfilter -e '@["modem"].*["model"]' | awk '{gsub("\r", ""); print $0}')
-				if [ -n "$(echo "$MODEL" | grep "${MANUF}")" ]; then
-					echo "$MODEL" > /tmp/modemdevice
-				else
-					echo "$MANUF $MODEL" > /tmp/modemdevice
+# get hardware info
+function get_hwinfo(){
+	if [ ! -f /tmp/modemdevice ]; then
+		case $FAMILY in 
+			INTEL) 
+				SCRIPT=$RES/scripts/fibo_hwinfo.gcom
+				O=$(gcom -d $DEVPORT -s $SCRIPT 2>/dev/null) 
+				FW=$(echo "$O" | awk '/\+GTPKGVER/{print $2}')
+				ICCID=$(echo "$O" | awk -F [:] '/CCID:/{gsub("\r","");print $2}')
+				IMEI=$(echo "$O" | grep CGSN -A2 | awk 'NR==2{print $1}')
+			;;
+			*)
+				SCRIPT=$RES/scripts/hwinfo.gcom
+		                O=$(gcom -d $DEVPORT -s $SCRIPT 2>/dev/null)
+		                FW=$(echo "$O" | awk '/Revision:/{print $2}')
+		                ICCID=$(echo "$O" | awk -F [:] '/ICCID:/{gsub("\r","");print $2}')
+			;;
+		esac
+                IMSI=$(echo "$O" | grep -A2 CIMI | awk 'NR ==2{gsub("\r","");print $0}')
+                echo FW=\"$FW\" >/tmp/modemdevice
+                echo ICCID=\"$ICCID\" >> /tmp/modemdevice
+                echo IMSI=\"$IMSI\" >> /tmp/modemdevice
+		echo IMEI=\"$IMEI\">> /tmp/modemdevice
+		# if use ModemManager then get device name via mmcli
+		if [ "$(uci -q get modeminfo.@modeminfo[0].mmcli_name)" == 1 ]; then
+			if [ -x /usr/bin/mmcli ]; then
+				MODEM=$(mmcli -L | awk '{print $1}' | head -1)
+				if [ $MODEM ]; then
+					MANUF=$(mmcli -m $MODEM -J | jsonfilter -e '@["modem"].*["manufacturer"]' | awk '{gsub("\r", ""); print $0}')
+					MODEL=$(mmcli -m $MODEM -J | jsonfilter -e '@["modem"].*["model"]' | awk '{gsub("\r", ""); print $0}')
+					FW=$(mmcli -m $MODEM -J | jsonfilter -e '@["modem"].*["revision"]')
+					if [ -n "$(echo "$MODEL" | grep "${MANUF}")" ]; then
+						echo DEVICE=\""$MODEL\"" >> /tmp/modemdevice
+					else
+						echo DEVICE=\""$MANUF $MODEL\"" >> /tmp/modemdevice
+					fi
 				fi
 			fi
-		fi
-		if [ -f /tmp/modemdevice ]; then
-			if [ $(cat /tmp/modemdevice | wc -l) = 1 ]; then
-				DEVICE="$(cat /tmp/modemdevice)"
-			fi
+		else
+			echo DEVICE=\"$DEVICE\" >> /tmp/modemdevice
 		fi
 	fi
+	source /tmp/modemdevice
+	
 }
 
 # get CSQ 
@@ -110,6 +133,7 @@ function get_csq(){
 		CSQ_PER="0"
 		CSQ_COL="black"
 	fi
+	# if aviable 
 }
 
 # Get MCC or MNC 
@@ -120,7 +144,11 @@ function get_cops() {
 		COPS_MCC=${COPS_NUM:0:3}
 		COPS_MNC=${COPS_NUM:3:3}
 		COPS=$(awk -F[\;] '/'$COPS_NUM'/ {print $2}' $RES/mccmnc.dat)
+		if [ "x$COPS" = "x" ]; then
+			COPS="$COPS_MCC $COPS_MNC"
+		fi
 	fi
+	#DISTANCE=$(qmicli -p -d /dev/cdc-wdm0 --nas-get-cell-location-info | awk '/LTE Timing Advance:/{gsub("\047",""); printf "%.2f\n", (299792458*($4*10^-6)/1000)/2}')
 }
 
 # Get MCC or MNC for ZTE modems
@@ -130,9 +158,9 @@ function get_cops_zte() {
 	COPS_TMP=$(awk -F[\;] 'BEGIN {IGNORECASE = 1} /'"$COPS"'/ {print $2}' $RES/mccmnc.dat)
 	if [ "x$COPS_TMP" != "x" ]; then
 		COPS="$COPS_TMP"
+	else
 		COPS_NUM=$(awk -F[\;] 'BEGIN {IGNORECASE = 1} /'"$COPS"'/ {print $1}' $RES/mccmnc.dat)
-		COPS_MCC=${COPS_NUM:0:3}
-		COPS_MNC=${COPS_NUM:3:3}
+		COPS="${COPS_NUM:0:3} ${COPS_NUM:3:3}"
 	fi
 }
 
@@ -155,13 +183,12 @@ function get_reg_data_mikrotik() {
 	ENBID=$(printf %d 0x$ENBx)
 	if [ "x$CID" != "x" ]; then
 		CID_NUM=$(printf %d 0x$CID)
-		if [ ${#CID} -gt 4 ]; then
-			T=$(echo "$CID" | awk '{print substr($1,length(substr($1,1,length($1)-4))+1)}')
-		else
-			T=$CID
-		fi
 	fi
 	REGST=$(echo "$O" | awk -F[,] '/^\+CEREG:/ {print $2}')
+	if [ $(uci -q get modeminfo.@modeminfo[0].decimail) -eq 1 ]; then
+		LAC=$LAC_NUM
+		CID=$CID_NUM
+	fi
 }
 
 # Get Registration data
@@ -173,10 +200,12 @@ function get_reg_data(){
 			break
 		fi
 	done
-	if [ $LAC = "FFFE" ]; then
-		CREG="+CEREG"
-		LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($3)}')
-	fi
+	case $LAC in
+		*FFFE*|*0000*)
+			CREG="+CEREG"
+			LAC=$(echo "$O" | awk -F[,] '/\'$CREG'/  {gsub("^A-F0-9|\"", ""); printf "%s", toupper($3)}')
+		;;
+	esac
 	LAC_NUM=$(printf %d 0x$LAC)
 	REGST=$(echo "$O" | awk -F[,] '/\'$CREG'/ {print $2}')
 	ENBx=$(echo $CID | sed -e 's/..$//')
@@ -184,12 +213,11 @@ function get_reg_data(){
 	ENBID=$(printf %d 0x$ENBx)
 	if [ "x$CID" != "x" ]; then
 		CID_NUM=$(printf %d 0x$CID)
-		if [ ${#CID} -gt 4 ]; then
-			T=$(echo "$CID" | awk '{print substr($1,length(substr($1,1,length($1)-4))+1)}')
-		else
-			T=$CID
-		fi
 	fi
+	if [ $(uci -q get modeminfo.@modeminfo[0].decimail) -eq 1 ]; then
+                LAC=$LAC_NUM                                
+                CID=$CID_NUM                    
+        fi
 }
 
 # Huawei modems
@@ -375,6 +403,7 @@ function simcom_data(){
                         RSRP=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", $13/10}')
                         RSRQ=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", $12/10}')
                         SINR=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {printf "%.0f\n", ($15*2)-20}')
+			PCI=$(echo "$O" | awk -F[,\ ] '/^\+CPSI/ {print $7}')
                         BWDL=$(echo "$O" |awk -F[,\ ] '/^\+CPSI/ {print $10}')
                         BWUL=$(echo "$O" |awk -F[,\ ] '/^\+CPSI/ {print $11}')
                 ;;
@@ -396,6 +425,7 @@ function quectel_data(){
 		EARFCN=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $10}')
 		RSRP=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $15}')
 		SINR=$(echo "$O" |awk -F "[\, ]" '/\+QENG:/{print $18}')
+		PCI=$(echo "$O" |awk -F "[\, ]" '/\+QENG:/{print $9}')
 		CSQ_RSSI=$(echo "$O" |awk -F "[\, ]" '/\+QENG:/{print $17}')
 		RSRQ=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $16}')
 		BWUL=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $12}')
@@ -474,6 +504,7 @@ function qualcomm_data(){
                 RSRQ=$(echo "$RADIODATA" |awk -F [,] '{printf "%.0f\n",$5}')
                 SINR=$(echo "$RADIODATA" |awk -F [,] '{printf "%.0f\n",$16}')
 		BWDx=$(echo "$BW" | awk '{printf "%.0f\n",$8}')
+		PCI=$(echo "$RADIODATA" |awk -F [,] '{print $11}')
 		case $BWDx in
 			3) BWDL=1 ;;
 			5) BWDL=2 ;;

@@ -26,5 +26,14 @@ Supported devices:
 
 Compiled newerst version [luci-app-modeminfo_0.1.9-5_all.ipk](http://openwrt.132lan.ru/packages/packages-19.07/luci/luci-app-modeminfo_0.1.9-5_all.ipk)
 
-![](https://raw.githubusercontent.com/koshev-msk/luci-app-modeminfo/master/screenshot.png)
+<details>
+   <summary>Screenshots</summary>
+
+	![](https://raw.githubusercontent.com/koshev-msk/luci-app-modeminfo/master/screenshots/modeminfo-network.png)
+
+	![](https://raw.githubusercontent.com/koshev-msk/luci-app-modeminfo/master/screenshots/modeminfo-hardware.png)
+
+	![](https://raw.githubusercontent.com/koshev-msk/luci-app-modeminfo/master/screenshots/modeminfo-setup.png)
+
+</details>
 

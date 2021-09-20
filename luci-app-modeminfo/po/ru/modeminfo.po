@@ -10,84 +10,92 @@ msgid "Modem"
 msgstr "Модем"
 
 #: applications/luci-app-modeminfo/luasrc/controller/modem/modeminfo.lua:9
-msgid "Signal Overview"
-msgstr "Состояние сети"
+msgid "Modeminfo"
+msgstr "Модеминфо"
 
 #: applications/luci-app-modeminfo/luasrc/controller/modem/modeminfo.lua:10
-msgid "Overview"
-msgstr "Обзор"
+msgid "Network"
+msgstr "Сеть"
 
 #: applications/luci-app-modeminfo/luasrc/controller/modem/modeminfo.lua:11
+msgid "Hardware"
+msgstr "Устройство"
+
+#: applications/luci-app-modeminfo/luasrc/controller/modem/modeminfo.lua:12
 msgid "Setup"
 msgstr "Настройка"
 
 #: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:10
-msgid "Modeminfo: Signal Overview"
-msgstr "Modeminfo: Уровень сигнала"
+msgid "Modeminfo"
+msgstr "Модеминфо"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:40
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:109
 msgid "No Registration"
 msgstr "Нет регистрации"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:42
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:111
 msgid "Registered"
 msgstr "Зарегистрирован"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:44
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:113
 msgid "Searching"
 msgstr "Поиск сети"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:46
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:115
 msgid "Denied"
 msgstr "Запрет регистрации"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:48
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:117
 msgid "Unknown"
 msgstr "Неизветсно"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:50
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:119
 msgid "Roaming"
 msgstr "Гостевая сеть"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:52
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:121
 msgid "No Data"
 msgstr "Нет данных"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:260
-msgid "Mobile network & Hardware Info"
-msgstr "Мобильная сеть и информация о модеме"
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:315
+msgid "Network/Band/Bandwidth"
+msgstr "Сеть/Диапазон/Полоса"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:263
-msgid "Device:"
-msgstr "Устройство:"
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:315
+msgid "Network/Band"
+msgstr "Сеть/Диапазон"
+
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:402
+msgid "Celluar network"
+msgstr "Сотовая сеть"
+
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:405
+msgid "Operator:"
+msgstr "Оператор:"
 
 #: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:265
 msgid "Status:"
 msgstr "Состояние:"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:271
-msgid "Network Desc.:"
-msgstr "Имя сети:"
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfohw.htm:38
+msgid "Device:"
+msgstr "Устройство:"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:275
-msgid "Network/band:"
-msgstr "Сеть/Диапазон:"
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfohw.htm:42
+msgid "Firmware:"
+msgstr "Встроенное ПО:"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:277
-msgid "Signal strength:"
-msgstr "Уровень сигнала:"
-
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:283
-msgid "Freq. DL/UL:"
-msgstr "Частота Вх/Исх:"
-
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:307
-msgid "Chip Temp:"
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfohw.htm:58
+msgid "Chiptemp:"
 msgstr "Температура:"
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:16
 msgid "In automatic mode detect first answered DATA port."
 msgstr "В автоматическом режиме находит первый отвечающий порт данных."
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:13
+msgid "Port not found!"
+msgstr "Порт не обнаружен!"
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:18
 msgid "Port not found!"
@@ -105,23 +113,34 @@ msgstr "Modeminfo: Конфигурация"
 msgid "Configuration panel of Мodeminfo."
 msgstr "Панель конфигурации Modeminfo."
 
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:37
+msgid "Use QMI"
+msgstr "Использовать QMI"
+
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:65
 msgid "Get modem data via qmicli (experimental). Require install qmi-utils."
-msgstr "Получать данные модема через qmicli (экспериментально). qmi-utils должен быть установлен."
+msgstr "Получать данные модема через qmicli (экспериментально). Требуется установленный qmi-utils."
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:42
 msgid "Data port"
 msgstr "Порт данных"
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:55
-msgid "Named modem via mmcli"
-msgstr "Имя модема через mmcli"
+msgid "Show decimal"
+msgstr "Показать в десятичных"
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:56
+msgid "Show LAC and CID in decimal."
+msgstr "Показать LAC и CID соты в десятичных."
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:56
 msgid "Get device hardware name via mmcli utility if aviable."
 msgstr "Если доступно, использовать утилиту mmcli для имени модема."
 
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:64
-msgid "Use QMI"
-msgstr "Использовать QMI"
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:59
+msgid "Named modem via mmcli"
+msgstr "Имя модема через mmcli"
 
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:60
+msgid "Get device model via mmcli utility if aviable."
+msgstr "Если доступно, использовать утилиту mmcli для имени модема."

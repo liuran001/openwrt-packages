@@ -40,6 +40,8 @@ get_hardware_info(){
 	        DEVICE="${MANUF} ${MODEL}"
 	fi
         IMEI=`$QMICTL --dms-get-ids | awk -F [:] '/IMEI:/{gsub("'\''|\*", ""); print $2}'`
+	FW=$($QMICTL --dms-get-software-version | awk -F [:] '/version:/{print $2}' )
+	ICCID=$($QMICTL --dms-uim-get-iccid | awk -F [:] '/ICCID/{gsub("'\''",""); print $2}' )
 }
 
 get_signal_info(){
@@ -69,6 +71,7 @@ get_signal_info(){
 		ENBx=$(echo $CID | sed -e 's/..$//')
 		ENBID=$(printf %d 0x$ENBx)
 		CELL=$(printf %d 0x${CID: -2})
+		PCI=$($QMICTL --nas-get-cell-location-info | awk -F [:] '/Serving Cell ID:/{gsub("'\''",""); print $2}')
 		LTE_O=$($QMICTL --nas-get-lte-cphy-ca-info)
 	        LTE_CA=$(echo "$LTE_O" |grep -i '^secondary cell' | wc -l)
 		BWDx=$(echo "$LTE_O" | grep -A4 'Primary Cell Info' | awk -F [:] '/DL Bandwidth:/{gsub("'\''| ", ""); print $2}')
@@ -129,6 +132,10 @@ get_signal_info(){
 			REGST=3
 		;;
         esac
+	if [ $(uci -q get modeminfo.@modeminfo[0].decimail) -eq 1 ]; then
+                LAC=$LAC_NUM
+                CID=$CID_NUM
+        fi
 }
 
 

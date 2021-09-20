@@ -14,6 +14,10 @@ opengt
  let $r="+CSQ"
  gosub readatcmd
 
+ send "AT+CGMR^m"
+ get 1 "" $s
+ print "\nFW: "$s
+
  let $c="ATE1; +CGMI^m"
  gosub readatcmdnr
  let $v=$s
@@ -173,8 +177,8 @@ opengt
 :intel
  print "\n",$toupper($mid($k,8,3)),"\n"
 
- let $c="AT+GMM?^m"
- let $r="+GMM"
+ let $c="AT+COPS=3,2;+COPS?^m"
+ let $r="+COPS"
  gosub readatcmd
 
  let $c="AT+XCESQ?^m"
@@ -204,7 +208,7 @@ opengt
  let $c="AT+XMCI=1^m"
  let $r="+XMCI"
  gosub readatcmd
- goto next
+ goto next1
 
 :zte
  let $c="AT+COPS?^m"

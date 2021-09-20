@@ -1,0 +1,21 @@
+opengt
+ set com 115200n81
+ set comecho off
+ set senddelay 0.02
+ waitquiet 0.2 0.2
+
+ send "AT+GTPKGVER?^m"
+ get 1 "" $s
+ print $s
+
+ send "AT+CGSN^m"
+ get 1 "" $s
+ print "\nIMEI:",$s,"\n"
+
+ send "AT+CIMI^m"
+ get 1 "" $s
+ print "\nCIMI:",$s,"\n"
+
+ send "AT+CCID^m"
+ get 1 "" $s
+ print $s
