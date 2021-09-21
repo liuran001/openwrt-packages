@@ -1,5 +1,3 @@
-msgid ""
-msgstr ""
 "Language: ru\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -96,10 +94,6 @@ msgstr "В автоматическом режиме находит первый
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:13
 msgid "Port not found!"
 msgstr "Порт не обнаружен!"
-
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:18
-msgid "Port not found!"
-msgstr "Порт не найден!"
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:25
 msgid "Autodetect"

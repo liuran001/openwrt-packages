@@ -311,7 +311,7 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
                                 var lactac = data.lac + " / " + data.cid;
 				var bcc = " " + band;
 			}
-			if (data.bwca || data.bwdl) { 
+			if (bw) { 
 				namebnd = "<%:Network/Band/Bandwidth%>";
 			} else {
 				namebnd = "<%:Network/Band%>";

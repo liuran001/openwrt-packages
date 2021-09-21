@@ -181,6 +181,10 @@ opengt
  let $r="+COPS"
  gosub readatcmd
 
+ let $c="AT+GMM?^m"
+ let $r="+GMM"
+ gosub readatcmd
+
  let $c="AT+XCESQ?^m"
  let $r="+XCESQ"
  gosub readatcmd
