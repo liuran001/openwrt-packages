@@ -109,17 +109,18 @@ function get_hwinfo(){
 	
 }
 
-# get CSQ 
+# get CSQ
 function get_csq(){
+	CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}')
+	# @csharper2005 commit #da52cbc
+	# RSSI & CSQ look very strange. Therefore we calculate it
+        # through RSSP and number of available resource blocks
 	case $FAMILY in
 		INTEL)
 			case $MODE in
-				# Correct CSQ LTE mode on Intel XMM Fibocom modems 
-				LTE*) CSQ=$(echo $RSRQ $RSRP $NP | awk '{printf "%.0f\n", (113+10*log(((-20-$1)/$2)/$3))/2}') ;;
-				*) CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}') ;;
+				LTE*) CSQ=$(echo $RSRP $NP | awk '{printf "%.0f\n", (($1+10*log(12*$2)/log(10))+113)/2}') ;;
 			esac
 		;;
-		*) CSQ=$(echo "$O" | awk -F[,\ ] '/^\+CSQ/ {print $2}') ;;
 	esac
 	[ "x$CSQ" = "x" ] && CSQ=-1
 	if [ $CSQ -ge 0 -a $CSQ -le 31 ]; then
@@ -133,7 +134,6 @@ function get_csq(){
 		CSQ_PER="0"
 		CSQ_COL="black"
 	fi
-	# if aviable 
 }
 
 # Get MCC or MNC 
@@ -148,7 +148,6 @@ function get_cops() {
 			COPS="$COPS_MCC $COPS_MNC"
 		fi
 	fi
-	#DISTANCE=$(qmicli -p -d /dev/cdc-wdm0 --nas-get-cell-location-info | awk '/LTE Timing Advance:/{gsub("\047",""); printf "%.2f\n", (299792458*($4*10^-6)/1000)/2}')
 }
 
 # Get MCC or MNC for ZTE modems
@@ -587,17 +586,19 @@ function dell_data(){
 # Intel XMM modems (need changes)
 function intel_data(){
 	generic_data
-	DEVx="$(echo "$O" | awk -F [:,] '/CGMI:|GMM:/{gsub("\"|\r","",$0);print substr($2,2);}')"
+	DEVx="$(echo "$O" | awk -F [:,] '/CGMI:|GMM:/{gsub("\"|\r","",$0); print substr($2,2);}')"
 	DEVICE=$(echo $DEVx)
 	if [ $MODE = LTE ]; then
 		EARFCN=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $3}')
 		DISTANCE=$(echo "$O" | awk -F [:,] '/\+XMCI: 4/{gsub(/"/,""); printf "%.2f\n", ($14*78)/1000}')
 		PCI=$(echo "$O" | awk -F [:,] '/\+XMCI: 4/{gsub(/"/,""); printf "%d\n", $7}')
+		RSRP=$(echo "$O" | awk -F [:,] '/\+RSRP:/{printf "%.0f\n", $4}')
+		RSRQ=$(echo "$O" | awk -F [:,] '/\+RSRQ:/{printf "%.0f\n", $4}')
+		# ! SINR formula needs to be checked !
+		SINR=$(echo "$O" | awk -F [:,] '/\+XMCI: 4/{gsub(/"/,""); printf "%.0f\n", $13/4+5}')
 		LTE_Cx=$(echo "$O" | awk -F [:,] '/\+XLEC:/{print $3}')
 		LTE_CA=$(($LTE_Cx -1))
 		BWDL=$(echo "$O" | awk -F [:,] '/\+XLEC:/{gsub("\r","",$4); print $4}')
-		RSRP=$(echo "$O" | awk -F [:,] '/\+RSRP:/{printf "%.0f\n", $4}')
-		RSRQ=$(echo "$O" | awk -F [:,] '/\+RSRQ:/{printf "%.0f\n", $4}')
 		BWCx=$(echo "$O" | awk -F [:,] '/\+XLEC/{gsub("\r",""); print $4" "$5" "$6" "$7" "$8}')
 		case $BWDL in
 			1) NP=15 ;;
@@ -627,29 +628,31 @@ function intel_data(){
 		for sca in $SCx; do
 			if [ $sca -ge 0 ] && [ $sca -le 599 ]; then
 				SC=1
+			elif [ $sca -ge 600 ] && [ $sca -le 1199 ]; then
+				SC=2
 			elif [ $sca -ge 1200 ] && [ $sca -le 1949 ]; then
 				SC=3
+			elif [ $sca -ge 1950] && [ $sca -le 2399 ]; then
+				SC=4
+			elif [ $sca -ge 2400] && [ $sca -le 2469 ]; then
+				SC=5
 			elif [ $sca -ge 2750 ] && [ $sca -le 3449 ]; then
 				SC=7
 			elif [ $sca -ge 3450 ] && [ $sca -le 3799 ]; then
 				SC=8
 			elif [ $sca -ge 6150 ] && [ $sca -le 6449 ]; then
 				SC=20
+			elif [ $sca -ge 9210 ] && [ $sca -le 9659 ]; then
+				SC=28
 			elif [ $sca -ge 9870 ] && [ $sca -le 9919 ]; then
 				SC=31
 			elif [ $sca -ge 37750 ] && [ $sca -le 38249 ]; then
 				SC=38
-			elif [ $sca -ge 38650 ] && [ $sca -le 39649 ]; then
+			elif [ $sca -ge 38650 ] && [ $sca -le 39649 ]; then 
 				SC=40
 			fi
 			SCC=$SCC+$SC
 		done
-		SINx=$(echo "$O" | awk -F [:,] '/\+XCESQ:/{print $9}')
-		if [ $SINx -eq 99 ]; then
-			SINR=""
-		else
-			SINR=$(echo "$O" |  awk -F [:,] '/\+XCESQ:/{printf "%.0f\n", ($9/4+5)}')
-		fi
 	else
 		EARFCN=$(echo "$O" | awk -F [:,] '/\+RSCP:/{print $3}')
 		SINx=$(echo "$O" | awk -F [:,] '/\+XCESQ:/{print $6}')
@@ -809,9 +812,9 @@ function get_data_in(){
 		;;
 		INTEL)
 			get_cops
+			get_reg_data
 			intel_data
 			get_csq
-			get_reg_data
 		;;
 		MIKROTIK)
 			get_cops_mikrotik
