@@ -18,12 +18,15 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)/config
 config PACKAGE_$(PKG_NAME)_INCLUDE_btrfs_progs
+	depends on PACKAGE_$(PKG_NAME)
 	bool "Include btrfs-progs"
 	default y
 config PACKAGE_$(PKG_NAME)_INCLUDE_lsblk
+	depends on PACKAGE_$(PKG_NAME)
 	bool "Include lsblk"
 	default y
 config PACKAGE_$(PKG_NAME)_INCLUDE_mdadm
+	depends on PACKAGE_$(PKG_NAME)
 	bool "Include mdadm"
 	default n
 config PACKAGE_$(PKG_NAME)_INCLUDE_kmod_md_raid456
