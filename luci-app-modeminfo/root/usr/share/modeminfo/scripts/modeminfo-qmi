@@ -145,6 +145,6 @@ function get_data_in(){
         get_signal_info
 }
 
-mmcli_name(){
+get_hwinfo(){
 	continue
 }
