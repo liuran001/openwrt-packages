@@ -2145,10 +2145,43 @@ textarea.ddns_logview
 }
 
 /* For luci-app-passwall */
-#_passwall_status_fieldset > div > div:nth-child(10) > div > div.pure-u-1-5 > div > img
+#_passwall_status_fieldset > div > div > div 
+{
+	background-color: rgba(0,0,0,0);
+    margin: 0.5rem;
+    padding: 0;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    font-family: inherit;
+    min-width: inherit;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: .375rem;
+    box-shadow: 0 0 2rem 0 rgb(136 152 170 / 15%);
+}
+
+#_passwall_status_fieldset > div > div > div > div > h4
+{
+	font-size: 1.2rem;
+}
+
+#_passwall_status_fieldset > div > div > div > div > h4 > span
+{
+	font-size: 1rem;
+}
+
+#_passwall_status_fieldset > div > div:nth-child(10) > div > div.pure-u-1-6 > div > img
 {
 	filter:invert(100%);
 }
+
+div#cbi-passwall.cbi-map > fieldset#cbi-passwall-nodes.cbi-section > div.cbi-section-node > table > tbody > tr._now_use
+{
+    background: #ff853469 !important;
+}
+
 div#cbi-passwall.cbi-map fieldset > fieldset > div > div > div  label
 {
 	padding: 7px 10px;
