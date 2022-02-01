@@ -23,8 +23,8 @@ msgstr "全局设置"
 msgid "Rule Providers and Groups"
 msgstr "规则集与策略组管理"
 
-msgid "Game Rules and Groups"
-msgstr "游戏规则与策略组管理"
+msgid "Game Rules and Groups (Only TUN Core Support)"
+msgstr "游戏规则与策略组管理（仅TUN内核）"
 
 msgid "Other Rule Providers and Groups (Only TUN Core Support)"
 msgstr "第三方规则集与策略组管理（仅TUN内核）"
@@ -126,22 +126,16 @@ msgid "fake-ip"
 msgstr "Fake-IP（增强）模式"
 
 msgid "redir-host(tun mode)"
-msgstr "Redir-Host（TUN）模式【依赖kmod-tun】"
+msgstr "Redir-Host（TUN）模式"
 
 msgid "fake-ip(tun mode)"
-msgstr "Fake-IP（TUN）模式【依赖kmod-tun】"
-
-msgid "redir-host-vpn(game mode)"
-msgstr "Redir-Host（游戏）模式【依赖kmod-tun】"
-
-msgid "fake-ip-vpn(game mode)"
-msgstr "Fake-IP（游戏）模式【依赖kmod-tun】"
+msgstr "Fake-IP（TUN）模式"
 
 msgid "redir-host-mix(tun mix mode)"
-msgstr "Redir-Host（TUN-混合）模式【依赖kmod-tun】【UDP-TUN，TCP-转发】"
+msgstr "Redir-Host（TUN-混合）模式【UDP-TUN，TCP-转发】"
 
 msgid "fake-ip-mix(tun mix mode)"
-msgstr "Fake-IP（TUN-混合）模式【依赖kmod-tun】【UDP-TUN，TCP-转发】"
+msgstr "Fake-IP（TUN-混合）模式【UDP-TUN，TCP-转发】"
 
 msgid "Select Mode For OpenClash Work, Try Flush DNS Cache If Network Error"
 msgstr "选择运行模式，如客户端的网络异常请尝试清除DNS缓存"
@@ -519,6 +513,9 @@ msgstr "必须代理的流量"
 msgid "Apple"
 msgstr "苹果服务（Apple）"
 
+msgid "Google FCM"
+msgstr "谷歌推送（Google FCM）"
+
 msgid "Scholar"
 msgstr "学术网站（Scholar）"
 
@@ -528,8 +525,8 @@ msgstr "微软服务（Microsoft）"
 msgid "Netflix"
 msgstr "奈飞（Netflix）"
 
-msgid "Disney"
-msgstr "迪士尼（Disney）"
+msgid "Disney Plus"
+msgstr "迪士尼+（Disney Plus）"
 
 msgid "Bilibili"
 msgstr "哔哩哔哩（Bilibili）"
@@ -929,6 +926,9 @@ msgstr "代理集路径（Path）"
 msgid "Update Your Proxy Provider File From Config Luci Page"
 msgstr "请先在配置文件管理页面上传您的代理集文件"
 
+msgid "Provider Filter"
+msgstr "代理集节点筛选"
+
 msgid "Provider URL"
 msgstr "代理集URL"
 
@@ -1178,6 +1178,9 @@ msgstr "GEOIP（By MaxMind）数据库日期"
 msgid "No Backup"
 msgstr "暂未备份"
 
+msgid "Backup"
+msgstr "备份"
+
 msgid "<Limited State>"
 msgstr "<受限状态>"
 
@@ -1186,9 +1189,6 @@ msgstr "增强"
 
 msgid "Compatible"
 msgstr "兼容"
-
-msgid "Game"
-msgstr "游戏"
 
 msgid "Mix"
 msgstr "混合"
@@ -1298,14 +1298,14 @@ msgstr "注意：客户端可能无法更新，因为squashfs格式的固件更�
 msgid "Compiled Version Selected"
 msgstr "已选择编译版本"
 
-msgid "CPU Architecture (OS)"
-msgstr "处理器架构（OS）"
+msgid "Release Branch Selected"
+msgstr "已选择更新分支"
+
+msgid "CPU Architecture"
+msgstr "处理器架构"
 
 msgid "Last Check Update"
 msgstr "上次检查更新时间"
-
-msgid "CPU Architecture (OPKG)"
-msgstr "处理器架构（OPKG）"
 
 msgid "Current Core"
 msgstr "当前内核版本"
@@ -1806,13 +1806,13 @@ msgid "Proxy-providers That no Longer Exists in Subscription"
 msgstr "订阅中已不存在的代理集..."
 
 msgid "Proxies That no Longer Exists in Subscription"
-msgstr "订阅中已不存在的代理集..."
+msgstr "订阅中已不存在的节点..."
 
 msgid "Read Successful!"
 msgstr "读取完成！"
 
 msgid "Write Successful!"
-msgstr "读取完成！"
+msgstr "写入完成！"
 
 msgid "Creating By Using Connershua (rule set) Rules..."
 msgstr "使用ConnersHua(规则集)规则创建中..."
@@ -1859,38 +1859,35 @@ msgstr "错误: 缺少配置文件，请上传或更新配置文件！"
 msgid "Error: Config File Format Validation Failed..."
 msgstr "错误：配置文件格式校验失败..."
 
-msgid "Detected The Exclusive Function of The TUN Core, Use TUN Core to Start..."
-msgstr "检测到配置了 TUN 内核专属功能，调用 TUN 内核启动..."
+msgid "Tip: Detected The Exclusive Function of The TUN Core, Use TUN Core to Start..."
+msgstr "提示: 检测到配置了 TUN 内核专属功能，调用 TUN 内核启动..."
 
-msgid "Detected The Exclusive Function of The Game Core, Use Game Core to Start..."
-msgstr "检测到配置了 Game 内核专属功能，调用 Game 内核启动..."
+msgid "Tip: No Special Configuration Detected, Use Dev Core to Start..."
+msgstr "提示: 未检测到特殊配置，调用 Dev 内核启动..."
 
-msgid "No Special Configuration Detected, Use Dev Core to Start..."
-msgstr "未检测到特殊配置，调用 Dev 内核启动..."
+msgid "Tip: Detected that the Dev Core is not Installed, Use TUN Core to Start..."
+msgstr "提示: 检测到 Dev 内核未安装，调用 TUN 内核启动..."
 
-msgid "Detect that the Dev Core is not Installed, Use TUN Core to Start..."
-msgstr "检测到 Dev 内核未安装，调用 TUN 内核启动..."
+msgid "Tip: Detected that the Dev Core is not Installed, Use Game Core to Start..."
+msgstr "提示: 检测到 Dev 内核未安装，调用 Game 内核启动..."
 
-msgid "Detect that the Dev Core is not Installed, Use Game Core to Start..."
-msgstr "检测到 Dev 内核未安装，调用 Game 内核启动..."
+msgid "Tip: Detected that the Dev Core is not Installed, Use Game Core to Start..."
+msgstr "提示: 检测到 Dev 内核未安装，调用 Game 内核启动..."
 
-msgid "Detect that the Dev Core is not Installed, Use Game Core to Start..."
-msgstr "检测到 Dev 内核未安装，调用 Game 内核启动..."
+msgid "Tip: Detected that the GEOIP Database is not Installed, Ready to Download..."
+msgstr "提示: 检测到GEOIP数据库文件不存在，准备开始下载..."
 
-msgid "Detect that the GEOIP Database is not Installed, Ready to Download..."
-msgstr "检测到GEOIP数据库文件不存在，准备开始下载..."
+msgid "Tip: Detected that the Core is not Installed, Ready to Download..."
+msgstr "提示: 检测到内核文件不存在，准备开始下载..."
 
-msgid "Detect that the Core is not Installed, Ready to Download..."
-msgstr "检测到内核文件不存在，准备开始下载..."
-
-msgid "Detect that the Chnroute Cidr List is not Installed, Ready to Download..."
-msgstr "检测到大陆白名单列表不存在，准备开始下载..."
+msgid "Tip: Detected that the Chnroute Cidr List is not Installed, Ready to Download..."
+msgstr "提示: 检测到大陆白名单列表不存在，准备开始下载..."
 
 msgid "Error: Could Not Load The Capsh Library, Please Verify The Capsh Shell Library Work Well..."
 msgstr "错误：Capsh异常，请尝试重新安装依赖【libcap】和相应的Capsh库，终止启动..."
 
 msgid "Tip: You Could Download And Re-Install The libcap & libcap-bin Library From The Address Give"
-msgstr "Tip: 你可以尝试从给出的地址中查找、下载并重新安装架构对应的 libcap 和 libcap-bin 依赖"
+msgstr "提示: 你可以尝试从给出的地址中查找、下载并重新安装架构对应的 libcap 和 libcap-bin 依赖"
 
 msgid "Error: Get DNS 'listen' Option Error, OpenClash Can Not Start With Raw Config File"
 msgstr "错误: 无法获取DNS部分的监听端口设置, OpenClash 使用原始配置文件启动失败"
@@ -2039,20 +2036,8 @@ msgstr "2、点击《管理第三方游戏规则》或者《管理第三方规�
 msgid "3. On this page, set the corresponding configuration file and policy group of the rule you have downloaded, and save the settings"
 msgstr "3、在此页面设置您已下载的规则的对应配置文件、策略组并保存设置"
 
-msgid "Use in normal mode (rules of the game only):"
-msgstr "在普通模式下使用（仅游戏规则）："
-
-msgid "1. Select normal mode in <global settings> - <mode settings> - <running mode> and enable UDP traffic, then restart"
-msgstr "1、在《全局设置》-《模式设置》-《运行模式》中选择普通模式并启用UDP流量代理，然后重新启动"
-
-msgid "Use in tun mode:"
-msgstr "在TUN模式下使用："
-
-msgid "1. In the <global settings> - <version update tab>, download and install the corresponding mode core first"
-msgstr "1、在全局设置-版本更新标签先下载、安装对应模式内核"
-
-msgid "2. Select mixed mode, Tun mode or game mode in <global settings> - <mode settings> - <running mode> and restart"
-msgstr "2、在《全局设置》-《模式设置》-《运行模式》中选择混合模式、TUN模式或者游戏模式并重新启动"
+msgid "4. Install the TUN core"
+msgstr "4、安装TUN内核"
 
 msgid "When setting this page, if the groups is empty, please go to the <server and group management> page to add"
 msgstr "本页设置时如策略组为空，请先到《服务器与策略组管理》页面进行添加"
@@ -2225,9 +2210,6 @@ msgstr "警告：【Rule】写法已不再支持，自动替换为rules"
 msgid "Warning: rule-provider is no longer used. Auto replaced by rule-providers"
 msgstr "警告：【rule-provider】写法已不再支持，自动替换为rule-providers"
 
-msgid "Warning: Because of No Rules Field, Stop Setting BT/P2P DIRECT Rules!"
-msgstr "警告：未找到【rules】配置，停止添加BT/P2P直连规则！"
-
 msgid "Error: Load File Error,"
 msgstr "错误：文件解析失败，"
 
@@ -2305,6 +2287,9 @@ msgstr "错误：策略组解析失败，"
 
 msgid "Error: Set default-nameserver Error,"
 msgstr "错误：修改default-nameserver配置失败，"
+
+msgid "Error: Netflix IP Rules Complete Error,"
+msgstr "错误：Netflix IP 规则补全失败，"
 
 msgid "switching succeeded!"
 msgstr "切换成功！"
@@ -2392,3 +2377,267 @@ msgstr "所有策略组"
 
 msgid "Are you sure want to switch the running mode?"
 msgstr "确认要切换运行模式吗?"
+
+msgid "Tip: Because of the file"
+msgstr "提示: 由于文件"
+
+msgid "modificated, Pause quick start..."
+msgstr "被修改，暂停快速启动..."
+
+msgid "Click to Update"
+msgstr "点击更新规则"
+
+msgid "Prefetch Netflix, Disney Plus Domains"
+msgstr "实验性：预解析 Netflix、Disney Plus 域名"
+
+msgid "Prevent Some Devices From Directly Using IP Access To Cause Unlocking Failure"
+msgstr "防止部分设备直接使用IP访问导致DNS解锁失败"
+
+msgid "Update Preset Domains List"
+msgstr "更新预置域名列表"
+
+msgid "Domains Prefetch Interval(min)"
+msgstr "域名预解析间隔（分钟）"
+
+msgid "Tip: Start Prefetch Netflix Domains..."
+msgstr "提示：开始预解析 Netflix 域名..."
+
+msgid "Tip: Netflix Domains Prefetch Finished!"
+msgstr "提示：Netflix 域名预解析完成!"
+
+msgid "Tip: Start Prefetch Disney Plus Domains..."
+msgstr "提示：开始预解析 Disney Plus 域名..."
+
+msgid "Tip: Disney Plus Domains Prefetch Finished!"
+msgstr "提示：Disney Plus 域名预解析完成!"
+
+msgid "Persistence Fake-IP"
+msgstr "Fake-IP 持久化"
+
+msgid "Cache Fake-IP DNS Resolution Records To File, Improve The Response Speed After Startup"
+msgstr "存储Fake-IP的DNS解析记录到文件，提升内核启动后的反应速度和稳定性"
+
+msgid "About to open fast.com"
+msgstr "确认后将打开 fast.com 进行测速"
+
+msgid "Please make sure the OpenClash works normally"
+msgstr "请确保 OpenClash 已在正常运行"
+
+msgid "The domains catch time is one minute"
+msgstr "域名抓取功能运行时间为一分钟"
+
+msgid "You can also try to catch while unlocking device playing"
+msgstr "您也可以在正常解锁的设备播放时尝试抓取"
+
+msgid "The catch result will be automatically saved"
+msgstr "抓取结果将自动保存"
+
+msgid "Click to Catch"
+msgstr "手动抓取域名"
+
+msgid "Catch Netflix"
+msgstr "手动抓取 Netflix 域名"
+
+msgid "No domain names were catched..."
+msgstr "未抓取到任何域名..."
+
+msgid "Will Run Once Immediately After Started, The Interval Does Not Need To Be Too Short (Take Effect Immediately After Commit)"
+msgstr "启动后会立即执行一次，间隔无需太短（修改后保存配置即可生效）"
+
+msgid "Test failed"
+msgstr "检测失败"
+
+msgid "OpenClash Start Failed"
+msgstr "OpenClash 启动失败"
+
+msgid "interface-name"
+msgstr "指定出口网卡"
+
+msgid "routing-mark"
+msgstr "指定路由标记"
+
+msgid "Streaming Enhance"
+msgstr "流媒体增强"
+
+msgid "Auto Select Unlock Proxy"
+msgstr "自动选择解锁节点"
+
+msgid "Auto Select Proxy For Streaming Unlock, Support Netflix, Disney Plus, HBO And YouTube Premium, etc"
+msgstr "自动选择解锁节点，支持 Netflix、Disney Plus、HBO 和 YouTube Premium 等"
+
+msgid "Auto Select Interval(min)"
+msgstr "自动选择（检测）间隔（分钟）"
+
+msgid "Expand Group"
+msgstr "展开策略组"
+
+msgid "Automatically Expand The Group When Selected"
+msgstr "自动展开嵌套的策略组并进行解锁检测，启用后可能会造成网络不稳定"
+
+msgid "Netflix Group Filter"
+msgstr "Netflix 策略组筛选"
+
+msgid "Disney Plus Group Filter"
+msgstr "Disney Plus 策略组筛选"
+
+msgid "HBO Now Group Filter"
+msgstr "HBO Now 策略组筛选"
+
+msgid "HBO Max Group Filter"
+msgstr "HBO Max 策略组筛选"
+
+msgid "HBO GO Asia Group Filter"
+msgstr "HBO GO Asia 策略组筛选"
+
+msgid "YouTube Premium Group Filter"
+msgstr "YouTube Premium 策略组筛选"
+
+msgid "TVB Anywhere+ Group Filter"
+msgstr "TVB Anywhere+ 策略组筛选"
+
+msgid "Amazon Prime Video Group Filter"
+msgstr "Amazon Prime Video 策略组筛选"
+
+msgid "Netflix Unlock Region Filter"
+msgstr "Netflix 解锁区域筛选"
+
+msgid "Disney Plus Unlock Region Filter"
+msgstr "Disney Plus 解锁区域筛选"
+
+msgid "HBO Max Unlock Region Filter"
+msgstr "HBO Max 解锁区域筛选"
+
+msgid "HBO GO Asia Unlock Region Filter"
+msgstr "HBO GO Asia 解锁区域筛选"
+
+msgid "YouTube Premium Unlock Region Filter"
+msgstr "YouTube Premium 解锁区域筛选"
+
+msgid "TVB Anywhere+ Unlock Region Filter"
+msgstr "TVB Anywhere+ 解锁区域筛选"
+
+msgid "Amazon Prime Video Unlock Region Filter"
+msgstr "Amazon Prime Video 解锁区域筛选"
+
+msgid "Tip: Start Auto Select Proxy For Netflix Unlock..."
+msgstr "提示：开始自动选择（检测）Netflix 解锁节点..."
+
+msgid "Tip: Start Auto Select Proxy For Disney Plus Unlock..."
+msgstr "提示：开始自动选择（检测）Disney Plus 解锁节点..."
+
+msgid "Tip: Start Auto Select Proxy For HBO Now Unlock..."
+msgstr "提示：开始自动选择（检测）HBO Now 解锁节点..."
+
+msgid "Tip: Start Auto Select Proxy For HBO Max Unlock..."
+msgstr "提示：开始自动选择（检测）HBO Max 解锁节点..."
+
+msgid "Tip: Start Auto Select Proxy For HBO GO Asia Unlock..."
+msgstr "提示：开始自动选择（检测）HBO GO Asia 解锁节点..."
+
+msgid "Tip: Start Auto Select Proxy For YouTube Premium Unlock..."
+msgstr "提示：开始自动选择（检测）YouTube Premium 解锁节点..."
+
+msgid "Tip: Start Auto Select Proxy For TVB Anywhere+ Unlock..."
+msgstr "提示：开始自动选择（检测）TVB Anywhere+ 解锁节点..."
+
+msgid "Tip: Start Auto Select Proxy For Amazon Prime Video Unlock..."
+msgstr "提示：开始自动选择（检测）Amazon Prime Video 解锁节点..."
+
+msgid "Netflix Group:"
+msgstr "Netflix 策略组："
+
+msgid "Disney Plus Group:"
+msgstr "Disney Plus 策略组："
+
+msgid "HBO Now Group:"
+msgstr "HBO Now 策略组："
+
+msgid "HBO Max Group:"
+msgstr "HBO Max 策略组："
+
+msgid "HBO GO Asia Group:"
+msgstr "HBO GO Asia 策略组："
+
+msgid "TVB Anywhere+ Group:"
+msgstr "TVB Anywhere+ 策略组："
+
+msgid "Amazon Prime Video Group:"
+msgstr "Amazon Prime Video 策略组："
+
+msgid "YouTube Premium Group:"
+msgstr "YouTube Premium 策略组："
+
+msgid "full support."
+msgstr "完整解锁。"
+
+msgid "full support, area:"
+msgstr "完整解锁，区域："
+
+msgid "only support homemade!"
+msgstr "仅支持自制剧！"
+
+msgid "unlock test faild!"
+msgstr "解锁检测失败！"
+
+msgid "the type of group is not select, auto select could not work!"
+msgstr "当前策略组类型非Select，无法进行自动选择！"
+
+msgid "Start auto select unlock proxy..."
+msgstr "开始进行解锁节点自动选择..."
+
+msgid "only support homemade! the type of group is not select, auto select could not work!"
+msgstr "仅支持自制剧！当前策略组类型非 Select，无法进行自动选择！"
+
+msgid "unlock test faild! the type of group is not select, auto select could not work!"
+msgstr "解锁检测失败！当前策略组类型非 Select，无法进行自动选择！"
+
+msgid "only support homemade! start auto select unlock proxy..."
+msgstr "仅支持自制剧！开始进行解锁节点自动选择..."
+
+msgid "unlock test faild! start auto select unlock proxy..."
+msgstr "解锁检测失败！开始进行解锁节点自动选择..."
+
+msgid "It Will Be Searched According To The Regex When Auto Search Group Fails"
+msgstr "策略组自动获取失败时将会根据正则表达式进行匹配"
+
+msgid "It Will Be Selected Region According To The Regex"
+msgstr "解锁区域将会根据正则表达式进行匹配"
+
+msgid "not support unlock!"
+msgstr "不支持解锁！"
+
+msgid "not support unlock! the type of group is not select, auto select could not work!"
+msgstr "不支持解锁！当前策略组类型非 Select，无法进行自动选择！"
+
+msgid "not support unlock! start auto select unlock proxy..."
+msgstr "不支持解锁！开始进行解锁节点自动选择..."
+
+msgid "unlock node auto selected successfully, the current selected is"
+msgstr "解锁节点自动选择成功，当前选择的是"
+
+msgid "unlock node auto selected failed, no node available, rolled back to the"
+msgstr "解锁节点自动选择失败，无可用节点，回退到"
+
+msgid ", area:"
+msgstr "，区域："
+
+msgid "failed to search based on keywords and automatically obtain the group, please confirm the validity of the regex!"
+msgstr "根据关键字搜索且自动获取策略组失败，请确认关键字的有效性！"
+
+msgid "unlock node auto selected failed, no node match the regex, rolled back to other full support node"
+msgstr "解锁节点自动选择失败，未找到区域匹配的节点，回退到其他区域的解锁节点"
+
+msgid "full support but not match the regex!"
+msgstr "完整解锁但区域不匹配！"
+
+msgid "but not match the regex! the type of group is not select, auto select could not work!"
+msgstr "完整解锁但区域不匹配！当前策略组类型非 Select，无法进行自动选择！"
+
+msgid "full support but not match the regex! start auto select unlock proxy..."
+msgstr "完整解锁但区域不匹配！开始进行解锁节点自动选择..."
+
+msgid "DNS Remote"
+msgstr "*远程域名解析"
+
+msgid "Add DNS Remote Support For Redir-Host"
+msgstr "Redir-Host模式强制进行远程域名解析"

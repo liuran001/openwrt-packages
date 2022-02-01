@@ -37,6 +37,10 @@ local v_ss_encrypt_method_list = {
     "aes-128-gcm", "aes-256-gcm", "chacha20-poly1305"
 }
 
+local x_ss_encrypt_method_list = {
+    "aes-128-gcm", "aes-256-gcm", "chacha20-poly1305", "xchacha20-poly1305"
+}
+
 local security_list = {"none", "auto", "aes-128-gcm", "chacha20-poly1305", "zero"}
 
 local header_type_list = {
@@ -188,6 +192,13 @@ domainStrategy.description = "<br /><ul><li>" .. translate("'AsIs': Only use dom
 domainStrategy:depends("protocol", "_balancing")
 domainStrategy:depends("protocol", "_shunt")
 
+domainMatcher = s:option(ListValue, "domainMatcher", translate("Domain matcher"))
+domainMatcher:value("hybrid")
+domainMatcher:value("linear")
+domainMatcher:depends("protocol", "_balancing")
+domainMatcher:depends("protocol", "_shunt")
+
+
 -- Brook协议
 brook_protocol = s:option(ListValue, "brook_protocol", translate("Protocol"))
 brook_protocol:value("client", translate("Brook"))
@@ -320,6 +331,18 @@ password:depends({ type = "Xray", protocol = "socks" })
 password:depends({ type = "Xray", protocol = "shadowsocks" })
 password:depends({ type = "Xray", protocol = "trojan" })
 
+hysteria_protocol = s:option(ListValue, "hysteria_protocol", translate("Protocol"))
+hysteria_protocol:value("udp", "UDP")
+hysteria_protocol:value("faketcp", "faketcp")
+hysteria_protocol:value("wechat-video", "wechat-video")
+hysteria_protocol:depends("type", "Hysteria")
+function hysteria_protocol.cfgvalue(self, section)
+	return m:get(section, "protocol")
+end
+function hysteria_protocol.write(self, section, value)
+	m:set(section, "protocol", value)
+end
+
 hysteria_obfs = s:option(Value, "hysteria_obfs", translate("Obfs Password"))
 hysteria_obfs:depends("type", "Hysteria")
 
@@ -333,6 +356,9 @@ hysteria_auth_password = s:option(Value, "hysteria_auth_password", translate("Au
 hysteria_auth_password.password = true
 hysteria_auth_password:depends("hysteria_auth_type", "string")
 hysteria_auth_password:depends("hysteria_auth_type", "base64")
+
+hysteria_alpn = s:option(Value, "hysteria_alpn", translate("QUIC TLS ALPN"))
+hysteria_alpn:depends("type", "Hysteria")
 
 ss_encrypt_method = s:option(Value, "ss_encrypt_method", translate("Encrypt Method"))
 for a, t in ipairs(ss_encrypt_method_list) do ss_encrypt_method:value(t) end
@@ -377,13 +403,27 @@ encryption:depends({ type = "Xray", protocol = "vless" })
 
 v_ss_encrypt_method = s:option(ListValue, "v_ss_encrypt_method", translate("Encrypt Method"))
 for a, t in ipairs(v_ss_encrypt_method_list) do v_ss_encrypt_method:value(t) end
-v_ss_encrypt_method:depends("protocol", "shadowsocks")
+v_ss_encrypt_method:depends({ type = "V2ray", protocol = "shadowsocks" })
 function v_ss_encrypt_method.cfgvalue(self, section)
 	return m:get(section, "method")
 end
 function v_ss_encrypt_method.write(self, section, value)
 	m:set(section, "method", value)
 end
+
+x_ss_encrypt_method = s:option(ListValue, "x_ss_encrypt_method", translate("Encrypt Method"))
+for a, t in ipairs(x_ss_encrypt_method_list) do x_ss_encrypt_method:value(t) end
+x_ss_encrypt_method:depends({ type = "Xray", protocol = "shadowsocks" })
+function x_ss_encrypt_method.cfgvalue(self, section)
+	return m:get(section, "method")
+end
+function x_ss_encrypt_method.write(self, section, value)
+	m:set(section, "method", value)
+end
+
+iv_check = s:option(Flag, "iv_check", translate("IV Check"))
+iv_check:depends({ type = "V2ray", protocol = "shadowsocks" })
+iv_check:depends({ type = "Xray", protocol = "shadowsocks" })
 
 ssr_protocol = s:option(Value, "ssr_protocol", translate("Protocol"))
 for a, t in ipairs(ssr_protocol_list) do ssr_protocol:value(t) end
@@ -472,9 +512,6 @@ uuid:depends({ type = "V2ray", protocol = "vmess" })
 uuid:depends({ type = "V2ray", protocol = "vless" })
 uuid:depends({ type = "Xray", protocol = "vmess" })
 uuid:depends({ type = "Xray", protocol = "vless" })
-
-alter_id = s:option(Value, "alter_id", translate("Alter ID"))
-alter_id:depends("protocol", "vmess")
 
 tls = s:option(Flag, "tls", translate("TLS"))
 tls.default = 0
@@ -690,6 +727,19 @@ ws_path:depends("ss_transport", "ws")
 ws_path:depends("trojan_transport", "ws")
 ws_path:depends({ type = "Brook", brook_protocol = "wsclient" })
 
+ws_enableEarlyData = s:option(Flag, "ws_enableEarlyData", translate("Enable early data"))
+ws_enableEarlyData:depends("transport", "ws")
+
+ws_maxEarlyData = s:option(Value, "ws_maxEarlyData", translate("Early data length"))
+ws_maxEarlyData.default = "1024"
+ws_maxEarlyData:depends("ws_enableEarlyData", true)
+function ws_maxEarlyData.cfgvalue(self, section)
+	return m:get(section, "ws_maxEarlyData")
+end
+function ws_maxEarlyData.write(self, section, value)
+	m:set(section, "ws_maxEarlyData", value)
+end
+
 -- [[ HTTP/2部分 ]]--
 h2_host = s:option(Value, "h2_host", translate("HTTP/2 Host"))
 h2_host:depends("transport", "h2")
@@ -698,6 +748,17 @@ h2_host:depends("ss_transport", "h2")
 h2_path = s:option(Value, "h2_path", translate("HTTP/2 Path"))
 h2_path:depends("transport", "h2")
 h2_path:depends("ss_transport", "h2")
+
+h2_health_check = s:option(Flag, "h2_health_check", translate("Health check"))
+h2_health_check:depends({ type = "Xray", transport = "h2"})
+
+h2_read_idle_timeout = s:option(Value, "h2_read_idle_timeout", translate("Idle timeout"))
+h2_read_idle_timeout.default = "10"
+h2_read_idle_timeout:depends("h2_health_check", true)
+
+h2_health_check_timeout = s:option(Value, "h2_health_check_timeout", translate("Health check timeout"))
+h2_health_check_timeout.default = "15"
+h2_health_check_timeout:depends("h2_health_check", true)
 
 -- [[ DomainSocket部分 ]]--
 ds_path = s:option(Value, "ds_path", "Path", translate("A legal file path. This file must not exist before running."))
@@ -724,7 +785,26 @@ grpc_serviceName:depends("transport", "grpc")
 grpc_mode = s:option(ListValue, "grpc_mode", "gRPC " .. translate("Transfer mode"))
 grpc_mode:value("gun")
 grpc_mode:value("multi")
-grpc_mode:depends("transport", "grpc")
+grpc_mode:depends({ type = "Xray", transport = "grpc"})
+
+grpc_health_check = s:option(Flag, "grpc_health_check", translate("Health check"))
+grpc_health_check:depends({ type = "Xray", transport = "grpc"})
+
+grpc_idle_timeout = s:option(Value, "grpc_idle_timeout", translate("Idle timeout"))
+grpc_idle_timeout.default = "10"
+grpc_idle_timeout:depends("grpc_health_check", true)
+
+grpc_health_check_timeout = s:option(Value, "grpc_health_check_timeout", translate("Health check timeout"))
+grpc_health_check_timeout.default = "20"
+grpc_health_check_timeout:depends("grpc_health_check", true)
+
+grpc_permit_without_stream = s:option(Flag, "grpc_permit_without_stream", translate("Permit without stream"))
+grpc_permit_without_stream.default = "0"
+grpc_permit_without_stream:depends("grpc_health_check", true)
+
+grpc_initial_windows_size = s:option(Value, "grpc_initial_windows_size", translate("Initial Windows Size"))
+grpc_initial_windows_size.default = "0"
+grpc_initial_windows_size:depends({ type = "Xray", transport = "grpc"})
 
 -- [[ Trojan-Go Shadowsocks2 ]] --
 ss_aead = s:option(Flag, "ss_aead", translate("Shadowsocks secondary encryption"))
@@ -741,11 +821,11 @@ ss_aead_pwd.password = true
 ss_aead_pwd:depends("ss_aead", "1")
 
 -- [[ Trojan-Go Mux ]]--
-mux = s:option(Flag, "smux", translate("smux"))
+mux = s:option(Flag, "smux", translate("Smux"))
 mux:depends("type", "Trojan-Go")
 
 -- [[ Mux ]]--
-mux = s:option(Flag, "mux", translate("mux"))
+mux = s:option(Flag, "mux", translate("Mux"))
 mux:depends({ type = "V2ray", protocol = "vmess" })
 mux:depends({ type = "V2ray", protocol = "vless", xtls = false })
 mux:depends({ type = "V2ray", protocol = "http" })
@@ -759,12 +839,12 @@ mux:depends({ type = "Xray", protocol = "socks" })
 mux:depends({ type = "Xray", protocol = "shadowsocks" })
 mux:depends({ type = "Xray", protocol = "trojan" })
 
-mux_concurrency = s:option(Value, "mux_concurrency", translate("mux concurrency"))
+mux_concurrency = s:option(Value, "mux_concurrency", translate("Mux concurrency"))
 mux_concurrency.default = 8
 mux_concurrency:depends("mux", true)
 mux_concurrency:depends("smux", true)
 
-smux_idle_timeout = s:option(Value, "smux_idle_timeout", translate("mux idle timeout"))
+smux_idle_timeout = s:option(Value, "smux_idle_timeout", translate("Mux idle timeout"))
 smux_idle_timeout.default = 60
 smux_idle_timeout:depends("smux", true)
 
@@ -775,6 +855,15 @@ hysteria_up_mbps:depends("type", "Hysteria")
 hysteria_down_mbps = s:option(Value, "hysteria_down_mbps", translate("Max download Mbps"))
 hysteria_down_mbps.default = "50"
 hysteria_down_mbps:depends("type", "Hysteria")
+
+hysteria_recv_window_conn = s:option(Value, "hysteria_recv_window_conn", translate("QUIC stream receive window"))
+hysteria_recv_window_conn:depends("type", "Hysteria")
+
+hysteria_recv_window = s:option(Value, "hysteria_recv_window", translate("QUIC connection receive window"))
+hysteria_recv_window:depends("type", "Hysteria")
+
+hysteria_disable_mtu_discovery = s:option(Flag, "hysteria_disable_mtu_discovery", translate("Disable MTU detection"))
+hysteria_disable_mtu_discovery:depends("type", "Hysteria")
 
 protocol.validate = function(self, value)
     if value == "_shunt" or value == "_balancing" then

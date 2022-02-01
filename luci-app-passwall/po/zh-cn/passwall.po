@@ -70,8 +70,8 @@ msgstr "进入界面"
 msgid "Rule Manage"
 msgstr "规则管理"
 
-msgid "Rule List Manage"
-msgstr "直连/代理名单管理"
+msgid "Rule List"
+msgstr "规则列表"
 
 msgid "Access control"
 msgstr "访问控制"
@@ -133,9 +133,6 @@ msgstr "0为不使用"
 msgid "Same as the tcp node"
 msgstr "与TCP节点相同"
 
-msgid "New process"
-msgstr "另开进程"
-
 msgid "Current node: %s"
 msgstr "当前节点：%s"
 
@@ -145,26 +142,20 @@ msgstr "用于代理特定的列表。"
 msgid "For proxy game network, DNS hijack etc."
 msgstr "用于代理游戏或DNS劫持等..."
 
-msgid "The selected server will not use Kcptun."
-msgstr "选中的服务器不会使用Kcptun。"
+msgid "DNS Shunt"
+msgstr "DNS分流"
 
-msgid "The client can use the router's Socks Servie."
-msgstr "客户端可以使用路由器的 Socks 服务。"
+msgid "Domestic group name"
+msgstr "国内分组名"
+
+msgid "You only need to configure domestic DNS packets in SmartDNS and set it redirect or as Dnsmasq upstream, and fill in the domestic DNS group name here."
+msgstr "你只需要在SmartDNS配置好国内DNS分组，并设置重定向或作为Dnsmasq上游，此处填入国内DNS分组名。"
 
 msgid "Filter Mode"
 msgstr "过滤模式"
 
-msgid "No Filter"
-msgstr "不过滤"
-
-msgid "Custom DNS"
-msgstr "自定义DNS"
-
-msgid "IP:Port mode ecceptable for specify other filtered name services."
-msgstr "定义接受 IP:Port 形式的输入，以指定其它域名服务的过滤服务。"
-
-msgid "Local DNS"
-msgstr "本地DNS"
+msgid "TCP node must be '%s' type to use FakeDNS."
+msgstr "TCP节点必须是 '%s' 类型才能使用 FakeDNS。"
 
 msgid "Remote DNS"
 msgstr "远程DNS"
@@ -174,27 +165,6 @@ msgstr "接受 IP:Port 形式的输入，多个以英文逗号分隔。"
 
 msgid "If you use dns2socks, only the first one is valid."
 msgstr "如果使用dns2socks，只有第一个生效。"
-
-msgid "When the selection is not the default, this DNS is forced to be set to dnsmasq upstream DNS."
-msgstr "当选择的不是默认，则将此DNS强制设置为dnsmasq上游DNS。"
-
-msgid "When custom, Please follow the format strictly:"
-msgstr "当自定义时，请严格遵循以下格式："
-
-msgid "Use ChinaDNS-NG"
-msgstr "使用ChinaDNS-NG"
-
-msgid "When checked, forced to be set to dnsmasq upstream DNS."
-msgstr "当勾选，则将强制设置为dnsmasq上游DNS。"
-
-msgid "Use ChinaList"
-msgstr "使用chnlist"
-
-msgid "Only useful in non-gfwlist mode."
-msgstr "仅可用于非防火墙表。"
-
-msgid "When used, the domestic DNS will be used only when the chnlist rule is hit, and the domain name that misses the rule will be resolved by remote DNS."
-msgstr "当使用时，只有当命中chnlist规则时，才会使用国内DNS，未命中规则的域名将会使用远程DNS解析。"
 
 msgid "Ali"
 msgstr "阿里"
@@ -208,9 +178,6 @@ msgstr "解析被代理的域名列表"
 msgid "Requery DNS By %s"
 msgstr "通过%s请求DNS"
 
-msgid "Forward To Socks Server"
-msgstr "转发至 Socks 服务器"
-
 msgid "Socks Server"
 msgstr "Socks服务器"
 
@@ -220,20 +187,11 @@ msgstr "配置不当"
 msgid "Make sure socks service is available on this address."
 msgstr "请确保此Socks服务可用。"
 
-msgid "ChinaDNS-NG Fair Mode"
-msgstr "ChinaDNS-NG 公平模式"
-
 msgid "Format must be:"
 msgstr "格式必须为："
 
 msgid "DoH request address"
 msgstr "DoH 请求地址"
-
-msgid "DoH bootstrap DNS"
-msgstr "DoH Bootstrap DNS"
-
-msgid "The Bootstrap DNS server is used to resolve the IP address of the DoH resolver you specify as the upstream."
-msgstr "Bootstrap DNS 服务器用于解析您指定为上游的 DoH 解析器的 IP 地址。"
 
 msgid "China list or gfwlist cannot be used together with outside China list!"
 msgstr "中国列表不能和中国列表外或防火墙表一起使用！"
@@ -241,14 +199,26 @@ msgstr "中国列表不能和中国列表外或防火墙表一起使用！"
 msgid "Cache Resolved"
 msgstr "缓存解析结果"
 
-msgid "Dnsmasq default dns"
-msgstr "Dnsmasq的默认DNS"
+msgid "Notify the DNS server when the DNS query is notified, the location of the client (cannot be a private IP address)."
+msgstr "用于 DNS 查询时通知 DNS 服务器，客户端所在的地理位置（不能是私有 IP 地址）。"
+
+msgid "This feature requires the DNS server to support the Edns Client Subnet (RFC7871)."
+msgstr "此功能需要 DNS 服务器支持 EDNS Client Subnet（RFC7871）。"
+
+msgid "Query Strategy"
+msgstr "查询策略"
 
 msgid "When the accessed domain name does not exist in the rule list, the default DNS used."
 msgstr "当访问的域名不存在规则列表中，使用的默认DNS。"
 
 msgid "The effect is better, but will increase the memory."
 msgstr "效果更好，但会增加内存使用。"
+
+msgid "Filter Proxy Host IPv6"
+msgstr "过滤代理域名 IPv6"
+
+msgid "Experimental feature."
+msgstr "实验性功能。"
 
 msgid "Clear IPSET"
 msgstr "清空 IPSET"
@@ -259,8 +229,20 @@ msgstr "如果修改规则后没有生效，请尝试此功能。"
 msgid "The server client can also use this rule to scientifically surf the Internet."
 msgstr "本机服务器的客户端也可以使用这个代理模式上网。"
 
-msgid "Tips"
-msgstr "小提示"
+msgid "About DNS issues:"
+msgstr "关于DNS问题："
+
+msgid "Some browsers may have built-in DNS, be sure to close. Example: Chrome. Settings - Security and Privacy - Security - Use secure DNS disabled."
+msgstr "部分浏览器可能有内置的DNS，请务必关闭。如：chrome。 设置 - 安全和隐私设置 - 使用安全 DNS 关闭。"
+
+msgid "Sometimes after restart, you can not internet, especially the GFW mode. At this time, close all browsers (important), Windows Client, please `ipconfig / flushdns`. Please close the WiFi on the phone, cut the flight mode and then cut back."
+msgstr "有时候重启后，上不了，尤其是GFW模式。这时请先关闭所有浏览器（重要），Windows客户端请`ipconfig/flushdns`。手机端请关闭WIFI，切一下飞行模式再切回来。"
+
+msgid "The client DNS and the default gateway must point to this router."
+msgstr "客户端DNS和默认网关必须指向本路由器。"
+
+msgid "If you have a wrong DNS process, the consequences are at your own risk!"
+msgstr "如果你自行配置了错误的DNS流程，后果自负！"
 
 msgid "You can use load balancing for failover."
 msgstr "可以使用负载均衡实现故障切换功能。"
@@ -295,12 +277,6 @@ msgstr "不指定"
 msgid "custom"
 msgstr "自定义"
 
-msgid "Multi Process Option"
-msgstr "多进程并发"
-
-msgid "you can start SS/SSR with multiple process"
-msgstr "当使用SS/SSR时可使用多进程并发"
-
 msgid "Process"
 msgstr "进程"
 
@@ -323,7 +299,7 @@ msgid "Global Proxy"
 msgstr "全局代理"
 
 msgid "GFW List"
-msgstr "防火墙表"
+msgstr "GFW列表"
 
 msgid "Not China List"
 msgstr "中国列表以外"
@@ -348,6 +324,9 @@ msgstr "危险"
 
 msgid "Same as the %s default proxy mode"
 msgstr "与 %s 默认代理模式相同"
+
+msgid "Want different devices to use different proxy modes/ports/nodes? Please use access control."
+msgstr "希望不同设备使用不同的代理模式/端口/节点？请使用访问控制。"
 
 msgid "Operation"
 msgstr "操作"
@@ -457,6 +436,9 @@ msgstr "当使用时，本机将首先连接到此节点，然后再使用此节
 msgid "Domain Strategy"
 msgstr "域名解析策略"
 
+msgid "Domain matcher"
+msgstr "域名匹配算法"
+
 msgid "'AsIs': Only use domain for routing. Default value."
 msgstr "AsIs：只使用域名进行路由选择。默认值。"
 
@@ -540,6 +522,15 @@ msgstr "最大上行(Mbps)"
 
 msgid "Max download Mbps"
 msgstr "最大下行(Mbps)"
+
+msgid "QUIC stream receive window"
+msgstr "QUIC 流接收窗口"
+
+msgid "QUIC connection receive window"
+msgstr "QUIC 连接接收窗口"
+
+msgid "Disable MTU detection"
+msgstr "禁用 MTU 检测"
 
 msgid "Encrypt Method"
 msgstr "加密"
@@ -931,6 +922,9 @@ msgstr "删除所有订阅节点"
 msgid "Delete the subscribed node"
 msgstr "删除已订阅的节点"
 
+msgid "Manual subscription All"
+msgstr "手动订阅全部"
+
 msgid "This remark already exists, please change a new remark."
 msgstr "此备注已存在，请改一个新的备注。"
 
@@ -942,6 +936,12 @@ msgstr "丢弃列表"
 
 msgid "Keep List"
 msgstr "保留列表"
+
+msgid "Discard List,But Keep List First"
+msgstr "丢弃列表，但保留列表优先"
+
+msgid "Keep List,But Discard List First"
+msgstr "保留列表，但丢弃列表优先"
 
 msgid "Use global config"
 msgstr "使用全局配置"
@@ -955,8 +955,14 @@ msgstr "添加"
 msgid "ACLs"
 msgstr "访问控制"
 
-msgid "ACLs is a tools which used to designate specific IP proxy mode, IP or MAC address can be entered."
-msgstr "访问控制列表是用于指定特殊IP代理模式的工具。IP、MAC地址可只填写一项。"
+msgid "ACLs is a tools which used to designate specific IP proxy mode."
+msgstr "访问控制列表是用于指定特殊IP代理模式的工具。"
+
+msgid "Example:"
+msgstr "例："
+
+msgid "IP range"
+msgstr "IP 范围"
 
 msgid "Remarks"
 msgstr "备注"
@@ -969,6 +975,12 @@ msgstr "代理列表"
 
 msgid "Block List"
 msgstr "屏蔽列表"
+
+msgid "Lan IP List"
+msgstr "局域网IP列表"
+
+msgid "Route Hosts"
+msgstr "路由Hosts文件"
 
 msgid "Join the direct hosts list of domain names will not proxy."
 msgstr "加入的域名不走代理，对所有模式有效。且优先级最高。"
@@ -985,6 +997,15 @@ msgstr "加入的IP段将走代理。可输入IP地址或地址段，如：35.24
 msgid "These had been joined websites will be block. Please input the domain names of websites, every line can input only one website domain. For example: twitter.com."
 msgstr "加入的域名将屏蔽。输入网站域名，如：twitter.com，每个地址段一行。"
 
+msgid "The list is the IPv4 LAN IP list, which represents the direct connection IP of the LAN. If you need the LAN IP in the proxy list, please clear it from the list. Do not modify this list by default."
+msgstr "列表中为IPv4的局域网IP列表，代表局域网直连IP。如果需要代理列表中的局域网IP，请将其在该列表中清除,并将其添加到代理列表中。默认情况下不要修改这个列表。"
+
+msgid "The list is the IPv6 LAN IP list, which represents the direct connection IP of the LAN. If you need the LAN IP in the proxy list, please clear it from the list. Do not modify this list by default."
+msgstr "列表中为IPv6的局域网IP列表，代表局域网直连IP。如果需要代理列表中的局域网IP，请将其在该列表中清除,并将其添加到代理列表中。默认情况下不要修改这个列表。"
+
+msgid "Configure routing etc/hosts file, if you don't know what you are doing, please don't change the content."
+msgstr "配置路由etc/hosts文件，如果你不知道自己在做什么，请不要改动内容。"
+
 msgid "These had been joined ip addresses will be block. Please input the ip address or ip address segment, every line can input only one ip address."
 msgstr "加入的IP段将屏蔽。可输入IP地址或地址段，每个地址段一行。"
 
@@ -993,6 +1014,15 @@ msgstr "不是有效域名，请重新输入！"
 
 msgid "Not valid IP format, please re-enter!"
 msgstr "不是有效IP格式，请重新输入！"
+
+msgid "Not valid IPv4 format, please re-enter!"
+msgstr "不是有效IPv4格式，请重新输入！"
+
+msgid "Not valid IPv6 format, please re-enter!"
+msgstr "不是有效IPv6格式，请重新输入！"
+
+msgid "Not true format, please re-enter!"
+msgstr "不是正确的格式，请重新输入！"
 
 msgid "Plaintext: If this string matches any part of the targeting domain, this rule takes effet. Example: rule 'sina.com' matches targeting domain 'sina.com', 'sina.com.cn' and 'www.sina.com', but not 'sina.cn'."
 msgstr "纯字符串: 当此字符串匹配目标域名中任意部分，该规则生效。比如'sina.com'可以匹配'sina.com'、'sina.com.cn'和'www.sina.com'，但不匹配'sina.cn'。"
@@ -1036,6 +1066,9 @@ msgstr "HAProxy不能和KCP一起使用"
 msgid "Password"
 msgstr "密码"
 
+msgid "IV Check"
+msgstr "IV 检查"
+
 msgid "Connection Timeout"
 msgstr "连接超时时间"
 
@@ -1053,9 +1086,6 @@ msgstr "插件"
 
 msgid "opts"
 msgstr "插件选项"
-
-msgid "Xray is currently directly compatible with V2ray and used."
-msgstr "Xray 目前可直接兼容 V2ray 并使用。"
 
 msgid "Protocol"
 msgstr "协议名称"
@@ -1104,9 +1134,6 @@ msgstr "Naiveproxy协议"
 
 msgid "V2ray Protocol"
 msgstr "V2ray协议"
-
-msgid "Alter ID"
-msgstr "额外ID(alterId)"
 
 msgid "User Level"
 msgstr "用户等级(level)"
@@ -1312,6 +1339,9 @@ msgstr "文件下载失败或超时：%s"
 msgid "File path required."
 msgstr "请指定文件路径。"
 
+msgid "%s not enough space."
+msgstr "%s 空间不足。"
+
 msgid "Can't find client in file: %s"
 msgstr "无法在文件中找到客户端：%s"
 
@@ -1323,3 +1353,30 @@ msgstr "客户端文件不适合当前设备。"
 
 msgid "Can't move new file to path: %s"
 msgstr "无法移动新文件到：%s"
+
+msgid "Mux concurrency"
+msgstr "最大并发连接数"
+
+msgid "Mux idle timeout"
+msgstr "最大闲置时间"
+
+msgid "Enable early data"
+msgstr "启用前置数据"
+
+msgid "Early data length"
+msgstr "前置数据最大长度"
+
+msgid "Health check"
+msgstr "健康检查"
+
+msgid "Idle timeout"
+msgstr "闲置时间"
+
+msgid "Health check timeout"
+msgstr "检查超时时间"
+
+msgid "Permit without stream"
+msgstr "无子连接时的健康检查"
+
+msgid "Initial Windows Size"
+msgstr "初始窗口大小"

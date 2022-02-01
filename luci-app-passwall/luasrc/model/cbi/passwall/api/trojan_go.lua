@@ -5,7 +5,9 @@ local sys = api.sys
 local util = api.util
 local i18n = api.i18n
 
-local trojan_go_api = "https://api.github.com/repos/p4gefau1t/trojan-go/releases?per_page=1"
+local pre_release_url = "https://api.github.com/repos/p4gefau1t/trojan-go/releases?per_page=1"
+local release_url = "https://api.github.com/repos/p4gefau1t/trojan-go/releases/latest"
+local api_url = release_url
 local app_path = api.get_trojan_go_path() or ""
 
 function check_path()
@@ -45,54 +47,10 @@ function to_check(arch)
         if sub_version and sub_version:match("^[5-8]$") then file_tree = file_tree .. "v" .. sub_version end
     end
 
-    local json = api.get_api_json(trojan_go_api)
-
-    if #json > 0 then
-        json = json[1]
-    end
-
-    if json.tag_name == nil then
-        return {
-            code = 1,
-            error = i18n.translate("Get remote version info failed.")
-        }
-    end
-
-    local now_version = api.get_trojan_go_version()
-    local remote_version = json.tag_name
-    local needs_update = api.compare_versions(now_version:match("[^v]+"), "<", remote_version:match("[^v]+"))
-    local html_url, download_url
-
-    if needs_update then
-        html_url = json.html_url
-        for _, v in ipairs(json.assets) do
-            if v.name and v.name:match("linux%-" .. file_tree .. "%.zip") then
-                download_url = v.browser_download_url
-                break
-            end
-        end
-    end
-
-    if needs_update and not download_url then
-        return {
-            code = 1,
-            now_version = now_version,
-            version = remote_version,
-            html_url = html_url,
-            error = i18n.translate("New version found, but failed to get new version download url.") .. " [linux-" .. file_tree .. ".zip]"
-        }
-    end
-
-    return {
-        code = 0,
-        update = needs_update,
-        now_version = now_version,
-        version = remote_version,
-        url = {html = html_url, download = download_url}
-    }
+    return api.common_to_check(api_url, api.get_trojan_go_version(), "linux%-" .. file_tree .. "%.zip")
 end
 
-function to_download(url)
+function to_download(url, size)
     local result = check_path()
     if result.code ~= 0 then
         return result
@@ -105,6 +63,13 @@ function to_download(url)
     sys.call("/bin/rm -f /tmp/trojan-go_download.*")
 
     local tmp_file = util.trim(util.exec("mktemp -u -t trojan-go_download.XXXXXX"))
+
+    if size then
+        local kb1 = api.get_free_space("/tmp")
+        if tonumber(size) > tonumber(kb1) then
+            return {code = 1, error = i18n.translatef("%s not enough space.", "/tmp")}
+        end
+    end
 
     result = api.exec(api.curl, {api._unpack(api.curl_args), "-o", tmp_file, url}, nil, api.command_timeout) == 0
 
@@ -125,6 +90,10 @@ function to_extract(file, subfix)
         return result
     end
 
+    if not file or file == "" or not fs.access(file) then
+        return {code = 1, error = i18n.translate("File path required.")}
+    end
+
     if sys.exec("echo -n $(opkg list-installed | grep -c unzip)") ~= "1" then
         api.exec("/bin/rm", {"-f", file})
         return {
@@ -133,11 +102,14 @@ function to_extract(file, subfix)
         }
     end
 
-    if not file or file == "" or not fs.access(file) then
-        return {code = 1, error = i18n.translate("File path required.")}
+    sys.call("/bin/rm -rf /tmp/trojan-go_extract.*")
+
+    local new_file_size = api.get_file_space(file)
+    local tmp_free_size = api.get_free_space("/tmp")
+    if tmp_free_size <= 0 or tmp_free_size <= new_file_size then
+        return {code = 1, error = i18n.translatef("%s not enough space.", "/tmp")}
     end
 
-    sys.call("/bin/rm -rf /tmp/trojan-go_extract.*")
     local tmp_dir = util.trim(util.exec("mktemp -d -t trojan-go_extract.XXXXXX"))
 
     local output = {}
@@ -162,37 +134,49 @@ function to_move(file)
         return {code = 1, error = i18n.translate("Client file is required.")}
     end
 
+    local bin_path = file .. "/trojan-go"
+
+    local new_version = api.get_trojan_go_version(bin_path)
+    if new_version == "" then
+        sys.call("/bin/rm -rf /tmp/trojan-go_extract.*")
+        return {
+            code = 1,
+            error = i18n.translate("The client file is not suitable for current device.")
+        }
+    end
+
     local flag = sys.call('pgrep -af "passwall/.*trojan-go" >/dev/null')
     if flag == 0 then
         sys.call("/etc/init.d/passwall stop")
     end
 
-    local app_path_bak
-
+    local old_app_size = 0
     if fs.access(app_path) then
-        app_path_bak = app_path .. ".bak"
-        api.exec("/bin/mv", {"-f", app_path, app_path_bak})
+        old_app_size = api.get_file_space(app_path)
+    end
+    local new_app_size = api.get_file_space(bin_path)
+    local final_dir = api.get_final_dir(app_path)
+    local final_dir_free_size = api.get_free_space(final_dir)
+    if final_dir_free_size > 0 then
+        final_dir_free_size = final_dir_free_size + old_app_size
+        if new_app_size > final_dir_free_size then
+            sys.call("/bin/rm -rf /tmp/trojan-go_extract.*")
+            return {code = 1, error = i18n.translatef("%s not enough space.", final_dir)}
+        end
     end
 
-    result = api.exec("/bin/mv", { "-f", file .. "/trojan-go", app_path }, nil, api.command_timeout) == 0
+    result = api.exec("/bin/mv", { "-f", bin_path, app_path }, nil, api.command_timeout) == 0
+
     sys.call("/bin/rm -rf /tmp/trojan-go_extract.*")
+    if flag == 0 then
+        sys.call("/etc/init.d/passwall restart >/dev/null 2>&1 &")
+    end
+
     if not result or not fs.access(app_path) then
-        if flag == 0 then
-            sys.call("/etc/init.d/passwall restart >/dev/null 2>&1 &")
-        end
-        if #app_path > 1 then
-            sys.call("/bin/rm -rf " .. app_path)
-        end
         return {
             code = 1,
             error = i18n.translatef("Can't move new file to path: %s", app_path)
         }
-    end
-
-    api.exec("/bin/chmod", {"-R", "755", app_path})
-
-    if flag == 0 then
-        sys.call("/etc/init.d/passwall restart >/dev/null 2>&1 &")
     end
 
     return {code = 0}

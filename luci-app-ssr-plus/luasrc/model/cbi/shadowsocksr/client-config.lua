@@ -47,6 +47,8 @@ local encrypt_methods_ss = {
 	"chacha20-ietf-poly1305",
 	"xchacha20-ietf-poly1305"
 	--[[ stream
+	"none",
+	"plain",
 	"table",
 	"rc4",
 	"rc4-md5",
@@ -69,19 +71,16 @@ local encrypt_methods_v2ray_ss = {
 	-- xray_ss
 	"none",
 	"plain",
-	--[[ stream
-	"aes-128-cfb",
-	"aes-256-cfb",
-	"chacha20",
-	"chacha20-ietf", ]]
 	-- aead
 	"aes-128-gcm",
 	"aes-256-gcm",
 	"chacha20-poly1305",
 	"chacha20-ietf-poly1305",
+	"xchacha20-ietf-poly1305",
 	"aead_aes_128_gcm",
 	"aead_aes_256_gcm",
-	"aead_chacha20_poly1305"
+	"aead_chacha20_poly1305",
+	"aead_xchacha20_poly1305"
 }
 
 local protocol = {
@@ -112,6 +111,7 @@ local securitys = {
 	-- vmess
 	"auto",
 	"none",
+	"zero",
 	"aes-128-gcm",
 	"chacha20-poly1305"
 }
@@ -256,11 +256,16 @@ end
 o.rmempty = true
 o:depends({type = "v2ray", v2ray_protocol = "shadowsocks"})
 
+o = s:option(Flag, "ivCheck", translate("Bloom Filter"))
+o.rmempty = true
+o:depends({type = "v2ray", v2ray_protocol = "shadowsocks"})
+o.default = "1"
+
 -- Shadowsocks Plugin
 o = s:option(Value, "plugin", translate("Obfs"))
 o:value("none", translate("None"))
 if is_finded("obfs-local") then
-	o:value("obfs-local", translate("simple-obfs"))
+	o:value("obfs-local", translate("obfs-local"))
 end
 if is_finded("v2ray-plugin") then
 	o:value("v2ray-plugin", translate("v2ray-plugin"))
@@ -296,13 +301,6 @@ o:depends("type", "ssr")
 
 o = s:option(Value, "obfs_param", translate("Obfs param(optional)"))
 o:depends("type", "ssr")
-
--- AlterId
-o = s:option(Value, "alter_id", translate("AlterId"))
-o.datatype = "port"
-o.default = 16
-o.rmempty = true
-o:depends({type = "v2ray", v2ray_protocol = "vmess"})
 
 -- VmessId
 o = s:option(Value, "vmess_id", translate("Vmess/VLESS ID (UUID)"))
@@ -358,16 +356,12 @@ o.rmempty = true
 -- WS域名
 o = s:option(Value, "ws_host", translate("WebSocket Host"))
 o:depends({transport = "ws", tls = false})
-o:depends("trojan_transport", "h2+ws")
-o:depends("trojan_transport", "ws")
 o.datatype = "hostname"
 o.rmempty = true
 
 -- WS路径
 o = s:option(Value, "ws_path", translate("WebSocket Path"))
 o:depends("transport", "ws")
-o:depends("trojan_transport", "h2+ws")
-o:depends("trojan_transport", "ws")
 o.rmempty = true
 
 -- [[ H2部分 ]]--
@@ -385,6 +379,41 @@ o.rmempty = true
 -- gRPC
 o = s:option(Value, "serviceName", translate("serviceName"))
 o:depends("transport", "grpc")
+o.rmempty = true
+
+-- gRPC初始窗口
+o = s:option(Value, "initial_windows_size", translate("Initial Windows Size"))
+o.datatype = "uinteger"
+o:depends("transport", "grpc")
+o.default = 0
+o.rmempty = true
+
+-- H2/gRPC健康检查
+o = s:option(Flag, "health_check", translate("H2/gRPC Health Check"))
+o:depends("transport", "h2")
+o:depends("transport", "grpc")
+o.rmempty = true
+
+o = s:option(Value, "read_idle_timeout", translate("H2 Read Idle Timeout"))
+o.datatype = "uinteger"
+o:depends({health_check = true, transport = "h2"})
+o.default = 60
+o.rmempty = true
+
+o = s:option(Value, "idle_timeout", translate("gRPC Idle Timeout"))
+o.datatype = "uinteger"
+o:depends({health_check = true, transport = "grpc"})
+o.default = 60
+o.rmempty = true
+
+o = s:option(Value, "health_check_timeout", translate("Health Check Timeout"))
+o.datatype = "uinteger"
+o:depends("health_check", 1)
+o.default = 20
+o.rmempty = true
+
+o = s:option(Flag, "permit_without_stream", translate("Permit Without Stream"))
+o:depends({health_check = true, transport = "grpc"})
 o.rmempty = true
 
 -- [[ QUIC部分 ]]--
@@ -463,28 +492,6 @@ o.rmempty = true
 o = s:option(Flag, "congestion", translate("Congestion"))
 o:depends("transport", "kcp")
 o.rmempty = true
-
-o = s:option(ListValue, "plugin_type", translate("Plugin Type"))
-o:value("plaintext", translate("Plain Text"))
-o:value("shadowsocks", translate("ShadowSocks"))
-o:value("other", translate("Other"))
-o.default = "plaintext"
-o:depends({tls = false, trojan_transport = "original"})
-
-o = s:option(Value, "plugin_cmd", translate("Plugin Binary"))
-o.placeholder = "eg: /usr/bin/v2ray-plugin"
-o:depends({plugin_type = "shadowsocks"})
-o:depends({plugin_type = "other"})
-
-o = s:option(Value, "plugin_option", translate("Plugin Option"))
-o.placeholder = "eg: obfs=http;obfs-host=www.baidu.com"
-o:depends({plugin_type = "shadowsocks"})
-o:depends({plugin_type = "other"})
-
-o = s:option(DynamicList, "plugin_arg", translate("Plugin Option Args"))
-o.placeholder = "eg: [\"-config\", \"test.json\"]"
-o:depends({plugin_type = "shadowsocks"})
-o:depends({plugin_type = "other"})
 
 -- [[ TLS ]]--
 o = s:option(Flag, "tls", translate("TLS"))

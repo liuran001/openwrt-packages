@@ -1,10 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-only
 #
-# Copyright (C) 2021 ImmortalWrt
-# <https://immortalwrt.org>
-#
-# This is free software, licensed under the GNU General Public License v3.
-# See /LICENSE for more information.
-#
+# Copyright (C) 2021 ImmortalWrt.org
 
 include $(TOPDIR)/rules.mk
 
@@ -18,7 +14,7 @@ PKG_HASH:=d94b570a7a84094376b8c299d740528f51b540d9162f1db562247a15a89340bf
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILE:=LICENSE
-PKG_MAINTAINER:=CN_SZTL <cnsztl@immortalwrt.org>
+PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_GOST_COMPRESS_GOPROXY \
@@ -36,15 +32,15 @@ include $(INCLUDE_DIR)/package.mk
 include ../../lang/golang/golang-package.mk
 
 define Package/gost
-	SECTION:=net
-	CATEGORY:=Network
-	TITLE:=GO Simple Tunnel
-	URL:=https://github.com/ginuerzh/gost
-	DEPENDS:=$(GO_ARCH_DEPENDS)
+  SECTION:=net
+  CATEGORY:=Network
+  TITLE:=GO Simple Tunnel
+  URL:=https://github.com/ginuerzh/gost
+  DEPENDS:=$(GO_ARCH_DEPENDS)
 endef
 
 define Package/gost/description
-	A simple security tunnel written in Golang
+  A simple security tunnel written in Golang
 endef
 
 define Package/gost/config
@@ -54,12 +50,13 @@ config GOST_COMPRESS_GOPROXY
 
 config GOST_COMPRESS_UPX
 	bool "Compress executable files with UPX"
-	default y
+	depends on !mips64
+	default n
 endef
 
 ifeq ($(CONFIG_GOST_COMPRESS_GOPROXY),y)
 	export GO111MODULE=on
-	export GOPROXY=https://goproxy.baidu.com
+	export GOPROXY=https://goproxy.bj.bcebos.com
 endif
 
 define Build/Compile

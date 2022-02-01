@@ -61,6 +61,11 @@ local name = s:option(Flag, "mmcli_name", translate("Name via mmcli"),
 name.rmempty = true
 name:depends("qmi_mode", 0)
 
+local qmi_proxy = s:option(Flag, "qmi_proxy", translate("QMI proxy"),
+        translate("Enable qmi-proxy mode."))
+qmi_proxy.rmempty = true
+qmi_proxy:depends("qmi_mode", 1)
+
 function m.on_after_commit(Map)
         luci.sys.call("rm -f /tmp/modemdevice")
 end

@@ -54,13 +54,15 @@ endef
 define Package/gq-client/config
 config GQ_CLIENT_COMPRESS_UPX
 	bool "Compress executable files with UPX"
-	default y
+	depends on !mips64
+	default n
 endef
 
 define Package/gq-server/config
 config GQ_SERVER_COMPRESS_UPX
 	bool "Compress executable files with UPX"
-	default y
+	depends on !mips64
+	default n
 endef
 
 GO_PKG_BUILD_VARS += GO111MODULE=auto

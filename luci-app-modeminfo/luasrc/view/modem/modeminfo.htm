@@ -298,7 +298,16 @@ XHR.poll(4, '<%=build_url("admin/modem/data")%>', null,
 				var namech = "EARFCN";
 				var namesnr = "SINR";
 				//var lactac = data.lac + " (" + data.lac_num + ") / " + data.enbid;
-			} else if (netmode == "3G" || netmode == "UMTS" || netmode == "HSPA" || netmode == "HSUPA" || netmode == "HSDPA" || netmode == "HSPA+" || netmode == "WCDMA" || netmode == "DC-HSPA+") {
+			} else if (netmode == 
+				"3G" || netmode == 
+				"UMTS" || netmode == 
+				"HSPA" || netmode == 
+				"HSUPA" || netmode == 
+				"HSDPA" || netmode == 
+				"HSPA+" || netmode == 
+				"WCDMA" || netmode == 
+				"DC-HSPA+" || netmode == 
+				"HSDPA+HSUPA") {
 				var namech = "UARFCN";
 				var namesnr = "ECIO";
 				var namecid = "LAC/CID";

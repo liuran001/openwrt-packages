@@ -8,8 +8,8 @@ local fs = require "luci.openclash"
 local uci = require("luci.model.uci").cursor()
 local CHIF = "0"
 
-font_green = [[<font color="green">]]
-font_off = [[</font>]]
+font_green = [[<b style=color:green>]]
+font_off = [[</b>]]
 bold_on  = [[<strong>]]
 bold_off = [[</strong>]]
 align_mid = [[<p align="center">]]
@@ -181,6 +181,7 @@ mt=tb:option(DummyValue,"mtime",translate("Update Time"))
 sz=tb:option(DummyValue,"size",translate("Size"))
 ck=tb:option(DummyValue,"check",translate("Grammar Check"))
 ck.template="openclash/cfg_check"
+nm.template="openclash/sub_info_show"
 
 btnis=tb:option(Button,"switch",translate("Switch Config"))
 btnis.template="openclash/other_button"

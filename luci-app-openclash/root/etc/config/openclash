@@ -40,8 +40,13 @@ config openclash 'config'
 	option common_ports '0'
 	option log_size '1024'
 	option tolerance '0'
+	option store_fakeip '1'
 	option custom_fallback_filter '0'
 	option append_wan_dns '1'
+	option stream_domains_prefetch '0'
+	option stream_auto_select '0'
+	option dns_remote '1'
+	option release_branch 'master'
 	option geo_custom_url 'https://cdn.jsdelivr.net/gh/alecthw/mmdb_china_ip_list@release/lite/Country.mmdb'
 	option chnr_custom_url 'https://ispip.clang.cn/all_cn.txt'
 	option chnr6_custom_url 'https://ispip.clang.cn/all_cn_ipv6.txt'
@@ -72,47 +77,41 @@ config dns_servers
 
 config dns_servers
 	option type 'https'
-	option group 'fallback'
-	option enabled '1'
 	option ip 'doh.pub/dns-query'
+	option group 'nameserver'
+	option enabled '1'
 
 config dns_servers
 	option type 'https'
-	option group 'fallback'
-	option enabled '1'
 	option ip 'dns.alidns.com/dns-query'
+	option group 'nameserver'
+	option enabled '1'
 
 config dns_servers
 	option type 'https'
 	option group 'fallback'
+	option ip 'dns.cloudflare.com/dns-query'
 	option enabled '1'
-	option ip 'cloudflare-dns.com/dns-query'
 
 config dns_servers
-	option group 'fallback'
-	option enabled '1'
-	option ip 'dns.rubyfish.cn/dns-query'
-	option type 'https'
-
-config dns_servers
-	option enabled '0'
 	option group 'fallback'
 	option ip 'dns.google'
 	option port '853'
 	option type 'tls'
+	option enabled '0'
 
 config dns_servers
-	option enabled '0'
 	option group 'fallback'
 	option type 'https'
 	option ip '1.1.1.1/dns-query'
+	option enabled '0'
 
 config dns_servers
-	option enabled '0'
 	option group 'fallback'
 	option ip '1.1.1.1'
 	option port '853'
 	option type 'tls'
+	option enabled '0'
 
 config dns_servers
 	option enabled '0'
@@ -120,17 +119,54 @@ config dns_servers
 	option ip '8.8.8.8'
 	option port '853'
 	option type 'tls'
-	
+
 config dns_servers
-	option enabled '0'
 	option type 'udp'
 	option group 'fallback'
 	option ip '2001:4860:4860::8888'
 	option port '53'
+	option enabled '0'
 
 config dns_servers
-	option enabled '0'
 	option type 'udp'
 	option group 'fallback'
 	option ip '2001:4860:4860::8844'
 	option port '53'
+	option enabled '0'
+
+config dns_servers
+	option type 'udp'
+	option group 'fallback'
+	option ip '2001:da8::666'
+	option port '53'
+	option enabled '1'
+
+config dns_servers
+	option group 'fallback'
+	option type 'https'
+	option ip 'public.dns.iij.jp/dns-query'
+	option enabled '1'
+
+config dns_servers
+	option group 'fallback'
+	option type 'https'
+	option ip 'jp.tiar.app/dns-query'
+	option enabled '1'
+
+config dns_servers
+	option group 'fallback'
+	option type 'https'
+	option ip 'jp.tiarap.org/dns-query'
+	option enabled '1'
+
+config dns_servers
+	option group 'fallback'
+	option ip 'jp.tiar.app'
+	option type 'tls'
+	option enabled '0'
+
+config dns_servers
+	option group 'fallback'
+	option ip 'dot.tiar.app'
+	option type 'tls'
+	option enabled '1'

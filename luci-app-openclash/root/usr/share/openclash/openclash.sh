@@ -49,15 +49,15 @@ config_download()
 {
 if [ -n "$subscribe_url_param" ]; then
    if [ -n "$c_address" ]; then
-      curl -sL --connect-timeout 10 --retry 2 "$c_address""$subscribe_url_param" -o "$CFG_FILE" >/dev/null 2>&1
+      curl -sL --connect-timeout 10 --retry 2 -H 'User-Agent: Clash' "$c_address""$subscribe_url_param" -o "$CFG_FILE" >/dev/null 2>&1
    else
-      curl -sL --connect-timeout 10 --retry 2 https://api.dler.io/sub"$subscribe_url_param" -o "$CFG_FILE" >/dev/null 2>&1
+      curl -sL --connect-timeout 10 --retry 2 -H 'User-Agent: Clash' https://api.dler.io/sub"$subscribe_url_param" -o "$CFG_FILE" >/dev/null 2>&1
       if [ "$?" -ne 0 ]; then
-         curl -sL --connect-timeout 10 --retry 2 https://subcon.dlj.tf/sub"$subscribe_url_param" -o "$CFG_FILE" >/dev/null 2>&1
+         curl -sL --connect-timeout 10 --retry 2 -H 'User-Agent: Clash' https://subconverter.herokuapp.com/sub"$subscribe_url_param" -o "$CFG_FILE" >/dev/null 2>&1
       fi
    fi
 else
-   curl -sL --connect-timeout 10 --retry 2 --user-agent "clash" "$subscribe_url" -o "$CFG_FILE" >/dev/null 2>&1
+   curl -sL --connect-timeout 10 --retry 2 -H 'User-Agent: Clash' "$subscribe_url" -o "$CFG_FILE" >/dev/null 2>&1
 fi
 }
 
@@ -157,14 +157,14 @@ config_cus_up()
 config_su_check()
 {
    LOG_OUT "Config File Download Successful, Check If There is Any Update..."
-   sed -i 's/!<str> //g' "$CFG_FILE" >/dev/null 2>&1
+   sed -i 's/!<str> /!!str /g' "$CFG_FILE" >/dev/null 2>&1
    if [ -f "$CONFIG_FILE" ]; then
       cmp -s "$BACKPACK_FILE" "$CFG_FILE"
       if [ "$?" -ne 0 ]; then
          LOG_OUT "Config File【$name】Are Updates, Start Replacing..."
          cp "$CFG_FILE" "$BACKPACK_FILE"
          #保留规则部分
-         if [ "$servers_update" -eq 1 ]; then
+         if [ "$servers_update" -eq 1 ] && [ "$only_download" -eq 0 ]; then
    	        ruby -ryaml -E UTF-8 -e "
                Value = YAML.load_file('$CONFIG_FILE');
                Value_1 = YAML.load_file('$CFG_FILE');
@@ -193,7 +193,7 @@ config_su_check()
       else
          LOG_OUT "Config File【$name】No Change, Do Nothing!"
          rm -rf "$CFG_FILE"
-         sleep 5
+         sleep 3
          SLOG_CLEAN
       fi
    else
@@ -214,7 +214,7 @@ config_error()
 {
    LOG_OUT "Error:【$name】Update Error, Please Try Again Later..."
    rm -rf "$CFG_FILE" 2>/dev/null
-   sleep 5
+   sleep 3
    SLOG_CLEAN
 }
 
@@ -232,9 +232,11 @@ change_dns()
          uci commit dhcp
          /etc/init.d/dnsmasq restart >/dev/null 2>&1
       fi
+      iptables -t nat -D OUTPUT -j openclash_output >/dev/null 2>&1
+      iptables -t mangle -D OUTPUT -j openclash_output >/dev/null 2>&1
       iptables -t nat -I OUTPUT -j openclash_output >/dev/null 2>&1
       iptables -t mangle -I OUTPUT -j openclash_output >/dev/null 2>&1
-      nohup /usr/share/openclash/openclash_watchdog.sh &
+      [ "$(unify_ps_status "openclash_watchdog.sh")" -eq 0 ] && [ "$(unify_ps_prevent)" -eq 0 ] && nohup /usr/share/openclash/openclash_watchdog.sh &
    fi
 }
 
@@ -248,15 +250,18 @@ field_name_check()
             Value['proxies'] = Value['Proxy']
             Value.delete('Proxy')
             puts '${LOGTIME} Warning: Proxy is no longer used. Auto replaced by proxies'
-         elsif Value.key?('Proxy Group') then
+         end
+         if Value.key?('Proxy Group') then
             Value['proxy-groups'] = Value['Proxy Group']
             Value.delete('Proxy Group')
             puts '${LOGTIME} Warning: Proxy Group is no longer used. Auto replaced by proxy-groups'
-         elsif Value.key?('Rule') then
+         end
+         if Value.key?('Rule') then
             Value['rules'] = Value['Rule']
             Value.delete('Rule')
             puts '${LOGTIME} Warning: Rule is no longer used. Auto replaced by rules'
-         elsif Value.key?('rule-provider') then
+         end
+         if Value.key?('rule-provider') then
             Value['rule-providers'] = Value['rule-provider']
             Value.delete('rule-provider')
              puts '${LOGTIME} Warning: rule-provider is no longer used. Auto replaced by rule-providers'
@@ -413,6 +418,12 @@ sub_info_get()
       return
    fi
    
+   if [ "$udp" == "true" ]; then
+      udp="udp=true"
+   else
+      udp=""
+   fi
+   
    if [ -z "$name" ]; then
       name="config"
       CONFIG_FILE="/etc/openclash/config/config.yaml"
@@ -451,7 +462,7 @@ sub_info_get()
          template_path_encode=$(urlencode "$template_path")
       	 [ -n "$key_match_param" ] && key_match_param="(?i)$(urlencode "$key_match_param")"
       	 [ -n "$key_ex_match_param" ] && key_ex_match_param="(?i)$(urlencode "$key_ex_match_param")"
-         subscribe_url_param="?target=clash&new_name=true&url=$subscribe_url&config=$template_path_encode&include=$key_match_param&exclude=$key_ex_match_param&emoji=$emoji&list=false&sort=$sort&udp=$udp&scv=$skip_cert_verify&append_type=$node_type&fdn=true"
+         subscribe_url_param="?target=clash&new_name=true&url=$subscribe_url&config=$template_path_encode&include=$key_match_param&exclude=$key_ex_match_param&emoji=$emoji&list=false&sort=$sort&$udp&scv=$skip_cert_verify&append_type=$node_type&fdn=true&expand=false"
          c_address="$convert_address"
       else
          subscribe_url=$address

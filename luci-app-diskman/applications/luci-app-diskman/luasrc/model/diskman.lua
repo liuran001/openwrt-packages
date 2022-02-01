@@ -246,7 +246,7 @@ local get_parted_info = function(device)
       end
     end
   end
-  result = disk_temp
+  result = disk_temp or result
   result.partitions = partitions_temp
 
   return result

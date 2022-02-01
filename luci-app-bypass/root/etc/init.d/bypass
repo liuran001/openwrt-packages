@@ -44,7 +44,7 @@ uci_get_by_type(){
 
 GLOBAL_SERVER=$(uci_get_by_type global global_server)
 adguardhome=$(uci_get_by_type global adguardhome 0)
-gfw_mode=$(uci_get_by_type global gfw_mode 0)
+gfw_mode=$(uci_get_by_type global gfw_mode 1)
 run_mode=$(uci_get_by_type global run_mode router)
 SO_SERVER=$(uci_get_by_type socks5_proxy server 0)
 [ $SO_SERVER = same ] && SO_SERVER=$GLOBAL_SERVER
@@ -169,7 +169,7 @@ gen_config_file(){
 }
 
 start_dns(){
-	$(which smartdns-le) -c $DNS_T
+	$(which smartdns) -c $DNS_T
 	case $dns_mode_o in
 	doh)
 		doh_o_a=$(echo $doh_o_a | sed 's/ -http-host dns.google//g')
@@ -193,7 +193,7 @@ start_dns(){
 		service_start $(which chinadns-ng) -l 5337 -c '127.0.0.1#5336' -t '127.0.0.1#5335' -4 china_v4 -6 china_v6 -f -n $([ $gfw_mode = 1 ] && echo -g $K/gfw.list)
 		log "ChinaDNS : Start ChinaDNS-NG successful!"
 	fi
-	if [[ "$(uci -q get dhcp.@dnsmasq[0].cachesize)" == "0" ]]; then
+	if [[ "$(uci -q get dhcp.@dnsmasq[0].cachesize)" == "0" && $adguardhome == 0 ]]; then
 		uci -q set dhcp.@dnsmasq[0].cachesize='1500'
 		uci commit dhcp
 	fi
@@ -216,6 +216,7 @@ preload(){
 check_net(){
 	if ! curl -so /dev/null -m 3 www.baidu.com;then
 		log "Wait for network to connect..."
+		/etc/init.d/dnsmasq restart
 		firstdown 1;exit 1
 	fi
 }
@@ -261,7 +262,6 @@ rules(){
 	fi
 	log "Check IP/GFW files successful!"
 	kcp_enable=$(uci_get_by_name $GLOBAL_SERVER kcp_enable 0)
-	[ $kcp_enable = 1 ] && kcp_server=$server
 	UDP_RELAY_SERVER=$(uci_get_by_type global udp_relay_server)
 	[ "$UDP_RELAY_SERVER" = same ] && UDP_RELAY_SERVER=$GLOBAL_SERVER
 	if [ "$(uci_get_by_name $UDP_RELAY_SERVER kcp_enable 0)" = 1 ];then
@@ -323,6 +323,7 @@ rules(){
 		all)mode=-z;;
 	esac
 
+	[ $kcp_enable = 1 ] && kcp_server=$server
 	if [ -n "$NF_SERVER" -a $run_mode != oversea ];then
 		nf_ip=$(uci_get_by_name $NF_SERVER server)
 		if ! echo $nf_ip | grep -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$">/dev/null;then
@@ -567,6 +568,7 @@ start_local(){
 	fi
 	socks5_port=$(uci_get_by_type socks5_proxy local_port 1080)
 	local_enable=1
+	mkdir -p $VAR
 	case $type in
 	ss|ssr)
 		gen_config_file $SO_SERVER $rtype
@@ -769,36 +771,6 @@ gen_dns(){
 	gfw|oversea) port=5336;;
 	*) port=5337;;
 	esac
-	if [[ -x /etc/init.d/AdGuardHome && "$(which AdGuardHome)" ]]; then
-		if [ $adguardhome == 1 ]; then
-			if [[ ! "$(netstat -tunlp | grep 53 | grep -i AdGuardHome)" ]]; then
-				uci -q del dhcp.@dnsmasq[0].dns_redirect
-				uci -q del dhcp.lan.dhcp_option
-				uci -q add_list dhcp.lan.dhcp_option="6,$(uci -q get network.lan.ipaddr)"
-				uci commit dhcp
-				masqport="$(uci -q get AdGuardHome.AdGuardHome.old_port)"
-				adgconf="$(uci -q get AdGuardHome.AdGuardHome.configpath)"	
-				[ "$masqport" ] || masqport="$(grep "  port:.*" $adgconf | cut -f 4 -d " ")"
-				cat $adgconf | tr '\n' '\r' | sed -e "s/upstream_dns:.*upstream_dns_file/upstream_dns:\n  - 127.0.0.1:$masqport\n  upstream_dns_file/" | tr '\r' '\n' >$(uci -q get AdGuardHome.AdGuardHome.configpath)
-				uci -q set AdGuardHome.AdGuardHome.enabled='1'
-				uci -q set AdGuardHome.AdGuardHome.redirect='exchange'
-				uci commit AdGuardHome
-				/etc/init.d/AdGuardHome restart
-			fi
-		elif [ "$(uci -q get AdGuardHome.AdGuardHome.redirect)" == "exchange" ]; then
-			uci -q set AdGuardHome.AdGuardHome.enabled='0'
-			redirect="$(uci -q get AdGuardHome.AdGuardHome.old_redirect)"
-			if [ "redirect" ]; then
-				uci -q set AdGuardHome.AdGuardHome.redirect="$redirect"
-			else
-				uci -q del AdGuardHome.AdGuardHome.redirect
-			fi
-			uci commit AdGuardHome
-			/etc/init.d/AdGuardHome stop
-		fi
-	elif [ $adguardhome == 1 ]; then
-		log "请确保系统中存在luci-app-adguardhome以及adg主程序!"
-	fi
 	cat >$DNS_FILE <<-EOF
 		no-resolv
 		server=127.0.0.1#$port
@@ -856,7 +828,7 @@ gen_dns(){
 	rm -f $O
 	[ $(find $DNS_DIR -name \* -exec cat {} \; 2>/dev/null | wc -l) = 0 ] && rm -rf $DNS_DIR || echo conf-dir=$DNS_DIR >>$DNS_FILE
 	[ $run_mode = router ] && chinadns_flag=1
-	killall -q -9 smartdns-le
+	killall -q -9 smartdns
 	start_dns
 	/etc/init.d/dnsmasq restart >/dev/null 2>&1
 	preload
@@ -990,11 +962,6 @@ start_monitor(){
 }
 
 start(){
-	if [[ "$(uci -q get smartdns.@smartdns[0].enabled)" == "1" ]]; then
-		uci -q del smartdns.@smartdns[0].enabled
-		uci commit smartdns
-		/etc/init.d/smartdns stop 2>/dev/null
-	fi
 	touch $LOC
 	if [ -n "$switch_server" ];then
 		GLOBAL_SERVER=$switch_server
@@ -1012,6 +979,31 @@ start(){
 	start_local
 	start_server
 	start_monitor
+	if [[ -x /etc/init.d/AdGuardHome && "$(which AdGuardHome)" ]]; then
+		if [[ $adguardhome == 1 && -n "$GLOBAL_SERVER" ]]; then
+			if [[ ! "$(netstat -tunlp | grep 53 | grep -i AdGuardHome)" ]]; then
+				uci -q del dhcp.@dnsmasq[0].dns_redirect
+				uci -q del dhcp.lan.dhcp_option
+				uci -q add_list dhcp.lan.dhcp_option="6,$(uci -q get network.lan.ipaddr)"
+				uci commit dhcp
+				adgconf="$(uci -q get AdGuardHome.AdGuardHome.configpath)"
+				masqport="$(grep "  port:.*" $adgconf | cut -f 4 -d " ")"
+				[ -s $adgconf ] && adgc="$(cat $adgconf | tr '\n' '\r' | sed -e "s/upstream_dns:.*upstream_dns_file/upstream_dns:\n  - 127.0.0.1:$masqport\n  upstream_dns_file/" | tr '\r' '\n')"
+				[ -n "$adgc" ] && echo "${adgc}" >$adgconf
+				uci -q set AdGuardHome.AdGuardHome.enabled='1'
+				uci -q set AdGuardHome.AdGuardHome.redirect='exchange'
+				uci commit AdGuardHome
+				(sleep 3; /etc/init.d/AdGuardHome restart >/dev/null 2>&1) &
+			fi
+		elif [ "$(uci -q get AdGuardHome.AdGuardHome.redirect)" == "exchange" ]; then
+				uci -q set AdGuardHome.AdGuardHome.enabled='0'
+				uci -q del AdGuardHome.AdGuardHome.redirect
+				uci commit AdGuardHome
+				/etc/init.d/AdGuardHome stop >/dev/null 2>&1 &
+		fi
+	elif [ $adguardhome == 1 ]; then
+		log "请确保系统中存在luci-app-adguardhome以及adg主程序!"
+	fi
 	rm -f $LOCK $LOC
 }
 
@@ -1031,28 +1023,15 @@ stop(){
 	kill -9 $(ps -w | grep by-monitor | grep -v grep | awk '{print$1}') 2>/dev/null
 	kill -9 $(ps -w | grep by-preload | grep -v grep | awk '{print$1}') 2>/dev/null
 	kill -9 $(ps -w | grep $VAR | grep -v grep | awk '{print$1}') 2>/dev/null
-	killall -q -9 smartdns-le chinadns-ng kcptun-client microsocks
-	if [[ $adguardhome == 1 && ! "$GLOBAL_SERVER" ]]; then
-		if [[ -f /etc/init.d/AdGuardHome && "$(uci -q get AdGuardHome.AdGuardHome.redirect)" == "exchange" ]]; then
-			redirect="$(uci -q get AdGuardHome.AdGuardHome.old_redirect)"
-			if [[ ! "redirect" || "redirect" == "exchange" ]]; then
-				uci -q del AdGuardHome.AdGuardHome.redirect
-			else
-				uci -q set AdGuardHome.AdGuardHome.redirect="$redirect"
-			fi
-			uci commit AdGuardHome
-			/etc/init.d/AdGuardHome stop
-		fi
-		if [[ "$(netstat -tunlp | grep 53 | grep -i AdGuardHome)" || "$(uci -q get dhcp.@dnsmasq[0].port)" != "53" ]]; then
-			uci -q set dhcp.@dnsmasq[0].port='53'
-			uci commit dhcp
-		fi
-	fi
+	killall -q -9 smartdns chinadns-ng kcptun-client microsocks
 	rm -rf $DNS_DIR $VAR $DNS_FILE $CON_T /var/lock/bypass-update.lock
 	[ $run_mode = gfw -o $gfw_mode = 1 ] || rm -f $K/gfw.list
 	[ $run_mode = router ] || rm -f $K/china_v6.txt
 	[ -z "$GLOBAL_SERVER" ] && grep -q bypass $CRON_FILE && sed -i '/bypass/d' $CRON_FILE && /etc/init.d/cron restart
 	if [ $STATUS = Y -o -z "$GLOBAL_SERVER" ];then
+		if [[ -f /etc/init.d/AdGuardHome && "$(uci -q get AdGuardHome.AdGuardHome.redirect)" == "exchange"  ]]; then
+			/etc/init.d/AdGuardHome stop >/dev/null 2>&1 &
+		fi
 		rm -rf $K $SDNS $PID $LOC
 		/etc/init.d/dnsmasq restart >/dev/null 2>&1
 	elif [ -s $DNS_T ];then
@@ -1082,9 +1061,9 @@ stop(){
 			dns_d_l=$(echo $dns_d_l | sed -e 's/，/,/g' -e 's/。/./g' -e 's/：/:/g' -e 's/,/\n/g')
 			for i in $dns_d_l;do echo "server $i" >> $DNS_T;done
 		fi
-		$(which smartdns-le) -c $DNS_T
+		$(which smartdns) -c $DNS_T
 		r=1
-		while ! ps -w | grep smartdns-le | grep -v grep >/dev/null;do
+		while ! ps -w | grep smartdns | grep -v grep >/dev/null;do
 			[ $r -ge 10 ] && return 1 || let r++
 			sleep 1
 		done

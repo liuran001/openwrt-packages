@@ -14,6 +14,26 @@ end
 
 local global_proxy_mode = (m:get("@global[0]", "tcp_proxy_mode") or "") .. (m:get("@global[0]", "udp_proxy_mode") or "")
 
+local dynamicList_write = function(self, section, value)
+    local t = {}
+    local t2 = {}
+    if type(value) == "table" then
+		local x
+		for _, x in ipairs(value) do
+			if x and #x > 0 then
+                if not t2[x] then
+                    t2[x] = x
+                    t[#t+1] = x
+                end
+			end
+		end
+	else
+		t = { value }
+	end
+    t = table.concat(t, " ")
+	return DynamicList.write(self, section, t)
+end
+
 -- [[ ACLs Settings ]]--
 s = m:section(NamedSection, arg[1], translate("ACLs"), translate("ACLs"))
 s.addremove = false
@@ -28,11 +48,6 @@ o.rmempty = false
 o = s:option(Value, "remarks", translate("Remarks"))
 o.default = arg[1]
 o.rmempty = true
-
-o = s:option(DynamicList, "ip_mac", translate("IP/MAC"))
-o.datatype = "or(ip4addr,macaddr)"
-o.cast = "string"
-o.rmempty = false
 
 local mac_t = {}
 sys.net.mac_hints(function(e, t)
@@ -53,28 +68,72 @@ table.sort(mac_t, function(a,b)
     end
     return false
 end)
+
+---- Source
+sources = s:option(DynamicList, "sources", translate("Source"))
+sources.description = "<ul><li>" .. translate("Example:")
+.. "</li><li>" .. translate("MAC") .. ": 00:00:00:FF:FF:FF"
+.. "</li><li>" .. translate("IP") .. ": 192.168.1.100"
+.. "</li><li>" .. translate("IP CIDR") .. ": 192.168.1.0/24"
+.. "</li><li>" .. translate("IP range") .. ": 192.168.1.100-192.168.1.200"
+.. "</li><li>" .. translate("IPSet") .. ": ipset:lanlist"
+.. "</li></ul>"
+sources.cast = "string"
 for _, key in pairs(mac_t) do
-    o:value(key.mac, "%s (%s)" % {key.mac, key.ip})
+    sources:value(key.mac, "%s (%s)" % {key.mac, key.ip})
 end
-function o.write(self, section, value)
-    local t = {}
-    local t2 = {}
-    if type(value) == "table" then
-		local x
-		for _, x in ipairs(value) do
-			if x and #x > 0 then
-                if not t2[x] then
-                    t2[x] = x
-                    t[#t+1] = x
-                end
-			end
-		end
+sources.cfgvalue = function(self, section)
+    local value
+	if self.tag_error[section] then
+		value = self:formvalue(section)
 	else
-		t = { value }
+		value = self.map:get(section, self.option)
+        if type(value) == "string" then
+            local value2 = {}
+            string.gsub(value, '[^' .. " " .. ']+', function(w) table.insert(value2, w) end)
+            value = value2
+        end
 	end
-    t = table.concat(t, " ")
-	return DynamicList.write(self, section, t)
+    return value
 end
+sources.validate = function(self, value, t)
+    local err = {}
+    for _, v in ipairs(value) do
+        local flag = false
+        if v:find("ipset:") and v:find("ipset:") == 1 then
+            local ipset = v:gsub("ipset:", "")
+            if ipset and ipset ~= "" then
+                flag = true
+            end
+        end
+
+        if flag == false and datatypes.macaddr(v) then
+            flag = true
+        end
+
+        if flag == false and datatypes.ip4addr(v) then
+            flag = true
+        end
+
+        if flag == false and api.iprange(v) then
+            flag = true
+        end
+
+        if flag == false then
+            err[#err + 1] = v
+        end
+    end
+
+    if #err > 0 then
+        self:add_error(t, "invalid", translate("Not true format, please re-enter!"))
+        for _, v in ipairs(err) do
+            self:add_error(t, "invalid", v)
+        end
+    end
+
+    return value
+end
+sources.write = dynamicList_write
 
 ---- TCP Proxy Mode
 tcp_proxy_mode = s:option(ListValue, "tcp_proxy_mode", translatef("%s Proxy Mode", "TCP"))
@@ -157,34 +216,42 @@ if api.is_finded("dns2socks") then
     o:value("dns2socks", "dns2socks")
 end
 if has_v2ray then
-    o:value("v2ray_doh", "V2ray DNS(DoH)")
-    o:value("v2ray_tcp", "V2ray DNS(TCP)")
+    o:value("v2ray", "V2ray")
 end
 if has_xray then
-    o:value("xray_doh", "Xray DNS(DoH)")
+    o:value("xray", "Xray")
 end
+
+o = s:option(ListValue, "v2ray_dns_mode", " ")
+o:value("tcp", "TCP")
+o:value("doh", "DoH")
+o:depends("dns_mode", "v2ray")
+o:depends("dns_mode", "xray")
 
 ---- DNS Forward
 o = s:option(Value, "dns_forward", translate("Remote DNS"))
-o.default = "8.8.8.8"
+o.default = "1.1.1.1"
+o:value("1.1.1.1", "1.1.1.1 (CloudFlare DNS)")
+o:value("1.1.1.2", "1.1.1.2 (CloudFlare DNS)")
 o:value("8.8.8.8", "8.8.8.8 (Google DNS)")
 o:value("8.8.4.4", "8.8.4.4 (Google DNS)")
 o:value("208.67.222.222", "208.67.222.222 (Open DNS)")
 o:value("208.67.220.220", "208.67.220.220 (Open DNS)")
 o:depends("dns_mode", "dns2socks")
+o:depends("v2ray_dns_mode", "tcp")
 
 if has_v2ray or has_xray then
 ---- DoH
 o = s:option(Value, "dns_doh", translate("DoH request address"))
-o:value("https://dns.adguard.com/dns-query,176.103.130.130", "AdGuard")
-o:value("https://cloudflare-dns.com/dns-query,1.1.1.1", "Cloudflare")
-o:value("https://security.cloudflare-dns.com/dns-query,1.1.1.2", "Cloudflare-Security")
+o:value("https://cloudflare-dns.com/dns-query,1.1.1.1", "CloudFlare")
+o:value("https://security.cloudflare-dns.com/dns-query,1.1.1.2", "CloudFlare-Security")
 o:value("https://doh.opendns.com/dns-query,208.67.222.222", "OpenDNS")
 o:value("https://dns.google/dns-query,8.8.8.8", "Google")
 o:value("https://doh.libredns.gr/dns-query,116.202.176.26", "LibreDNS")
 o:value("https://doh.libredns.gr/ads,116.202.176.26", "LibreDNS (No Ads)")
 o:value("https://dns.quad9.net/dns-query,9.9.9.9", "Quad9-Recommended")
-o.default = "https://dns.google/dns-query,8.8.8.8"
+o:value("https://dns.adguard.com/dns-query,176.103.130.130", "AdGuard")
+o.default = "https://cloudflare-dns.com/dns-query,1.1.1.1"
 o.validate = function(self, value, t)
     if value ~= "" then
         local flag = 0
@@ -206,8 +273,19 @@ o.validate = function(self, value, t)
     end
     return nil, translate("DoH request address") .. " " .. translate("Format must be:") .. " URL,IP"
 end
-o:depends("dns_mode", "v2ray_doh")
-o:depends("dns_mode", "xray_doh")
+o:depends("v2ray_dns_mode", "doh")
 end
+
+o = s:option(Value, "dns_client_ip", translate("EDNS Client Subnet"))
+o.datatype = "ipaddr"
+o:depends("v2ray_dns_mode", "doh")
+
+o = s:option(ListValue, "dns_query_strategy", translate("Query Strategy"))
+o.default = "UseIPv4"
+o:value("UseIPv4")
+o:value("UseIPv6")
+o:value("UseIP")
+o:depends("dns_mode", "v2ray")
+o:depends("dns_mode", "xray")
 
 return m

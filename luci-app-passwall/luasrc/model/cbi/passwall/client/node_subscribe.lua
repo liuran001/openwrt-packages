@@ -44,6 +44,8 @@ o = s:option(ListValue, "filter_keyword_mode", translate("Filter keyword Mode"))
 o:value("0", translate("Close"))
 o:value("1", translate("Discard List"))
 o:value("2", translate("Keep List"))
+o:value("3", translate("Discard List,But Keep List First"))
+o:value("4", translate("Keep List,But Discard List First"))
 
 o = s:option(DynamicList, "filter_discard_list", translate("Discard List"))
 
@@ -70,12 +72,23 @@ function o.write(e, e)
     luci.sys.call("lua /usr/share/" .. appname .. "/subscribe.lua truncate > /dev/null 2>&1")
 end
 
+o = s:option(Button, "_update", translate("Manual subscription All"))
+o.inputstyle = "apply"
+function o.write(t, n)
+    luci.sys.call("lua /usr/share/" .. appname .. "/subscribe.lua start > /dev/null 2>&1 &")
+    luci.http.redirect(api.url("log"))
+end
+
 s = m:section(TypedSection, "subscribe_list", "", "<font color='red'>" .. translate("Please input the subscription url first, save and submit before manual subscription.") .. "</font>")
 s.addremove = true
 s.anonymous = true
 s.sortable = true
 s.template = "cbi/tblsection"
 s.extedit = api.url("node_subscribe_config", "%s")
+function s.create(e, t)
+    local id = TypedSection.create(e, t)
+    luci.http.redirect(e.extedit:format(id))
+end
 
 o = s:option(Value, "remark", translate("Remarks"))
 o.width = "auto"

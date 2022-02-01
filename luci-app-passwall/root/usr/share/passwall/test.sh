@@ -1,7 +1,9 @@
 #!/bin/sh
 
 CONFIG=passwall
-LOG_FILE=/var/log/$CONFIG.log
+LOG_FILE=/tmp/log/$CONFIG.log
+LOCK_FILE_DIR=/tmp/lock
+LOCK_FILE=${LOCK_FILE_DIR}/${CONFIG}_script.lock
 
 echolog() {
 	local d="$(date "+%Y-%m-%d %H:%M:%S")"
@@ -75,12 +77,12 @@ test_node() {
 			}
 		else
 			local _tmp_port=$(/usr/share/${CONFIG}/app.sh get_new_port 61080 tcp)
-			/usr/share/${CONFIG}/app.sh run_socks flag=auto_switch node=$node_id bind=127.0.0.1 socks_port=${_tmp_port} config_file=/var/etc/${CONFIG}/test.json
+			/usr/share/${CONFIG}/app.sh run_socks flag=auto_switch node=$node_id bind=127.0.0.1 socks_port=${_tmp_port} config_file=/tmp/etc/${CONFIG}/test.json
 			local curlx="socks5h://127.0.0.1:${_tmp_port}"
 		fi
 		_proxy_status=$(test_url "https://www.google.com/generate_204" ${retry_num} ${connect_timeout} "-x $curlx")
-		pgrep -f "/var/etc/${CONFIG}/test\.json|auto_switch" | xargs kill -9 >/dev/null 2>&1
-		rm -rf "/var/etc/${CONFIG}/test.json"
+		pgrep -f "/tmp/etc/${CONFIG}/test\.json|auto_switch" | xargs kill -9 >/dev/null 2>&1
+		rm -rf "/tmp/etc/${CONFIG}/test.json"
 		if [ "${_proxy_status}" -eq 200 ]; then
 			return 0
 		fi
@@ -97,13 +99,13 @@ test_auto_switch() {
 	local b_tcp_nodes=$2
 	local now_node=$3
 	[ -z "$now_node" ] && {
-		if [ -f "/var/etc/$CONFIG/id/${TYPE}" ]; then
-			now_node=$(cat /var/etc/$CONFIG/id/${TYPE})
+		if [ -f "/tmp/etc/$CONFIG/id/${TYPE}" ]; then
+			now_node=$(cat /tmp/etc/$CONFIG/id/${TYPE})
 			if [ "$(config_n_get $now_node protocol nil)" = "_shunt" ]; then
-				if [ "$shunt_logic" == "1" ] && [ -f "/var/etc/$CONFIG/id/${TYPE}_default" ]; then
-					now_node=$(cat /var/etc/$CONFIG/id/${TYPE}_default)
-				elif [ "$shunt_logic" == "2" ] && [ -f "/var/etc/$CONFIG/id/${TYPE}_main" ]; then
-					now_node=$(cat /var/etc/$CONFIG/id/${TYPE}_main)
+				if [ "$shunt_logic" == "1" ] && [ -f "/tmp/etc/$CONFIG/id/${TYPE}_default" ]; then
+					now_node=$(cat /tmp/etc/$CONFIG/id/${TYPE}_default)
+				elif [ "$shunt_logic" == "2" ] && [ -f "/tmp/etc/$CONFIG/id/${TYPE}_main" ]; then
+					now_node=$(cat /tmp/etc/$CONFIG/id/${TYPE}_main)
 				else
 					shunt_logic=0
 				fi
@@ -203,27 +205,28 @@ test_auto_switch() {
 }
 
 start() {
-	if [ "$(pgrep -f $CONFIG/test.sh | wc -l)" -gt 2 ]; then
-		exit 1
-	fi
 	ENABLED=$(config_t_get global enabled 0)
 	[ "$ENABLED" != 1 ] && return 1
 	ENABLED=$(config_t_get auto_switch enable 0)
 	[ "$ENABLED" != 1 ] && return 1
 	delay=$(config_t_get auto_switch testing_time 1)
-	#sleep ${delay}m
 	#sleep 9s
 	connect_timeout=$(config_t_get auto_switch connect_timeout 3)
 	retry_num=$(config_t_get auto_switch retry_num 3)
 	restore_switch=$(config_t_get auto_switch restore_switch 0)
 	shunt_logic=$(config_t_get auto_switch shunt_logic 0)
-	while [ "$ENABLED" -eq 1 ]
-	do
+	while [ "$ENABLED" -eq 1 ]; do
+		[ -f "$LOCK_FILE" ] && {
+			sleep 6s
+			continue
+		}
+		touch $LOCK_FILE
 		TCP_NODE=$(config_t_get auto_switch tcp_node nil)
 		[ -n "$TCP_NODE" -a "$TCP_NODE" != "nil" ] && {
 			TCP_NODE=$(echo $TCP_NODE | tr -s ' ' '\n' | uniq | tr -s '\n' ' ')
 			test_auto_switch TCP "$TCP_NODE"
 		}
+		rm -f $LOCK_FILE
 		sleep ${delay}m
 	done
 }

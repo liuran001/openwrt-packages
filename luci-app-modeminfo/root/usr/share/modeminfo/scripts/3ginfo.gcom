@@ -38,6 +38,7 @@ opengt
  if $toupper($mid($v,0,3)) = "ZTE" goto zte
  if $toupper($mid($v,0,3)) = "QUE" goto quectel
  if $toupper($mid($v,0,3)) = "DEL" goto dell
+ if $toupper($mid($v,0,3)) = "FIB" goto fibocom
  if $toupper($mid($k,8,3)) = "XMM" goto intel
  if $toupper($mid($t,9,3)) = "MIK" goto mikrotik
  goto generic
@@ -172,6 +173,24 @@ opengt
  send "AT\^CA_INFO?^m"
  get 1 "" $s
  print $s
+ goto next
+
+:fibocom
+ send "AT+GTCCINFO?^m"
+ get 1 "" $s
+ print $s
+
+ send "AT+GTCAINFO?^m"
+ get 1 "" $s
+ print $s
+
+ let $c="AT+MTSM=1^m"
+ let $r="+MTSM"
+ gosub readatcmd
+
+ let $c="AT*CNTI=0^m"
+ let $r="*CNTI"
+ gosub readatcmd
  goto next
 
 :intel

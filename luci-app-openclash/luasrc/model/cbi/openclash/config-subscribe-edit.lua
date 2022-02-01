@@ -7,8 +7,8 @@ local sys = require "luci.sys"
 local json = require "luci.jsonc"
 local sid = arg[1]
 
-font_red = [[<font color="red">]]
-font_off = [[</font>]]
+font_red = [[<b style=color:red>]]
+font_off = [[</b>]]
 bold_on  = [[<strong>]]
 bold_off = [[</strong>]]
 
@@ -85,9 +85,7 @@ o.rmempty     = true
 o.description = font_red..bold_on..translate("Note: There is A Risk of Privacy Leakage in Online Convert")..bold_off..font_off
 o:depends("sub_convert", "1")
 o:value("https://api.dler.io/sub", translate("api.dler.io")..translate("(Default)"))
-o:value("https://subcon.dlj.tf/sub", translate("subcon.dlj.tf")..translate("(Default)"))
-o:value("https://subconverter-web.now.sh/sub", translate("subconverter-web.now.sh"))
-o:value("https://subconverter.herokuapp.com/sub", translate("subconverter.herokuapp.com"))
+o:value("https://subconverter.herokuapp.com/sub", translate("subconverter.herokuapp.com")..translate("(Default)"))
 o:value("https://sub.id9.cc/sub", translate("sub.id9.cc"))
 o:value("https://api.wcc.best/sub", translate("api.wcc.best"))
 o.default = "https://api.dler.io/sub"
@@ -165,6 +163,7 @@ o.rmempty = true
 ---- de_exkey
 o = s:option(MultiValue, "de_ex_keyword", font_red..bold_on..translate("Exclude Keyword Match Default")..bold_off..font_off)
 o.rmempty = true
+o:depends("sub_convert", 0)
 o:value("过期时间")
 o:value("剩余流量")
 o:value("TG群")

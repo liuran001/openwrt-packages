@@ -62,8 +62,8 @@ amobile.music.tc.qq.com
 *.music.migu.cn
 music.migu.cn
 #win10本地连接检测
-*.msftconnecttest.com
-*.msftncsi.com
++.msftconnecttest.com
++.msftncsi.com
 msftconnecttest.com
 msftncsi.com
 #QQ快捷登录
@@ -107,3 +107,15 @@ swdist.apple.com
 #Google
 lens.l.google.com
 stun.l.google.com
+#Netflix
++.nflxvideo.net
+#FinalFantasy XIV Worldwide Server & CN Server
+*.square-enix.com
+*.finalfantasyxiv.com
+*.ffxiv.com
+*.ff14.sdo.com
+ff.dorado.sdo.com
+#Bilibili
+*.mcdn.bilivideo.cn
+#Disney Plus
++.media.dssott.com

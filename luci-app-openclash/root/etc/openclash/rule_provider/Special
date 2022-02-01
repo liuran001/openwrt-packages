@@ -4,7 +4,7 @@ payload:
 
   # > Apple CDN
   - PROCESS-NAME,storedownloadd
-  # - User-Agent,com.apple.appstored*
+  # - USER-AGENT,com.apple.appstored*
   - DOMAIN,aod.itunes.apple.com
   - DOMAIN,api.smoot.apple.cn
   - DOMAIN,appldnld.apple.com
@@ -24,34 +24,69 @@ payload:
   - DOMAIN-KEYWORD,epicgames
 
   # > Google
-  - DOMAIN-KEYWORD,mtalk.google.com
   - DOMAIN,safebrowsing.googleapis.com
   - DOMAIN-SUFFIX,dl.google.com
 
   # > Microsoft
+  # - USER-AGENT,Microsoft%20Remote%20Desktop*
   - DOMAIN-SUFFIX,msftconnecttest.com
+  - DOMAIN-SUFFIX,windows.com
+  - DOMAIN-SUFFIX,windows.net
+  - DOMAIN-SUFFIX,windowsupdate.com
+  - DOMAIN-SUFFIX,xbox.com
+  - DOMAIN-SUFFIX,xboxlive.com
 
   # > Proxy plugin
   - PROCESS-NAME,v2ray
   - PROCESS-NAME,ss-local
 
   # > Steam
-  # - User-Agent,Steam*
-  - DOMAIN-SUFFIX,pinyuncloud.com
+  # - USER-AGENT,Steam*
   - DOMAIN-SUFFIX,steamcontent.com
+  - DOMAIN,store.steampowered.com
+
+  - DOMAIN-SUFFIX,steamchina.com
+
+  - DOMAIN,csgo.wmsj.cn
+  - DOMAIN,dota2.wmsj.cn
+  - DOMAIN,wmsjsteam.com
+
+  - DOMAIN,dl.steam.clngaa.com
+  - DOMAIN,dl.steam.ksyna.com
+
+  - DOMAIN,st.dl.bscstorage.net
+  - DOMAIN,st.dl.eccdnx.com
+  - DOMAIN,st.dl.pinyuncloud.com
+
+  - DOMAIN,steampipe.steamcontent.tnkjmec.com
+
+  - DOMAIN,steampowered.com.8686c.com
+  - DOMAIN,steamstatic.com.8686c.com
+
+  - DOMAIN,steambroadcast.akamaized.net
+  - DOMAIN,steamcdn-a.akamaihd.net
+  - DOMAIN,steamcommunity-a.akamaihd.net
+  - DOMAIN,steamstore-a.akamaihd.net
+  - DOMAIN,steamusercontent-a.akamaihd.net
+  - DOMAIN,steamuserimages-a.akamaihd.net
 
   # > Tesla
+  - DOMAIN,tesla-cdn.thron.cn
+  - DOMAIN,tesla-cdn.thron.com
+  - DOMAIN-SUFFIX,solarcity.com
   - DOMAIN-SUFFIX,tesla.cn
-  - DOMAIN-SUFFIX,tesla-cdn.thron.cn
+  - DOMAIN-SUFFIX,tesla.com
+  - DOMAIN-SUFFIX,tesla.com.cn
+  - DOMAIN-SUFFIX,teslamotors.cn
+  - DOMAIN-SUFFIX,teslamotors.com
+  - DOMAIN-SUFFIX,teslamotors.com.cn
+  - DOMAIN-SUFFIX,ts.la
 
   # > UUBooster
   - PROCESS-NAME,UUBooster
 
-  # > Windows
-  - DOMAIN-SUFFIX,windowsupdate.com
-
   # > Xunlei
-  # - User-Agent,%E8%BF%85%E9%9B%B7
+  # - USER-AGENT,%E8%BF%85%E9%9B%B7
   - DOMAIN-SUFFIX,xunlei.com
 
   # > Download
@@ -62,7 +97,6 @@ payload:
   - PROCESS-NAME,NetTransport.exe
   - PROCESS-NAME,qbittorrent.exe
   - PROCESS-NAME,Thunder.exe
-  - PROCESS-NAME,ThunderVIP.exe
   - PROCESS-NAME,transmission-daemon.exe
   - PROCESS-NAME,transmission-qt.exe
   - PROCESS-NAME,uTorrent.exe

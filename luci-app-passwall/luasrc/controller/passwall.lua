@@ -13,6 +13,7 @@ local brook = require("luci.model.cbi." .. appname ..".api.brook")
 local v2ray = require("luci.model.cbi." .. appname ..".api.v2ray")
 local xray = require("luci.model.cbi." .. appname ..".api.xray")
 local trojan_go = require("luci.model.cbi." .. appname ..".api.trojan_go")
+local hysteria = require("luci.model.cbi." .. appname ..".api.hysteria")
 
 function index()
 	appname = require "luci.model.cbi.passwall.api.api".appname
@@ -37,7 +38,7 @@ function index()
 	end
 	entry({"admin", "services", appname, "app_update"}, cbi(appname .. "/client/app_update"), _("App Update"), 95).leaf = true
 	entry({"admin", "services", appname, "rule"}, cbi(appname .. "/client/rule"), _("Rule Manage"), 96).leaf = true
-	entry({"admin", "services", appname, "rule_list"}, cbi(appname .. "/client/rule_list"), _("Rule List Manage"), 97).leaf = true
+	entry({"admin", "services", appname, "rule_list"}, cbi(appname .. "/client/rule_list"), _("Rule List"), 97).leaf = true
 	entry({"admin", "services", appname, "node_subscribe_config"}, cbi(appname .. "/client/node_subscribe_config")).leaf = true
 	entry({"admin", "services", appname, "node_config"}, cbi(appname .. "/client/node_config")).leaf = true
 	entry({"admin", "services", appname, "shunt_rules"}, cbi(appname .. "/client/shunt_rules")).leaf = true
@@ -82,6 +83,8 @@ function index()
 	entry({"admin", "services", appname, "xray_update"}, call("xray_update")).leaf = true
 	entry({"admin", "services", appname, "trojan_go_check"}, call("trojan_go_check")).leaf = true
 	entry({"admin", "services", appname, "trojan_go_update"}, call("trojan_go_update")).leaf = true
+	entry({"admin", "services", appname, "hysteria_check"}, call("hysteria_check")).leaf = true
+	entry({"admin", "services", appname, "hysteria_update"}, call("hysteria_update")).leaf = true
 end
 
 local function http_write_json(content)
@@ -142,11 +145,11 @@ end
 
 function get_now_use_node()
 	local e = {}
-	local data, code, msg = nixio.fs.readfile("/var/etc/passwall/id/TCP")
+	local data, code, msg = nixio.fs.readfile("/tmp/etc/passwall/id/TCP")
 	if data then
 		e["TCP"] = util.trim(data)
 	end
-	local data, code, msg = nixio.fs.readfile("/var/etc/passwall/id/UDP")
+	local data, code, msg = nixio.fs.readfile("/tmp/etc/passwall/id/UDP")
 	if data then
 		e["UDP"] = util.trim(data)
 	end
@@ -157,11 +160,11 @@ end
 function get_redir_log()
 	local proto = luci.http.formvalue("proto")
 	proto = proto:upper()
-	if proto == "UDP" and (ucic:get(appname, "@global[0]", "udp_node") or "nil") == "tcp" and not nixio.fs.access("/var/etc/passwall/" .. proto .. ".log") then
+	if proto == "UDP" and (ucic:get(appname, "@global[0]", "udp_node") or "nil") == "tcp" and not nixio.fs.access("/tmp/etc/passwall/" .. proto .. ".log") then
 		proto = "TCP"
 	end
-	if nixio.fs.access("/var/etc/passwall/" .. proto .. ".log") then
-		local content = luci.sys.exec("cat /var/etc/passwall/" .. proto .. ".log")
+	if nixio.fs.access("/tmp/etc/passwall/" .. proto .. ".log") then
+		local content = luci.sys.exec("cat /tmp/etc/passwall/" .. proto .. ".log")
 		content = content:gsub("\n", "<br />")
 		luci.http.write(content)
 	else
@@ -170,12 +173,12 @@ function get_redir_log()
 end
 
 function get_log()
-	-- luci.sys.exec("[ -f /var/log/passwall.log ] && sed '1!G;h;$!d' /var/log/passwall.log > /var/log/passwall_show.log")
-	luci.http.write(luci.sys.exec("[ -f '/var/log/passwall.log' ] && cat /var/log/passwall.log"))
+	-- luci.sys.exec("[ -f /tmp/log/passwall.log ] && sed '1!G;h;$!d' /tmp/log/passwall.log > /tmp/log/passwall_show.log")
+	luci.http.write(luci.sys.exec("[ -f '/tmp/log/passwall.log' ] && cat /tmp/log/passwall.log"))
 end
 
 function clear_log()
-	luci.sys.call("echo '' > /var/log/passwall.log")
+	luci.sys.call("echo '' > /tmp/log/passwall.log")
 end
 
 function status()
@@ -392,8 +395,8 @@ end
 
 function server_user_log()
 	local id = luci.http.formvalue("id")
-	if nixio.fs.access("/var/etc/passwall_server/" .. id .. ".log") then
-		local content = luci.sys.exec("cat /var/etc/passwall_server/" .. id .. ".log")
+	if nixio.fs.access("/tmp/etc/passwall_server/" .. id .. ".log") then
+		local content = luci.sys.exec("cat /tmp/etc/passwall_server/" .. id .. ".log")
 		content = content:gsub("\n", "<br />")
 		luci.http.write(content)
 	else
@@ -402,11 +405,11 @@ function server_user_log()
 end
 
 function server_get_log()
-	luci.http.write(luci.sys.exec("[ -f '/var/log/passwall_server.log' ] && cat /var/log/passwall_server.log"))
+	luci.http.write(luci.sys.exec("[ -f '/tmp/log/passwall_server.log' ] && cat /tmp/log/passwall_server.log"))
 end
 
 function server_clear_log()
-	luci.sys.call("echo '' > /var/log/passwall_server.log")
+	luci.sys.call("echo '' > /tmp/log/passwall_server.log")
 end
 
 function kcptun_check()
@@ -422,7 +425,7 @@ function kcptun_update()
 	elseif task == "move" then
 		json = kcptun.to_move(http.formvalue("file"))
 	else
-		json = kcptun.to_download(http.formvalue("url"))
+		json = kcptun.to_download(http.formvalue("url"), http.formvalue("size"))
 	end
 
 	http_write_json(json)
@@ -439,7 +442,7 @@ function brook_update()
 	if task == "move" then
 		json = brook.to_move(http.formvalue("file"))
 	else
-		json = brook.to_download(http.formvalue("url"))
+		json = brook.to_download(http.formvalue("url"), http.formvalue("size"))
 	end
 
 	http_write_json(json)
@@ -458,7 +461,7 @@ function v2ray_update()
 	elseif task == "move" then
 		json = v2ray.to_move(http.formvalue("file"))
 	else
-		json = v2ray.to_download(http.formvalue("url"))
+		json = v2ray.to_download(http.formvalue("url"), http.formvalue("size"))
 	end
 
 	http_write_json(json)
@@ -477,7 +480,7 @@ function xray_update()
 	elseif task == "move" then
 		json = xray.to_move(http.formvalue("file"))
 	else
-		json = xray.to_download(http.formvalue("url"))
+		json = xray.to_download(http.formvalue("url"), http.formvalue("size"))
 	end
 
 	http_write_json(json)
@@ -496,8 +499,26 @@ function trojan_go_update()
 	elseif task == "move" then
 		json = trojan_go.to_move(http.formvalue("file"))
 	else
-		json = trojan_go.to_download(http.formvalue("url"))
+		json = trojan_go.to_download(http.formvalue("url"), http.formvalue("size"))
 	end
 
 	http_write_json(json)
 end
+
+function hysteria_check()
+	local json = hysteria.to_check("")
+	http_write_json(json)
+end
+
+function hysteria_update()
+	local json = nil
+	local task = http.formvalue("task")
+	if task == "move" then
+		json = hysteria.to_move(http.formvalue("file"))
+	else
+		json = hysteria.to_download(http.formvalue("url"), http.formvalue("size"))
+	end
+
+	http_write_json(json)
+end
+

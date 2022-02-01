@@ -6,8 +6,8 @@ local fs = require "luci.openclash"
 local sys = require "luci.sys"
 local sid = arg[1]
 
-font_red = [[<font color="red">]]
-font_off = [[</font>]]
+font_red = [[<b style=color:red>]]
+font_off = [[</b>]]
 bold_on  = [[<strong>]]
 bold_off = [[</strong>]]
 
@@ -75,9 +75,7 @@ for t,f in ipairs(fs.glob("/etc/openclash/rule_provider/*"))do
 	if h then
     p[t]={}
     p[t].name=fs.basename(f)
-    if IsYamlFile(p[t].name) or IsYmlFile(p[t].name) then
-       o:value("./rule_provider/"..p[t].name)
-    end
+    o:value("./rule_provider/"..p[t].name)
   end
 end
 o.rmempty = false
@@ -91,6 +89,11 @@ o = s:option(Value, "interval", translate("Rule Providers Interval(s)"))
 o.default = "86400"
 o.rmempty = false
 o:depends("type", "http")
+
+o = s:option(ListValue, "position", translate("Append Position"))
+o.rmempty     = false
+o:value("0", translate("Priority Match"))
+o:value("1", translate("Extended Match"))
 
 o = s:option(ListValue, "group", translate("Set Proxy Group"))
 o.description = font_red..bold_on..translate("The Added Proxy Groups Must Exist Except 'DIRECT' & 'REJECT'")..bold_off..font_off

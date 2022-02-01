@@ -93,7 +93,7 @@ tcp_node = s:taboption("Main", ListValue, "tcp_node", "<a style='color: red'>" .
 tcp_node.description = ""
 --tcp_node.description = translate("For proxy specific list.")
 --tcp_node.description = o.description .. "<br />"
-local current_node = luci.sys.exec(string.format("[ -f '/var/etc/%s/id/TCP' ] && echo -n $(cat /var/etc/%s/id/TCP)", appname, appname))
+local current_node = luci.sys.exec(string.format("[ -f '/tmp/etc/%s/id/TCP' ] && echo -n $(cat /tmp/etc/%s/id/TCP)", appname, appname))
 if current_node and current_node ~= "" and current_node ~= "nil" then
     local n = uci:get_all(appname, current_node)
     if n then
@@ -176,49 +176,60 @@ udp_node:value("tcp", translate("Same as the tcp node"))
 
 s:tab("DNS", translate("DNS"))
 
+if api.is_finded("smartdns") then
+    dns_shunt = s:taboption("DNS", ListValue, "dns_shunt", translate("DNS Shunt"))
+    dns_shunt:value("dnsmasq", "Dnsmasq")
+    dns_shunt:value("smartdns", "SmartDNS")
+
+    group_domestic = s:taboption("DNS", Value, "group_domestic", translate("Domestic group name"))
+    group_domestic.placeholder = "local"
+    group_domestic:depends("dns_shunt", "smartdns")
+    group_domestic.description = translate("You only need to configure domestic DNS packets in SmartDNS and set it redirect or as Dnsmasq upstream, and fill in the domestic DNS group name here.")
+end
+
+o = s:taboption("DNS", Flag, "filter_proxy_ipv6", translate("Filter Proxy Host IPv6"), translate("Experimental feature."))
+o.default = "0"
+
 ---- DNS Forward Mode
-o = s:taboption("DNS", ListValue, "dns_mode", translate("Filter Mode"))
-o.rmempty = false
-o:reset_values()
+dns_mode = s:taboption("DNS", ListValue, "dns_mode", translate("Filter Mode"))
+dns_mode.rmempty = false
+dns_mode:reset_values()
 if api.is_finded("pdnsd") then
-    o:value("pdnsd", "pdnsd " .. translatef("Requery DNS By %s", translate("TCP Node")))
+    dns_mode:value("pdnsd", "pdnsd " .. translatef("Requery DNS By %s", translate("TCP Node")))
 end
 if api.is_finded("dns2socks") then
-    o:value("dns2socks", "dns2socks")
+    dns_mode:value("dns2socks", "dns2socks")
 end
 if has_v2ray then
-    o:value("v2ray_tcp", "V2ray DNS(TCP)")
-    o:value("v2ray_doh", "V2ray DNS(DoH)")
+    dns_mode:value("v2ray", "V2ray")
 end
 if has_xray then
-    o:value("xray_doh", "Xray DNS(DoH)")
+    dns_mode:value("xray", "Xray")
 end
-o:value("udp", translatef("Requery DNS By %s", translate("UDP Node")))
-o:value("custom", translate("Custom DNS") .. "(UDP)")
-o:value("nonuse", translate("No Filter"))
+dns_mode:value("udp", translatef("Requery DNS By %s", "UDP"))
 
----- Custom DNS
-o = s:taboption("DNS", Value, "custom_dns", translate("Custom DNS"))
-o.default = "127.0.0.1#5353"
+o = s:taboption("DNS", ListValue, "v2ray_dns_mode", " ")
+o:value("tcp", "TCP")
+o:value("doh", "DoH")
+o:value("fakedns", "FakeDNS")
+o:depends("dns_mode", "v2ray")
+o:depends("dns_mode", "xray")
 o.validate = function(self, value, t)
-    local v = string.gsub(value, "#", ":")
-    if not datatypes.ipaddrport(v) then
-        return nil, translate("Custom DNS") .. " " .. translate("Not valid IP format, please re-enter!")
+    if value == "fakedns" then
+        local _dns_mode = dns_mode:formvalue(t)
+        local _tcp_node = tcp_node:formvalue(t)
+        if m:get(_tcp_node, "type"):lower() ~= _dns_mode then
+            return nil, translatef("TCP node must be '%s' type to use FakeDNS.", _dns_mode)
+        end
     end
     return value
 end
-o:depends({dns_mode = "custom"})
 
-o = s:taboption("DNS", ListValue, "up_trust_tcp_dns", translate("Resolver For The List Proxied"))
+o = s:taboption("DNS", ListValue, "dns_by", translate("Resolver For The List Proxied"))
 o:value("tcp", translatef("Requery DNS By %s", translate("TCP Node")))
 o:value("socks", translatef("Requery DNS By %s", translate("Socks Node")))
-o:depends("dns_mode", "v2ray_tcp")
-
-o = s:taboption("DNS", ListValue, "up_trust_doh_dns", translate("Resolver For The List Proxied"))
-o:value("tcp", translatef("Requery DNS By %s", translate("TCP Node")))
-o:value("socks", translatef("Requery DNS By %s", translate("Socks Node")))
-o:depends("dns_mode", "v2ray_doh")
-o:depends("dns_mode", "xray_doh")
+o:depends("v2ray_dns_mode", "tcp")
+o:depends("v2ray_dns_mode", "doh")
 
 o = s:taboption("DNS", Value, "socks_server", translate("Socks Server"), translate("Make sure socks service is available on this address."))
 for k, v in pairs(socks_table) do o:value(v.id, v.remarks) end
@@ -229,29 +240,29 @@ o.validate = function(self, value, t)
     return value
 end
 o:depends({dns_mode = "dns2socks"})
-o:depends({dns_mode = "v2ray_tcp", up_trust_tcp_dns = "socks"})
-o:depends({dns_mode = "v2ray_doh", up_trust_doh_dns = "socks"})
-o:depends({dns_mode = "xray_doh", up_trust_doh_dns = "socks"})
+o:depends({dns_by = "socks"})
 
 ---- DoH
 o = s:taboption("DNS", Value, "up_trust_doh", translate("DoH request address"))
-o:value("https://dns.adguard.com/dns-query,176.103.130.130", "AdGuard")
-o:value("https://cloudflare-dns.com/dns-query,1.1.1.1", "Cloudflare")
-o:value("https://security.cloudflare-dns.com/dns-query,1.1.1.2", "Cloudflare-Security")
+o:value("https://cloudflare-dns.com/dns-query,1.1.1.1", "CloudFlare")
+o:value("https://security.cloudflare-dns.com/dns-query,1.1.1.2", "CloudFlare-Security")
 o:value("https://doh.opendns.com/dns-query,208.67.222.222", "OpenDNS")
 o:value("https://dns.google/dns-query,8.8.8.8", "Google")
 o:value("https://doh.libredns.gr/dns-query,116.202.176.26", "LibreDNS")
 o:value("https://doh.libredns.gr/ads,116.202.176.26", "LibreDNS (No Ads)")
 o:value("https://dns.quad9.net/dns-query,9.9.9.9", "Quad9-Recommended")
-o.default = "https://dns.google/dns-query,8.8.8.8"
+o:value("https://dns.adguard.com/dns-query,176.103.130.130", "AdGuard")
+o.default = "https://cloudflare-dns.com/dns-query,1.1.1.1"
 o.validate = doh_validate
-o:depends({dns_mode = "v2ray_doh"})
-o:depends({dns_mode = "xray_doh"})
+o:depends("v2ray_dns_mode", "doh")
 
 ---- DNS Forward
 o = s:taboption("DNS", Value, "dns_forward", translate("Remote DNS"))
 --o.description = translate("IP:Port mode acceptable, multi value split with english comma.") .. " " .. translate("If you use dns2socks, only the first one is valid.")
-o.default = "8.8.8.8"
+o.datatype = "or(ipaddr,ipaddrport)"
+o.default = "1.1.1.1"
+o:value("1.1.1.1", "1.1.1.1 (CloudFlare DNS)")
+o:value("1.1.1.2", "1.1.1.2 (CloudFlare DNS)")
 o:value("8.8.8.8", "8.8.8.8 (Google DNS)")
 o:value("8.8.4.4", "8.8.4.4 (Google DNS)")
 o:value("208.67.222.222", "208.67.222.222 (Open DNS)")
@@ -259,21 +270,45 @@ o:value("208.67.220.220", "208.67.220.220 (Open DNS)")
 o:depends({dns_mode = "dns2socks"})
 o:depends({dns_mode = "pdnsd"})
 o:depends({dns_mode = "udp"})
-o:depends({dns_mode = "v2ray_tcp"})
+o:depends({v2ray_dns_mode = "tcp"})
+
+o = s:taboption("DNS", Value, "dns_client_ip", translate("EDNS Client Subnet"))
+o.description = translate("Notify the DNS server when the DNS query is notified, the location of the client (cannot be a private IP address).") .. "<br />" ..
+                translate("This feature requires the DNS server to support the Edns Client Subnet (RFC7871).")
+o.datatype = "ipaddr"
+o:depends("v2ray_dns_mode", "tcp")
+o:depends("v2ray_dns_mode", "doh")
+
+o = s:taboption("DNS", ListValue, "dns_query_strategy", translate("Query Strategy"))
+o.default = "UseIPv4"
+o:value("UseIPv4")
+o:value("UseIPv6")
+o:value("UseIP")
+o:depends({dns_mode = "v2ray", v2ray_dns_mode = "tcp"})
+o:depends({dns_mode = "v2ray", v2ray_dns_mode = "doh"})
+o:depends({dns_mode = "xray", v2ray_dns_mode = "tcp"})
+o:depends({dns_mode = "xray", v2ray_dns_mode = "doh"})
 
 o = s:taboption("DNS", Flag, "dns_cache", translate("Cache Resolved"))
 o.default = "1"
 o:depends({dns_mode = "dns2socks"})
 o:depends({dns_mode = "pdnsd"})
-o:depends({dns_mode = "v2ray_tcp"})
-o:depends({dns_mode = "v2ray_doh"})
-o:depends({dns_mode = "xray_doh"})
+o:depends({dns_mode = "v2ray", v2ray_dns_mode = "tcp"})
+o:depends({dns_mode = "v2ray", v2ray_dns_mode = "doh"})
+o:depends({dns_mode = "xray", v2ray_dns_mode = "tcp"})
+o:depends({dns_mode = "xray", v2ray_dns_mode = "doh"})
 o.rmempty = false
 
 if has_chnlist and api.is_finded("chinadns-ng") then
     o = s:taboption("DNS", Flag, "chinadns_ng", translate("ChinaDNS-NG"), translate("The effect is better, but will increase the memory."))
-    o.default = "1"
-    o:depends({dns_mode = "nonuse", ["!reverse"] = true})
+    o.default = "0"
+    o:depends({dns_mode = "dns2socks"})
+    o:depends({dns_mode = "pdnsd"})
+    o:depends({dns_mode = "v2ray", v2ray_dns_mode = "tcp"})
+    o:depends({dns_mode = "v2ray", v2ray_dns_mode = "doh"})
+    o:depends({dns_mode = "xray", v2ray_dns_mode = "tcp"})
+    o:depends({dns_mode = "xray", v2ray_dns_mode = "doh"})
+    o:depends({dns_mode = "udp"})
 end
 
 o = s:taboption("DNS", Button, "clear_ipset", translate("Clear IPSET"), translate("Try this feature if the rule modification does not take effect."))
@@ -322,6 +357,7 @@ localhost_tcp_proxy_mode:value("chnroute", translate("Not China List"))
 if has_chnlist then
     localhost_tcp_proxy_mode:value("returnhome", translate("China List"))
 end
+localhost_tcp_proxy_mode:value("disable", translate("No Proxy"))
 localhost_tcp_proxy_mode:value("direct/proxy", translate("Only use direct/proxy list"))
 localhost_tcp_proxy_mode.default = "default"
 --localhost_tcp_proxy_mode.validate = redir_mode_validate
@@ -339,6 +375,12 @@ localhost_udp_proxy_mode:value("disable", translate("No Proxy"))
 localhost_udp_proxy_mode:value("direct/proxy", translate("Only use direct/proxy list"))
 localhost_udp_proxy_mode.default = "default"
 localhost_udp_proxy_mode.validate = redir_mode_validate
+
+tips = s:taboption("Proxy", DummyValue, "tips", " ")
+tips.rawhtml = true
+tips.cfgvalue = function(t, n)
+    return string.format('<a style="color: red" href="%s">%s</a>', api.url("acl"), translate("Want different devices to use different proxy modes/ports/nodes? Please use access control."))
+end
 
 s:tab("log", translate("Log"))
 o = s:taboption("log", Flag, "close_log_tcp", translatef("%s Node Log Close", "TCP"))
@@ -362,10 +404,10 @@ trojan_loglevel:value("2", "warn")
 trojan_loglevel:value("3", "error")
 trojan_loglevel:value("4", "fatal")
 
-s:tab("tips", translate("Tips"))
+s:tab("faq", "FAQ")
 
-o = s:taboption("tips", DummyValue, "")
-o.template = appname .. "/global/tips"
+o = s:taboption("faq", DummyValue, "")
+o.template = appname .. "/global/faq"
 
 -- [[ Socks Server ]]--
 o = s:taboption("Main", Flag, "socks_enabled", "Socks " .. translate("Main switch"))

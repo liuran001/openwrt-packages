@@ -64,7 +64,7 @@ msgid "Network/Band"
 msgstr "Сеть/Диапазон"
 
 #: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:402
-msgid "Celluar network"
+msgid "Cellular network"
 msgstr "Сотовая сеть"
 
 #: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:405
@@ -75,9 +75,9 @@ msgstr "Оператор:"
 msgid "Status:"
 msgstr "Состояние:"
 
-#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfohw.htm:38
-msgid "Device:"
-msgstr "Устройство:"
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfohw.htm:35
+msgid "Hardware Info"
+msgstr "Информация о модеме"
 
 #: applications/luci-app-modeminfo/luasrc/view/modem/modeminfohw.htm:42
 msgid "Firmware:"
@@ -104,8 +104,8 @@ msgid "Modeminfo: Configuration"
 msgstr "Modeminfo: Конфигурация"
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:32
-msgid "Configuration panel of Мodeminfo."
-msgstr "Панель конфигурации Modeminfo."
+msgid "Configuration panel of Modeminfo."
+msgstr "Страница конфигурации Modeminfo."
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:37
 msgid "Use QMI"
@@ -132,9 +132,17 @@ msgid "Get device hardware name via mmcli utility if aviable."
 msgstr "Если доступно, использовать утилиту mmcli для имени модема."
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:59
-msgid "Named modem via mmcli"
+msgid "Name via mmcli"
 msgstr "Имя модема через mmcli"
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:60
 msgid "Get device model via mmcli utility if aviable."
 msgstr "Если доступно, использовать утилиту mmcli для имени модема."
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:64
+msgid "QMI proxy"
+msgstr "QMI прокси"
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:64
+msgid "Enable qmi-proxy mode."
+msgstr "Задействовать режим прокси."

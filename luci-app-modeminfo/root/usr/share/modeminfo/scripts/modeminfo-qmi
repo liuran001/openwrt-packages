@@ -1,33 +1,42 @@
 # qmi addon for luci-app-modeminfo
-# (c) 2020-2021 written by Konstantine Shevlakov (c) at <shevlakov@132lan.ru>
+# (c) 2020-2022 written by Konstantine Shevlakov (c) at <shevlakov@132lan.ru>
 
 get_device_info(){
 	DEVPORT=$(uci -q get modeminfo.@modeminfo[0].device_qmi)
-	case $DEVPORT in
-		cdc-wdm*) export QMICTL="qmicli -p -d $DEVPORT" ;;
-		*)
-	        	for qmi in $(ls /dev/cdc-wdm*); do
-        	        	if [ $qmi ]; then
-                	        	QMI_DEVICE=$qmi
-	                	        if [ -n $(which qmicli) ]; then
-        	                	        export QMICTL="qmicli -p -d ${QMI_DEVICE}"
-	                	        else
-		                                logger -t "luci-app-modeminfo" "qmi-utils not found or installed!"
-        		                        exit 0
-	                	        fi
-		                else
-        		                logger -t "luci-app-modeminfo" "Device is no QMI mode or not found!"
-                		        exit 0
-		                fi
-        		done
-			if [ $qmi ]; then
-				uci set modeminfo.@modeminfo[0].device_qmi="$qmi"
-				uci commit modeminfo
-				break
-			fi
-		;;
-	esac
-		
+	if [ -x /usr/bin/qmicli ]; then
+		export QMICTL="qmicli -p -d $DEVPORT"
+	else
+ 		logger -t "luci-app-modeminfo" "qmicli not found!"
+		exit 1
+        fi
+	if [ $DEVPORT ]; then
+		QPROXY=$(uci -q get modeminfo.@modeminfo[0].qmi_proxy)
+                if [ $QPROXY -eq 1 ]; then           
+                        export QMICTL="qmicli -p -d $DEVPORT"
+                else                              
+                        export QMICTL="qmicli -d $DEVPORT"   
+                fi
+	else
+	       	for qmi in $(ls /dev/cdc-wdm*); do
+                	if [ $qmi ]; then
+               	        	QMI_DEVICE=$qmi
+	               	        if [ -n $(which qmicli) ]; then
+                        	        export QMICTL="qmicli -p -d ${QMI_DEVICE}"
+	               	        else
+	                                logger -t "luci-app-modeminfo" "qmi-utils not found or installed!"
+        	                        exit 0
+	               	        fi
+	                else
+        	                logger -t "luci-app-modeminfo" "Device is no QMI mode or not found!"
+               		        exit 0
+	                fi
+        	done
+		if [ $qmi ]; then
+			uci set modeminfo.@modeminfo[0].device_qmi="$qmi"
+			uci commit modeminfo
+			break
+		fi
+	fi	
 }
 
 
@@ -53,7 +62,7 @@ get_signal_info(){
         else
 		COPS_MNC=$COPS_MNC_RAW
 	fi
-        COPS=$(echo ${NETWORK} |awk '{print $3}')
+        COPS="$(echo "${NETWORK}" |tail -1)"
 	SIGNAL=$($QMICTL --nas-get-signal-info)
         MODE=$(echo "$SIGNAL" | awk 'NR ==2{gsub("\:", ""); print $1}')
         STRENGTH=$(echo "$SIGNAL" | awk '/RSSI|RSRQ|RSRP|SNR|ECIO/{gsub("'\''",""); print $2}')

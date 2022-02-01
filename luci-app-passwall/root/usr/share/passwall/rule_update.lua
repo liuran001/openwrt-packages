@@ -33,13 +33,13 @@ local chnroute6_url =  ucic:get(name, "@global_rules[0]", "chnroute6_url") or {"
 local chnlist_url = ucic:get(name, "@global_rules[0]", "chnlist_url") or {"https://cdn.jsdelivr.net/gh/felixonmars/dnsmasq-china-list/accelerated-domains.china.conf","https://cdn.jsdelivr.net/gh/felixonmars/dnsmasq-china-list/apple.china.conf","https://cdn.jsdelivr.net/gh/felixonmars/dnsmasq-china-list/google.china.conf"}
 local geoip_api =  "https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest"
 local geosite_api =  "https://api.github.com/repos/Loyalsoldier/v2ray-rules-dat/releases/latest"
-local v2ray_asset_location = ucic:get_first(name, 'global_rules', "v2ray_location_asset", "/usr/share/xray/")
+local v2ray_asset_location = ucic:get_first(name, 'global_rules', "v2ray_location_asset", "/usr/share/v2ray/")
 
 local log = function(...)
     if arg1 then
         local result = os.date("%Y-%m-%d %H:%M:%S: ") .. table.concat({...}, " ")
         if arg1 == "log" then
-            local f, err = io.open("/var/log/passwall.log", "a")
+            local f, err = io.open("/tmp/log/passwall.log", "a")
             if f and err == nil then
                 f:write(result .. "\n")
                 f:close()
