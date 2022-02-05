@@ -217,7 +217,7 @@ if dm.command.mdadm then
 
   local rname, rmembers, rlevel
   local r_name = creation_section:taboption("raid", Value, "_rname", translate("Raid Name"))
-  r_name.placeholder = "/dev/md0"
+  r_name.placeholder = dm.find_free_md_device()
   r_name.write = function(self, section, value)
     rname = value
   end
