@@ -20,6 +20,10 @@ opengt
  let $r="+CREG"
  gosub readatcmd
 
+ let $c="AT+CPIN?^m"
+ let $r="+CPIN"
+ gosub readatcmd
+
  exit 0
 
 :readatcmd
