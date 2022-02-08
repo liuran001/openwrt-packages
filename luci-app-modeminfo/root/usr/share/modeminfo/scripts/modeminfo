@@ -656,7 +656,6 @@ function intel_data(){
 		LTE_Cx=$(echo "$O" | awk -F [:,] '/\+XLEC:/{print $3}')
 		LTE_CA=$(($LTE_Cx -1))
 		BWDL=$(echo "$O" | awk -F [:,] '/\+XLEC:/{gsub("\r","",$4); print $4}')
-		BWCx=$(echo "$O" | awk -F [:,] '/\+XLEC/{gsub("\r",""); print $4" "$5" "$6" "$7" "$8}')
 		case $BWDL in
 			1) NP=15 ;;
 			2) NP=25 ;;
@@ -665,23 +664,35 @@ function intel_data(){
 			5) NP=100 ;;
 			*) NP=0 ;;
 		esac
-		for ca in $BWCx; do
-			case $ca in
-				1) N=3 ;;
-				2) N=5 ;;
-				3) N=10 ;;
-				4) N=15 ;;
-				5) N=20 ;;
-				*) N=0 ;;
-			esac
-			BWCA=$(($BWCA+$N))
-		done
 		case $LTE_CA in
-			1) SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6}') ;;
-			2) SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6" "$9}') ;;
-			3) SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6" "$9" "$12}') ;;
-			4) SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6" "$9" "$12" "$15}') ;;
+			1) 
+				SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6}')
+				BWCx=$(echo "$O" | awk -F [:,] '/\+XLEC/{gsub("\r",""); print $4" "$5}')
+			;;
+			2)
+				SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6" "$9}')
+				BWCx=$(echo "$O" | awk -F [:,] '/\+XLEC/{gsub("\r",""); print $4" "$5" "$6}')
+			;;
+			3)
+				SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6" "$9" "$12}')
+				BWCx=$(echo "$O" | awk -F [:,] '/\+XLEC/{gsub("\r",""); print $4" "$5" "$6" "$7}')
+			;;
+			4)
+				SCx=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $6" "$9" "$12" "$15}')
+				BWCx=$(echo "$O" | awk -F [:,] '/\+XLEC/{gsub("\r",""); print $4" "$5" "$6" "$7" "$8}')
+			;;
 		esac
+		for ca in $BWCx; do
+                        case $ca in
+                                1) N=3 ;;
+                                2) N=5 ;;
+                                3) N=10 ;;
+                                4) N=15 ;;
+                                5) N=20 ;;
+                                *) N=0 ;;
+                        esac
+                        BWCA=$(($BWCA+$N))
+                done
 		for sca in $SCx; do
 			ch_to_band $sca
 			SCC=$SCC+$SC
