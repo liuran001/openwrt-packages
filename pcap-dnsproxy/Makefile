@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pcap-dnsproxy
 PKG_BASE_VERSION:=0.4.9.13
-PKG_RELEASE:=$(AUTORELESE)
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/1715173329/Pcap_DNSProxy.git
