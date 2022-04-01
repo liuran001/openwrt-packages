@@ -25,9 +25,9 @@ Supported devices:
  - Fibocom NL668/NL678
 
 
-Compiled OpenWrt 18.06-19.07 version [luci-app-modeminfo_0.2.2-1_all.ipk](http://openwrt.132lan.ru/packages/packages-19.07/luci/luci-app-modeminfo_0.2.2-1_all.ipk)
+Compiled OpenWrt 18.06-19.07 version [luci-app-modeminfo_0.2.3-0_all.ipk](http://openwrt.132lan.ru/packages/packages-19.07/luci/luci-app-modeminfo_0.2.3-0_all.ipk)
 
-Compiled OpenWrt 21.02 version [luci-app-modeminfo_0.2.2-1_all.ipk](http://openwrt.132lan.ru/packages/packages-21.02/luci/luci-app-modeminfo_0.2.2-1_all.ipk)
+Compiled OpenWrt 21.02 version [luci-app-modeminfo_0.2.3-0_all.ipk](http://openwrt.132lan.ru/packages/packages-21.02/luci/luci-app-modeminfo_0.2.3-0_all.ipk)
 
 Сompiled old versions https://inf.labz.ru/repo/
 
