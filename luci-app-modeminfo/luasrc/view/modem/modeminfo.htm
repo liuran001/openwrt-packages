@@ -11,6 +11,14 @@
 
 <script type="text/javascript">//<![CDATA[
 
+	var bar_line = '<div style="width:100%%; max-width:auto; position:relative; border:1px solid #999999">' +
+                                '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
+                                        '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +
+                                                '<small>%s</small>' +
+                                        '</div>' +
+                                '</div>' +
+                        '</div>';
+
 	function bar(v, m)
         {
                 var vn = parseInt(v) || 0;
@@ -18,15 +26,7 @@
 		if (vn > -50) { vn = -50 };
 		if (vn < -110) { vn = -110 };
                 var pc =  Math.floor(100*(1-(-50 - vn)/(-50 - mn)));
-                return String.format(
-                        '<div style="width:100%%; max-width:auto; position:relative; border:1px solid #999999">' +
-                                '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
-                                        '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +
-                                                '<small>%s</small>' +
-                                        '</div>' +
-                                '</div>' +
-                        '</div>', pc, v, m, pc
-                );
+                return String.format(bar_line, pc, v, m, pc);
         }
 
 	function rsrp_bar(v, m)
@@ -36,15 +36,7 @@
                 if (vn > -50) { vn = -50 };
                 if (vn < -140) { vn = -140 };
                 var pc =  Math.floor(100*(1-(-50 - vn)/(-50 - mn)));
-                return String.format(
-                        '<div style="width:100%%; max-width:auto; position:relative; border:1px solid #999999">' +
-                                '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
-                                        '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +
-                                                '<small>%s</small>' +
-                                        '</div>' +
-                                '</div>' +
-                        '</div>', pc, v, m, pc
-                );
+                return String.format(bar_line, pc, v, m, pc);
         }
 	
 	function sinr_bar(v, m)
@@ -52,15 +44,7 @@
                 var vn = parseInt(v) || 0;
                 var mn = parseInt(m) || 100;
                 var pc = Math.floor(100-(100*(1-((mn - vn)/(mn - 30)))));
-                return String.format(
-                        '<div style="width:100%%; max-width:auto; position:relative; border:1px solid #999999">' +
-                                '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
-                                        '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +
-                                                '<small>%s</small>' +
-                                        '</div>' +
-                                '</div>' +
-                        '</div>', pc, v, m, pc
-                );
+                return String.format(bar_line, pc, v, m, pc);
         }
 
 	function rsrq_bar(v, m)
@@ -69,15 +53,7 @@
                 var mn = parseInt(m) || 100;
                 var pc = Math.floor(100-(100/mn)*vn);
 		if (vn > 0) { vn = 0; };
-                return String.format(
-                        '<div style="width:100%%; max-width:auto; position:relative; border:1px solid #999999">' +
-                                '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
-                                        '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%; color:#000000">' +
-                                                '<small>%s</small>' +
-                                        '</div>' +
-                                '</div>' +
-                        '</div>', pc, v, m, pc
-                );
+                return String.format(bar_line, pc, v, m, pc);
         }
 
 
