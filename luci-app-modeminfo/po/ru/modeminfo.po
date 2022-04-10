@@ -17,7 +17,7 @@ msgstr "Сеть"
 
 #: applications/luci-app-modeminfo/luasrc/controller/modem/modeminfo.lua:11
 msgid "Hardware"
-msgstr "Устройство"
+msgstr "Оборудование"
 
 #: applications/luci-app-modeminfo/luasrc/controller/modem/modeminfo.lua:12
 msgid "Setup"
@@ -45,7 +45,7 @@ msgstr "Запрет регистрации"
 
 #: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:117
 msgid "Unknown"
-msgstr "Неизветсно"
+msgstr "Неизвестно"
 
 #: applications/luci-app-modeminfo/luasrc/view/modem/modeminfo.htm:119
 msgid "Roaming"
@@ -78,6 +78,10 @@ msgstr "Состояние:"
 #: applications/luci-app-modeminfo/luasrc/view/modem/modeminfohw.htm:35
 msgid "Hardware Info"
 msgstr "Информация о модеме"
+
+#: applications/luci-app-modeminfo/luasrc/view/modem/modeminfohw.htm:38
+msgid "Device:"
+msgstr "Устройство:"
 
 #: applications/luci-app-modeminfo/luasrc/view/modem/modeminfohw.htm:42
 msgid "Firmware:"
@@ -134,10 +138,6 @@ msgstr "Если доступно, использовать утилиту mmcli
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:59
 msgid "Name via mmcli"
 msgstr "Имя модема через mmcli"
-
-#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:60
-msgid "Get device model via mmcli utility if aviable."
-msgstr "Если доступно, использовать утилиту mmcli для имени модема."
 
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:64
 msgid "QMI proxy"
