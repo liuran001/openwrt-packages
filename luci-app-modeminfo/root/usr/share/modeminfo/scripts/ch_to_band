@@ -5,9 +5,9 @@ ch_to_band(){
 		SC=2
 	elif [ $1 -ge 1200 ] && [ $1 -le 1949 ]; then
 		SC=3
-	elif [ $1 -ge 1950] && [ $1 -le 2399 ]; then
+	elif [ $1 -ge 1950 ] && [ $1 -le 2399 ]; then
 		SC=4
-	elif [ $1 -ge 2400] && [ $1 -le 2469 ]; then
+	elif [ $1 -ge 2400 ] && [ $1 -le 2469 ]; then
 		SC=5
 	elif [ $1 -ge 2750 ] && [ $1 -le 3449 ]; then
 		SC=7
