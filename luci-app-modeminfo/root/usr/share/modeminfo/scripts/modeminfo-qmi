@@ -150,8 +150,8 @@ get_signal_info(){
 
 #get_device
 function get_data_in(){
-        get_hardware_info
-        get_signal_info
+        get_hardware_info >/dev/null 2>&1
+        get_signal_info >/dev/null 2>&1
 }
 
 get_hwinfo(){
