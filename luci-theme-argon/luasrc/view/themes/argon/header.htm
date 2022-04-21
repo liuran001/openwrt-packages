@@ -44,7 +44,7 @@
 	local node = disp.context.dispatched
 
 	local categories = disp.node_childs(tree)
-
+	local currentNode = luci.dispatcher.context.path
 	local c = tree
 	local i, r
 	
@@ -108,16 +108,22 @@
 		end
 	end
 
-	local function render_submenu(prefix, node)
+	local function render_submenu(prefix,parent, node)
 		local childs = disp.node_childs(node)
 		if #childs > 0 then
-			write('<ul class="slide-menu">')
-
+			local active = (currentNode[2] == parent) and "active" or ""
+			local display = (currentNode[2] == parent) and 'style="display: block;"' or ""
+			
+			write('<ul class="slide-menu %s" %s>' %{
+				active,
+				display
+			})
 			for i, r in ipairs(childs) do
 				local nnode = node.nodes[r]
 				local title = pcdata(striptags(translate(nnode.title)))
-
-				write('<li><a data-title="%s" href="%s">%s</a></li>' %{
+				local subactive = (currentNode[3] == r) and 'class="active"' or ""
+				write('<li %s><a data-title="%s" href="%s">%s</a></li>' %{
+					subactive,
 					title,
 					nodeurl(prefix, r, nnode.query),
 					title
@@ -132,20 +138,21 @@
 		local childs = disp.node_childs(cattree)
 		if #childs > 0 then
 			write('<ul class="nav">')
-
+			
 			for i, r in ipairs(childs) do
 				local nnode = cattree.nodes[r]
 				local grandchildren = disp.node_childs(nnode)
-
 				if #grandchildren > 0 then
+					local active = (currentNode[2] == r) and "active" or ""
 					local title = pcdata(striptags(translate(nnode.title)))
                                         local en_title = pcdata(striptags(string.gsub(nnode.title," ","_")))
-					write('<li class="slide"><a class="menu" data-title="%s" href="#">%s</a>' %{
+					write('<li class="slide"><a class="menu %s" data-title="%s" href="#">%s</a>' %{
+						active,
 						en_title,
 						title
 					})
 
-					render_submenu(category .. "/" .. r, nnode)
+					render_submenu(category .. "/" .. r,r, nnode)
 					write('</li>')
 				else
 					local title = pcdata(striptags(translate(nnode.title)))
@@ -192,14 +199,14 @@
 	local dark_css = fs.readfile('/www/luci-static/argon/css/dark.css')
 	local bar_color = '#5e72e4'
 	local primary, dark_primary, blur_radius, blur_radius_dark, blur_opacity
-	if fs.access('/etc/config/argon-config') then
-		primary = uci:get_first('argon-config', 'global', 'primary')
-		dark_primary = uci:get_first('argon-config', 'global', 'dark_primary')
-		blur_radius = uci:get_first('argon-config', 'global', 'blur')
-		blur_radius_dark = uci:get_first('argon-config', 'global', 'blur_dark')
-		blur_opacity = uci:get_first('argon-config', 'global', 'transparency')
-		blur_opacity_dark = uci:get_first('argon-config', 'global', 'transparency_dark')
-		mode = uci:get_first('argon-config', 'global', 'mode')
+	if fs.access('/etc/config/argon') then
+		primary = uci:get_first('argon', 'global', 'primary')
+		dark_primary = uci:get_first('argon', 'global', 'dark_primary')
+		blur_radius = uci:get_first('argon', 'global', 'blur')
+		blur_radius_dark = uci:get_first('argon', 'global', 'blur_dark')
+		blur_opacity = uci:get_first('argon', 'global', 'transparency')
+		blur_opacity_dark = uci:get_first('argon', 'global', 'transparency_dark')
+		mode = uci:get_first('argon', 'global', 'mode')
 		bar_color = mode == 'dark' and dark_primary or primary
 	end
 	
@@ -246,7 +253,7 @@
 	<% elseif mode == 'dark' then %>
 		<%=dark_css%>
 	<% end -%>
-	<% if fs.access('/etc/config/argon-config') then %>
+	<% if fs.access('/etc/config/argon') then %>
 	:root {
 		--primary: <%=primary%>;
 		--dark-primary: <%=dark_primary%>;
