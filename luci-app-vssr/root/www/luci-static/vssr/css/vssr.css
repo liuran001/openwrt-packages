@@ -46,7 +46,7 @@
 }
 
 #cbi-vssr {
-
+    
 }
 
 #cbi-vssr .panel-title {
@@ -339,8 +339,10 @@ footer.mobile-hide {
     bottom: 0;
     right: 0;
     box-shadow: 0 0 2rem 0 rgba(136, 152, 170, .3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: #525f7f;
-    background: #fff;
+    background-color: rgba(255, 255, 255,0.7);
     z-index: 5;
     box-sizing: border-box;
 }
@@ -383,6 +385,7 @@ footer.mobile-hide {
 
 .status-bar .icon-con img {
     height: 3rem;
+    width: 3.6rem;
 }
 
 /**  Node choose panel  **/
@@ -537,13 +540,12 @@ footer.mobile-hide {
         height: 50px !important;
         bottom: 90px;
         color: #fff;
-        right: 5px;
+        right: 15px;
         font-size: 16px;
         border-radius: 50%;
         display: block;
         background-color: #fb6340 !important;
         border-color: #fb6340 !important;
-        box-shadow: 0 0 1rem 0 rgba(136, 152, 170, .75);
         background-image: none;
     }
 
@@ -575,6 +577,7 @@ footer.mobile-hide {
 
     .status-bar .icon-con img {
         height: 2.5rem;
+        width: 3rem;
     }
 
     .p-in5 {
@@ -600,7 +603,7 @@ footer.mobile-hide {
     }
 
     .cbi-section-table-row {
-        color: #ccc;
+        color: rgb(204, 204, 204);
         background-color: #252526 !important;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.35);
     }
@@ -614,12 +617,13 @@ footer.mobile-hide {
     }
 
     .ssr-button {
-        color: #ccc;
+        color: rgb(204, 204, 204);
     }
 
     .status-bar {
-        background-color: #252526;
-        color: #fff;
+        box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.3);
+        background-color: rgba(37, 37, 38, 0.7);
+        color: rgb(204, 204, 204);
     }
 }
 
@@ -630,8 +634,8 @@ footer.mobile-hide {
 }
 
 .dark .cbi-section-table-row {
-    color: #ccc;
-    background-color: #252526 !important;
+    color: rgb(204, 204, 204);
+    background-color: rgb(37, 37, 38) !important;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.35);
 }
 
@@ -644,11 +648,12 @@ footer.mobile-hide {
 }
 
 .dark .ssr-button {
-    color: #ccc;
+    color: rgb(204, 204, 204);
 }
 
 .dark .status-bar {
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.3);
-    background-color: #252526;
-    color: #fff;
+    
+    background-color: rgba(37, 37, 38, 0.7);
+    color: rgb(204, 204, 204);
 }
