@@ -2056,6 +2056,13 @@ div#cbi-timewol.cbi-map .cbi-value.cbi-value-last div.cbi-value-field font.timew
 	display: block;
 	padding-top:6px;
 }
+
+/* For luci-app-timecontrol */
+div#cbi-timecontrol.cbi-map fieldset.cbi-section-node > div.cbi-value > div.cbi-value-field > font {
+	display: block;
+	padding-top:6px;
+}
+
 /* For luci-app-kodexplorer */
 div#cbi-kodexplorer.cbi-map div#_nginx_status.cbi-value-field font {
 	display: block;
