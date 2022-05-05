@@ -2,7 +2,7 @@
 *	InfinityFreedom is a clean HTML5 theme for LuCI. It is based on luci-theme-material.
 *
 *	luci-theme-infinityfreedom
-*	Copyright 2020-2021 Richard Yu <xiaoqingfengatgm@gmail.com>
+*	Copyright 2020-2022 Richard Yu <xiaoqingfengatgm@gmail.com>
 *
 *	Have a bug? Please create an issue here on GitHub!
 *	https://github.com/xiaoqingfengATGH/luci-theme-infinityfreedom/issues
@@ -1757,6 +1757,15 @@ small {
 
 .cbi-button-up,
 .cbi-button-down {
+    display: inline-block;
+    min-width: 0;
+    padding: 0.2rem 0.3rem;
+    font-size: 10pt;
+	background-color: #9876AA;
+}
+
+.cbi-button-selectAll,
+.cbi-button-test {
     display: inline-block;
     min-width: 0;
     padding: 0.2rem 0.3rem;
