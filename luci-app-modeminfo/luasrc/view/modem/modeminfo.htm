@@ -11,12 +11,12 @@
 
 <script type="text/javascript">//<![CDATA[
 
-	var bar_line = '<div style="width:100%%; max-width:auto; position:relative; border:1px solid #999999">' +
-                                '<div style="animation-direction: reverse; background-color:#90c0e0; width:%d%%; height:15px">' +
-                                        '<div style="position:absolute; left:0; top:0; text-align:center; width:100%%">' +
-                                                '<small>%s</small>' +
-                                        '</div>' +
-                                '</div>' +
+	var bar_line = '<div class="cbi-progressbar" style="top: -0.5em">' +                                         
+                                '<div style="animation-direction: reverse; width:%d%%">' +
+					'<div style="position:absolute">' +
+	                                        '<sub>%s</sub>' +
+					'</div>' +
+                                '</div>' +                                                       
                         '</div>';
 
 	function bar(v, m)
