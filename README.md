@@ -34,3 +34,7 @@
 | ---- | ---- | ---- |
 | 2021-03-19 | **辰 | 20.00元 |
 
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/liuran001/openwrt-packages.svg)](https://starchart.cc/liuran001/openwrt-packages)
