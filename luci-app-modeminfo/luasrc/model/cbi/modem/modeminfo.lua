@@ -66,6 +66,10 @@ local qmi_proxy = s:option(Flag, "qmi_proxy", translate("QMI proxy"),
 qmi_proxy.rmempty = true
 qmi_proxy:depends("qmi_mode", 1)
 
+local short = s:option(Flag, "index", translate("Index page"),
+        translate("Short info on Overview page"))
+short.rmempty = true
+
 function m.on_after_commit(Map)
         luci.sys.call("rm -f /tmp/modemdevice")
 end
