@@ -146,3 +146,11 @@ msgstr "QMI прокси"
 #: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:64
 msgid "Enable qmi-proxy mode."
 msgstr "Задействовать режим прокси."
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:69
+msgid "Index page"
+msgstr "На главную"
+
+#: applications/luci-app-modeminfo/luasrc/model/cbi/modem/modeminfo.lua:70
+msgid "Short info on Overview page"
+msgstr "Краткая информация о сети на главной странице"
