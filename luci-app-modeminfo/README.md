@@ -31,6 +31,22 @@ Compiled OpenWrt 21.02 version [luci-app-modeminfo_0.2.5-0_all.ipk](http://openw
 Сompiled old versions https://inf.labz.ru/repo/
 
 
+# How-To compile
+
+add git repo in feeds.conf.default OpenWrt SDK
+
+```
+src-git modeminfo https://github.com/koshev-msk/luci-app-modeminfo.git
+```
+
+update feeds and compile package. E.g
+
+```
+./scripts/feeds update -a && ./scripts feeds install -a
+make -j$((`nproc`+1)) package/feeds/modeminfo/luci-app-modeminfo/compile
+```
+
+
 <details>
    <summary>Screenshots</summary>
 

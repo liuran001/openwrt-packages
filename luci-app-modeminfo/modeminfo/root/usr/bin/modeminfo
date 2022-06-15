@@ -1,0 +1,114 @@
+#!/bin/sh
+
+function json_status() {
+        . /usr/share/libubox/jshn.sh
+        json_init
+        IFS=$'\n'
+        for jvar in device=$DEVICE cops=$COPS mode=$MODE csq_per=$CSQ_PER lac=$LAC cid=$CID rssi=$CSQ_RSSI \
+			sinr=$SINR rsrp=$RSRP rsrq=$RSRQ imei=$IMEI reg=$REGST csq_col=$CSQ_COL arfcn=$EARFCN \
+			chiptemp=$CHIPTEMP firmware=$FW bwdl=$BWDL lteca=$LTE_CA enbid=$ENBID \
+			distance=$DISTANCE cell=$CELL scc=$SCC bwca=$BWCA iccid=$ICCID imsi=$IMSI pci=$PCI; do
+                json_add_string ${jvar%=*} ${jvar#*=}
+        done
+        json_close_object
+        json_dump
+}
+
+function if_null() {
+        for var in DEVICE COPS MODE CSQ_PER LAC CSQ_RSSI SINR RSRP \
+                        RSRQ IMEI REGST EARFCN CHIPTEMP FW BWDL ICCID IMSI; do
+                if [ "x$(eval echo \${$var})" = "x" ]; then
+                        eval $var='--'
+                fi
+        done
+}
+
+cli_status() {
+	 . /usr/share/modeminfo/scripts/ch_to_band
+        ch_to_band $EARFCN
+	case $MODE in
+		LTE*)
+		if [ $LTE_CA -ge 1 ]; then
+			MODE=LTE+
+			BAND="B$SC${SCC}"
+			BANDWIDH=$BWCA
+		else
+			BAND="B$SC"
+			case $BWDL in
+				1) BANDWIDH=1.4 ;;
+				2) BANDWIDH=5 ;;
+				3) BANDWIDH=10 ;;
+				4) BANDWIDH=15 ;;
+				5) BANDWIDH=20 ;;
+			esac
+		fi
+		;;
+	esac
+	case $CSQ_COL in
+		green) COLOR="\e[30;42m" ;;
+		orange) COLOR="\e[33;43m" ;;
+		red) COLOR="\e[41m" ;;
+		*) COLOR="\e[47m" ;;
+	esac
+	END="\e[0m"
+	case $DEVICE in
+		0) DEVICE="Generic Qualcomm" ;;
+	esac
+	echo -e "DEVICE:\t\t$DEVICE"
+	STREIGH="$COLOR${CSQ_PER}%$END"
+	EARFCN=$(echo $EARFCN | awk '{print $1}')
+	case $MODE in
+		LTE*)
+			if [ $DISTANCE ]; then
+				STREIGH="$COLOR${CSQ_PER}%$END ~${DISTANCE}km"
+			fi
+			NETINFO="${COPS} / ${MODE} / $BAND / ${BANDWIDH}Mhz"
+			VALUES="RSSI: ${CSQ_RSSI}dBm / RSRP: ${RSRP}dBm / RSRQ: ${RSRQ}dB / SINR: ${SINR}dB"
+			TWINFO="EARFCN: $EARFCN | LAC/CID: ${LAC}/${CID} | ENBID: $ENBID | PCI: $PCI"
+		;;
+		*WCDMA*|*HSP*|*HUS*|*UMTS*)
+			BAND=$SC
+			NETINFO="${COPS} / ${MODE} / $BAND"
+			VALUES="RSSI: ${CSQ_RSSI}dBm / ECIO: ${SINR}dB"
+			TWINFO="UARFCN: $EARFCN | LAC/CID: ${LAC}/${CID}"
+		;;
+		GSM*|EGDE*)
+			BAND=$SC
+			NETINFO="${COPS} / ${MODE} / $BAND"
+			VALUES="RSSI: ${CSQ_RSSI}dBm"
+			TWINFO="ARFCN: $EARFCN | LAC/CID: ${LAC}/${CID}"
+		;;
+	esac
+	case $MIMO in
+		2) RXMIMO="MIMO 2x2" ;;
+		4) RXMIMO="MIMO 4x4" ;;
+		0|1) RXMIMO="SISO 1x1" ;;
+	esac
+	echo -e "NETWORK:\t${NETINFO}"
+	echo -e "SIGNAL:\t\t $STREIGH | $RXMIMO"
+	echo "$TWINFO"
+	echo -e "$VALUES" 
+}
+
+if [ $(uci -q get modeminfo.@modeminfo[0].qmi_mode) ]; then
+	SCRIPT=/usr/share/modeminfo/scripts/modeminfo-qmi
+else
+	SCRIPT=/usr/share/modeminfo/scripts/modeminfo
+fi
+
+if [ -r $SCRIPT ]; then
+	. $SCRIPT
+else
+	exit 0
+fi
+
+get_device_info
+get_data_in
+get_hwinfo
+if_null
+case $1 in
+	-c) cli_status ;;
+	*) json_status ;;
+esac
+
+exit 0

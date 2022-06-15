@@ -79,6 +79,7 @@ get_signal_info(){
 	SERVING=$($QMICTL --nas-get-serving-system)
 	RFBAND=$($QMICTL --nas-get-rf-band-info)
         if  [ $MODE == "LTE" ]; then
+		MIMO=$($QMICTL --nas-get-tx-rx-info=lte | grep 'RX Chain' | wc -l)
 		LACTAC=$(echo "$SERVING" | awk -F [:] '/tracking area code:|3GPP cell ID:/{gsub("'\''",""); print $2}')
 		LAC_NUM=$(echo $LACTAC | awk '{print $2}')
 		CID_NUM=$(echo $LACTAC | awk '{print $1}')
@@ -117,6 +118,10 @@ get_signal_info(){
 		fi	
 		EARFCN=$BANDCH
         else
+		MIMO=$($QMICTL --nas-get-tx-rx-info=umts | grep 'RX Chain' | wc -l)
+		case $MIMO in
+			0) MIMO=$($QMICTL --nas-get-tx-rx-info=gsm | grep 'RX Chain' | wc -l) ;;
+		esac
 		LACTAC=$(echo "$SERVING" | awk -F [:] '/3GPP location area code:|3GPP cell ID:/{gsub("'\''",""); print $2}')
 		LAC_NUM=$(echo $LACTAC | awk '{print $1}')
                 CID_NUM=$(echo $LACTAC | awk '{print $2}')
@@ -128,6 +133,7 @@ get_signal_info(){
 		fi
 		BANDCH=$(echo "$RFBAND" |  awk -F [:] '/Active Channel:/{gsub("'\''| ",""); print $2}')
 		EARFCN=$(echo $BANDCH | awk '{print $2}')
+		
         fi
         CSQ_PER=$(echo $CSQ_RSSI |awk '{printf "%d\n", (100*(1-(-50 - $1)/(-50 - -120)))}')
         [ $CSQ_RSSI -ge -110 ] && CSQ_COL="black"
