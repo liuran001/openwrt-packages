@@ -18,6 +18,8 @@
               cell.innerText = disk_info.p_table || "-"
             } else if (cell.getAttribute("data-name") == "sata_ver" || cell.childNodes[1] && cell.childNodes[1].id.match(/sata_ver/)) {
               cell.innerText = disk_info.sata_ver || "-"
+            } else if (cell.getAttribute("data-name") == "health_status" || cell.childNodes[1] && cell.childNodes[1].id.match(/health_status/)) {
+              cell.innerText = (disk_info.health || "-") + "\n" + (disk_info.status || "-")
             } else if (cell.getAttribute("data-name") == "health" || cell.childNodes[1] && cell.childNodes[1].id.match(/health/)) {
               cell.innerText = disk_info.health || "-"
             } else if (cell.getAttribute("data-name") == "status" || cell.childNodes[1] && cell.childNodes[1].id.match(/status/)) {

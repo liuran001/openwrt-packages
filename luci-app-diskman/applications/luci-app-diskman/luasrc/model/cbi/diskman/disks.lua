@@ -43,8 +43,39 @@ d:option(DummyValue, "temp", translate("Temp"))
 d:option(DummyValue, "p_table", translate("Partition Table"))
 d:option(DummyValue, "sata_ver", translate("SATA Version"))
 -- d:option(DummyValue, "rota_rate", translate("Rotation Rate"))
-d:option(DummyValue, "health", translate("Health"))
-d:option(DummyValue, "status", translate("Status"))
+d:option(DummyValue, "health_status", translate("Health") .. "<br/>" .. translate("Status"))
+-- d:option(DummyValue, "status", translate("Status"))
+
+local btn_eject = d:option(Button, "_eject")
+btn_eject.template = "diskman/cbi/disabled_button"
+btn_eject.inputstyle = "remove"
+btn_eject.inputtitle = translate("Eject")
+btn_eject.forcewrite = true
+btn_eject.write = function(self, section, value)
+  local dev = section
+  local disk_info = dm.get_disk_info(dev, true)
+  if disk_info.p_table:match("Raid") then
+    m.errmessage = translate("Unsupported raid reject!")
+    return
+  end
+  for i, p in ipairs(disk_info.partitions) do
+    if p.mount_point ~= "-" then
+      m.errmessage = p.name .. translate("is in use! please unmount it first!")
+      return
+    end
+  end
+  if disk_info.type:match("md") then
+    luci.util.exec(dm.command.mdadm .. " --stop /dev/" .. dev)
+    luci.util.exec(dm.command.mdadm .. " --remove /dev/" .. dev)
+    for _, disk in ipairs(disk_info.members) do
+      luci.util.exec(dm.command.mdadm .. " --zero-superblock " .. disk)
+    end
+    dm.gen_mdadm_config()
+  else
+    luci.util.exec("echo 1 > /sys/block/" .. dev .. "/device/delete")
+  end
+  luci.http.redirect(luci.dispatcher.build_url("admin/system/diskman"))
+end
 
 d.extedit = luci.dispatcher.build_url("admin/system/diskman/partition/%s")
 
@@ -222,21 +253,23 @@ if dm.command.mdadm then
     rname = value
   end
   local r_level = creation_section:taboption("raid", ListValue, "_rlevel", translate("Raid Level"))
-  local valid_raid = luci.util.exec("lsmod | grep md_mod")
-  if valid_raid:match("linear") then
+  local valid_raid = luci.util.exec("grep -m1 'Personalities :' /proc/mdstat")
+  if valid_raid:match("%[linear%]") then
     r_level:value("linear", "Linear")
   end
-  if valid_raid:match("raid456") then
+  if valid_raid:match("%[raid5%]") then
     r_level:value("5", "Raid 5")
+  end
+  if valid_raid:match("%[raid6%]") then
     r_level:value("6", "Raid 6")
   end
-  if valid_raid:match("raid1") then
+  if valid_raid:match("%[raid1%]") then
     r_level:value("1", "Raid 1")
   end
-  if valid_raid:match("raid0") then
+  if valid_raid:match("%[raid0%]") then
     r_level:value("0", "Raid 0")
   end
-  if valid_raid:match("raid10") then
+  if valid_raid:match("%[raid10%]") then
     r_level:value("10", "Raid 10")
   end
   r_level.write = function(self, section, value)

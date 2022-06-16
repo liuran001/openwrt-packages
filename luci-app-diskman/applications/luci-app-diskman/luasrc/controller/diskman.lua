@@ -106,16 +106,16 @@ function smart_detail(dev)
 end
 
 function smart_attr(dev)
+  local attr = { }
   local dm = require "luci.model.diskman"
   local cmd = io.popen(dm.command.smartctl ..  " -H -A -i /dev/%s" % dev)
   if cmd then
-    local attr = { }
-    if cmd:match("NVMe Version:")then
-      while true do
-        local ln = cmd:read("*l")
-        if not ln then
-          break
-        elseif ln:match("^(.-):%s+(.+)") then
+    local content = cmd:read("*all")
+    local ln
+    cmd:close()
+    if content:match("NVMe Version:")then
+      for ln in string.gmatch(content,'[^\r\n]+') do
+        if ln:match("^(.-):%s+(.+)") then
           local key, value = ln:match("^(.-):%s+(.+)")
           attr[#attr+1]= {
               key = key,
@@ -124,11 +124,8 @@ function smart_attr(dev)
         end
       end
     else
-      while true do
-        local ln = cmd:read("*l")
-        if not ln then
-          break
-        elseif ln:match("^.*%d+%s+.+%s+.+%s+.+%s+.+%s+.+%s+.+%s+.+%s+.+%s+.+") then
+      for ln in string.gmatch(content,'[^\r\n]+') do
+        if ln:match("^.*%d+%s+.+%s+.+%s+.+%s+.+%s+.+%s+.+%s+.+%s+.+%s+.+") then
           local id,attrbute,flag,value,worst,thresh,type,updated,raw = ln:match("^%s*(%d+)%s+([%a%p]+)%s+(%w+)%s+(%d+)%s+(%d+)%s+(%d+)%s+([%a%p]+)%s+(%a+)%s+[%w%p]+%s+(.+)")
           id= "%x" % id
           if not id:match("^%w%w") then
@@ -148,8 +145,7 @@ function smart_attr(dev)
         end
       end
     end
-  cmd:close()
+  end
   luci.http.prepare_content("application/json")
   luci.http.write_json(attr)
-  end
 end

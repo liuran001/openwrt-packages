@@ -26,10 +26,6 @@
 		%><div class="cbi-map-descr"><%=self.description%></div><%
 	end
 
-	self:render_children()
-
-	%></div><%
-
 	if self.message then
 		%><div class="alert-message notice"><%=self.message%></div><%
 	end
@@ -37,6 +33,10 @@
 	if self.errmessage then
 		%><div class="alert-message warning"><%=self.errmessage%></div><%
 	end
+
+	self:render_children()
+
+	%></div><%
 
 	if not self.embedded then
 		if type(self.hidden) == "table" then
