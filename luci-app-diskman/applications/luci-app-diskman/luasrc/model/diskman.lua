@@ -181,7 +181,7 @@ local get_parted_info = function(device)
         partition_temp["number"] = -1
         partition_temp["fs"] = "Free Space"
         partition_temp["name"] = "-"
-      elseif device:match("sd") or device:match("sata") then
+      elseif device:match("sd") or device:match("sata") or device:match("vd") then
         partition_temp["name"] = device..partition_temp["number"]
       elseif device:match("mmcblk") or device:match("md") or device:match("nvme") then
         partition_temp["name"] = device.."p"..partition_temp["number"]
@@ -405,6 +405,7 @@ d.list_devices = function()
       or dev:match("^mmcblk%d+$")
       or dev:match("^sata[a-z]$")
       or dev:match("^nvme%d+n%d+$")
+      or dev:match("^vd[a-z]$")
       then
       table.insert(target_devnames, dev)
     end
