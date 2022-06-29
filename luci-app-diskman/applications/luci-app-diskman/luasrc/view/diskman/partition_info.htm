@@ -58,25 +58,34 @@
   }
   window.onload = function () {
     // handle partition table
-    const btn_p_table = document.getElementById("widget.cbid.table.1.p_table") || document.getElementById("cbid.table.1.p_table")
-    const btn_p_table_raw_index = btn_p_table.selectedIndex
-    const val_name = document.getElementById("cbi-table-1-path").innerText.split('/').pop()
-    btn_p_table.onchange = function () {
-      let btn_p_table_index = btn_p_table.selectedIndex
-      if (btn_p_table_index != btn_p_table_raw_index) {
-        if (confirm("<%:Warnning !! \nTHIS WILL OVERWRITE EXISTING PARTITIONS!! \nModify the partition table?%>")) {
-          let p_table = btn_p_table.options[btn_p_table_index].value
-          XHR.get('<%=luci.dispatcher.build_url("admin/system/diskman/mk_p_table")%>', { dev: val_name, p_table: p_table }, (x, res) => {
-            if (res.code == 0) {
-              location.reload();
+    const init_pt_btn = function() {
+      const btn_p_table = document.getElementById("widget.cbid.table.1.p_table") || document.getElementById("cbid.table.1.p_table")
+      if (!btn_p_table) {
+        setTimeout(init_pt_btn, 500);
+        return;
+      }
+      if (btn_p_table.type == 'hidden')
+        return;
+      const btn_p_table_raw_index = btn_p_table.selectedIndex
+      const val_name = document.getElementById("cbi-table-1-path").innerText.split('/').pop()
+      btn_p_table.onchange = function () {
+        let btn_p_table_index = btn_p_table.selectedIndex
+        if (btn_p_table_index != btn_p_table_raw_index) {
+          if (confirm("<%:Warnning !! \nTHIS WILL OVERWRITE EXISTING PARTITIONS!! \nModify the partition table?%>")) {
+            let p_table = btn_p_table.options[btn_p_table_index].value
+            XHR.get('<%=luci.dispatcher.build_url("admin/system/diskman/mk_p_table")%>', { dev: val_name, p_table: p_table }, (x, res) => {
+              if (res.code == 0) {
+                location.reload();
+              }
             }
+            );
           }
-          );
-        }
-        else {
+          else {
+          }
         }
       }
-    }
+    };
+    init_pt_btn();
     // handle smartinfo
     const url = location.href.split('/')
     const dev = url[url.length - 1]
