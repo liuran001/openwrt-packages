@@ -172,3 +172,4 @@ function get_data_in(){
 get_hwinfo(){
 	continue
 }
+

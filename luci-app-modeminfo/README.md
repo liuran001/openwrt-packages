@@ -33,7 +33,11 @@ Compiled OpenWrt 21.02 version [luci-app-modeminfo_0.2.5-0_all.ipk](http://openw
 
 # How-To compile
 
-add git repo in feeds.conf.default OpenWrt SDK
+add git repos in feeds.conf.default OpenWrt SDK
+
+```
+src-git atinout https://github.com/koshev-msk/luci-app-atinout.git^38a7298736e05b6cf3b5f61862e8d534a690c972
+```
 
 ```
 src-git modeminfo https://github.com/koshev-msk/luci-app-modeminfo.git
