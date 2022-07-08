@@ -23,7 +23,11 @@ function if_null() {
         done
 }
 
-SCRIPT=/usr/share/modeminfo/scripts/modeminfo
+if [ $(uci -q get modeminfo.@modeminfo[0].qmi_mode) ]; then
+	SCRIPT=/usr/share/modeminfo/scripts/modeminfo-qmi
+else
+	SCRIPT=/usr/share/modeminfo/scripts/modeminfo
+fi
 
 if [ -r $SCRIPT ]; then
 	. $SCRIPT

@@ -7,8 +7,16 @@ function modem_data(){
         DEVICE="$MANUF $MODEL"
         FW=$(echo "$O" | grep -A2 -i $FAMILY | tail -1)
         ICCID=$(echo "$O" | awk -F [:] '/ICCID:/{gsub("\r","");print $2}')
-        IMSI=$(echo "$O" | grep -A3 -i $FAMILY | tail -1)
-        IMEI=$(echo "$O" | grep -A4 -i $FAMILY | tail -1)
+	case $MODEL in
+		*EC200*)
+		        IMSI=$(echo "$O" | grep -A3 -i $FAMILY | tail -1)
+		        IMEI=$(echo "$O" | grep -A4 -i $FAMILY | tail -1)
+		;;
+		*)
+			IMSI=$(echo "$O" | grep -A1 -i ICCID | tail -1)
+			IMEI=$(echo "$O" | grep -A2 -i ICCID | tail -1)
+		;;
+	esac
 	# signal info
 	if [ "$MODE" = "LTE" ]; then
 		EARFCN=$(echo "$O" |awk -F[,\ ] '/^\+QENG/ {print $10}')

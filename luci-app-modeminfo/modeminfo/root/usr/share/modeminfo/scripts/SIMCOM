@@ -39,7 +39,7 @@ modem_data(){
 			CELL=$(printf %d 0x${CID: -2})
 			ENBID=$(printf %d 0x$ENBx)
 			LTE_CA=$(echo "$O" | grep -i CA_Scell | wc -l)
-                        if [ $LTE_CA -ge 0 ]; then
+                        if [ $LTE_CA -gt 0 ]; then
 				. /usr/share/modeminfo/scripts/ch_to_band
 				LTE_CA=1
 				SCH=$(echo "$O" | awk -F[:,] '/CA_Scell/{print $3}')
