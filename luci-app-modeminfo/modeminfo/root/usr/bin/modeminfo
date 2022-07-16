@@ -36,7 +36,7 @@ else
 fi
 
 get_device_info
-get_data_in
+get_data_in >/dev/null 2>&1
 if_null
 json_status
 kill -9 $(pgrep atinout) >/dev/null 2>&1
