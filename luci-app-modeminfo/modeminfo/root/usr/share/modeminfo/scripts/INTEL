@@ -7,15 +7,15 @@ function modem_data(){
 	IMEI=$(echo "$O" | grep -A2 CCID | tail -1)
 	DEVx="$(echo "$O" | awk -F [:,] '/CGMI:|GMM:/{gsub("\"|\r","",$0); print substr($2,2);}')"
 	DEVICE=$(echo $DEVx)
-	REGST=$(echo "$O" | awk -F[,] '/\+CEREG/ {print $2}')
-	LAC=$(echo "$O" | awk -F [,] '/\+CEREG/{gsub("\"","");print $3}')                                              
-        CID=$(echo "$O" | awk -F [,] '/\+CEREG/{gsub("\"","");print $4}')
 	if [ $MODE = LTE ]; then
 		EARFCN=$(echo "$O" | awk -F [:,] '/\+RSRP:/{print $3}')
 		DISTANCE=$(echo "$O" | awk -F [:,] '/\+XMCI: 4/{gsub(/"/,""); printf "%.2f\n", ($14*78)/1000}')
 		PCI=$(echo "$O" | awk -F [:,] '/\+XMCI: 4/{gsub(/"/,""); printf "%d\n", $7}')
 		RSRP=$(echo "$O" | awk -F [:,] '/\+RSRP:/{printf "%.0f\n", $4}')
 		RSRQ=$(echo "$O" | awk -F [:,] '/\+RSRQ:/{printf "%.0f\n", $4}')
+		REGST=$(echo "$O" | awk -F[,] '/\+CEREG/ {print $2}')
+        	LAC=$(echo "$O" | awk -F [,] '/\+CEREG/{gsub("\"","");print $3}')
+	        CID=$(echo "$O" | awk -F [,] '/\+CEREG/{gsub("\"","");print $4}')
 		# ! SINR formula needs to be checked !
 		SINR=$(echo "$O" | awk -F [:,] '/\+XMCI: 4/{gsub(/"/,""); printf "%.0f\n", $13/4+5}')
 		LTE_Cx=$(echo "$O" | awk -F [:,] '/\+XLEC:/{print $3}')
@@ -84,6 +84,9 @@ function modem_data(){
 			SCC=$SCC+$SC
 		done
 	else
+		REGST=$(echo "$O" | awk -F[,] '/\+CREG/ {print $2}')
+        	LAC=$(echo "$O" | awk -F [,] '/\+CREG/{gsub("\"","");print $3}')
+	        CID=$(echo "$O" | awk -F [,] '/\+CREG/{gsub("\"","");print $4}')
 		EARFCN=$(echo "$O" | awk -F [:,] '/\+RSCP:/{print $3}')
 		SINx=$(echo "$O" | awk -F [:,] '/\+XCESQ:/{print $6}')
 		if [ $SINx -eq 99 ]; then
