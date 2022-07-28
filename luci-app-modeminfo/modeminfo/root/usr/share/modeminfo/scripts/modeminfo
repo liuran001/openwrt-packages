@@ -108,7 +108,7 @@ function generic_data(){
 
 # name device via mmcli utility
 mmcli_name(){
-	MCLI=$(uci -q get modeminfo.@modeminfo[0].mmcli_name)
+	MMCLI=$(uci -q get modeminfo.@modeminfo[0].mmcli_name)
 	if [ "$MMCLI" -eq "1" ]; then
 		if [ -x /usr/bin/mmcli ]; then
 			MODEM=$(mmcli -L | awk '{print $1}' | head -1)
