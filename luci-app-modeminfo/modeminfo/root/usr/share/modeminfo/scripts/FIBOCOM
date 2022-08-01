@@ -8,13 +8,11 @@ function modem_data(){
 	ICCID=$(echo "$O" | awk -F [:] '/ICCID:/{gsub("\r","");print $2}')
 	IMSI=$(echo "$O" | awk -F [:,] '/\+CIMI/{gsub("\"","");print $2}')
 	IMEI=$(echo "$O" | awk -F [:,] '/\+CGSN/{gsub("\"","");print $2}')
-	LAC=$(echo "$O" |awk -F[,\ ] '/^\+CEREG/{gsub("\"","");print $4}')
-	CID=$(echo "$O" |awk -F[,\ ] '/^\+CEREG/{gsub("\"","");print $5}')
-	LAC_NUM=$(printf %d 0x$LAC)
-	CID_NUM=$(printf %d 0x$CID)
 	NETWORK=$(echo "$O"| grep -A2 'service cell' | awk 'NR ==2{print}')
 	EARFCN=$(echo "$NETWORK" | awk -F [,] '{print $7}')
 	if [ "$MODE" = "LTE" ]; then
+		LAC=$(echo "$O" |awk -F[,\ ] '/^\+CEREG/{gsub("\"","");print $4}')
+	        CID=$(echo "$O" |awk -F[,\ ] '/^\+CEREG/{gsub("\"","");print $5}')
 		RSRQ=$(echo "$NETWORK" | awk -F [,] '{printf "%.0f\n", -20+($14/2)}')
 		RSRP=$(echo "$NETWORK" | awk -F [,] '{printf "%.0f\n", $13-140}')
 		SINR=$(echo "$NETWORK" | awk -F [,] '{printf "%.0f\n", $11/4+5}')
@@ -52,11 +50,15 @@ function modem_data(){
 
 	else
 		TECH=$(echo "$O" | awk -F[,\ ] '/^\*CNTI/ {print $3}' | sed 's|/|,|g')
+		LAC=$(echo "$O" |awk -F[,\ ] '/^\+CEREG/{gsub("\"","");print $4}')
+                CID=$(echo "$O" |awk -F[,\ ] '/^\+CEREG/{gsub("\"","");print $5}')
 		if [ "x$TECH" != "x" ]; then
 			MODE="$TECH"
 		fi
 		SINR=$(echo "$NETWORK" | awk -F [,] '{printf "%.0f\n", $NF/2-24}')
 	fi
+        LAC_NUM=$(printf %d 0x$LAC)
+        CID_NUM=$(printf %d 0x$CID)
 	CHIPTEMP=$(echo "$O" | awk '/\+MTSM/{print $2}')
 	if [ $(uci -q get modeminfo.@modeminfo[0].decimail) -eq 1 ]; then
 		LAC=$LAC_NUM

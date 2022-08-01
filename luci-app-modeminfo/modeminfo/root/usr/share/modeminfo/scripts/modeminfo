@@ -90,7 +90,12 @@ function get_cops() {
 
 # Get Registration data
 function get_reg_data(){
-	REGST=$(echo "$O" | awk -F[,] '/\+CGREG/ {print $2}')
+	for CREG in "+CREG" "+CGREG" "+CEREG"; do
+		REGST=$(echo "$O" | awk -F[,] '/\'$CREG'/ {print $2}')
+		if [ "$REGST" ]; then
+			break
+		fi
+	done
 }
 
 function generic_data(){
