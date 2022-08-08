@@ -50,8 +50,8 @@ function modem_data(){
 
 	else
 		TECH=$(echo "$O" | awk -F[,\ ] '/^\*CNTI/ {print $3}' | sed 's|/|,|g')
-		LAC=$(echo "$O" |awk -F[,\ ] '/^\+CEREG/{gsub("\"","");print $4}')
-                CID=$(echo "$O" |awk -F[,\ ] '/^\+CEREG/{gsub("\"","");print $5}')
+		LAC=$(echo "$O" |awk -F[,\ ] '/^\+CGREG/{gsub("\"","");print $4}')
+                CID=$(echo "$O" |awk -F[,\ ] '/^\+CGREG/{gsub("\"","");print $5}')
 		if [ "x$TECH" != "x" ]; then
 			MODE="$TECH"
 		fi
