@@ -12,7 +12,7 @@ function modem_data(){
 		        IMSI=$(echo "$O" | grep -A3 -i $FAMILY | tail -1)
 		        IMEI=$(echo "$O" | grep -A4 -i $FAMILY | tail -1)
 		;;
-                *EP06*)
+                *EC25*|*EP06*)
                         IMSI=$(echo "$O" | grep -A1 -i $FW | tail -1)
                         IMEI=$(echo "$O" | grep -A1 -i $ICCID | tail -1)
 		;;
