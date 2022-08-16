@@ -6,7 +6,7 @@ luci-app-modeminfo is fork from https://github.com/IceG2020/luci-app-3ginfo
 
 Supported devices:
 
- - Quectel EC21/EC25/EP06/EM12
+ - Quectel EC200T/EC21/EC25/EP06/EM12
 
  - SimCom SIM7600E-H
 
