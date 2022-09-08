@@ -1366,7 +1366,6 @@ td > table > tbody > tr > td,
 }
 
 button:hover,
-.waves-input-wrapper:hover,
 .btn:hover,
 .cbi-button:hover,
 .item:hover::after {
@@ -3600,10 +3599,6 @@ display:none !important;
 	}
 }
 
-.waves-input-wrapper {
-	background-color: #475F7B;
-}
-
 .cbi-button,.btn {
 	background-color: #23bd70;
 }
@@ -3931,8 +3926,22 @@ input[type=button],input[type=submit],input[type=reset] {
 	height: auto !important;
 }
 
+input:not([type=button]):not([type=submit]),select {
+	border:0 !important;
+	background-image:linear-gradient(dodgerblue,dodgerblue),linear-gradient(#a9a9a9,#a9a9a9);
+    background-size:0 2px,100% 1px;
+    background-position:left bottom,center calc(100% - 1px);
+    background-repeat:no-repeat;
+    transition: all .3s !important;
+}
+
+select:focus, input:not([type=button]):not([type=submit]):focus {
+    background-size: 100% 2px,100% 1px;
+    transition: all .3s !important;
+}
+
 .btn,button,
-  .cbi-button,input[type=button],input[type=submit],input[type=reset],.waves-input-wrapper {
+  .cbi-button,input[type=button],input[type=submit],input[type=reset] {
 	height: auto !important;
 	width: auto !important;
 	padding: 0.6rem 1.6rem;
@@ -3943,15 +3952,12 @@ input[type=button],input[type=submit],input[type=reset] {
 	transition: all .20s linear;
 	top: 0;
 	margin-left: 0.5rem;
+	position:relative;
 }
 
 .btn:first-child,button:first-child,
-  .cbi-button:first-child,input[type=button]:first-child,input[type=submit]:first-child,input[type=reset]:first-child,.waves-input-wrapper:first-child {
+  .cbi-button:first-child,input[type=button]:first-child,input[type=submit]:first-child,input[type=reset]:first-child {
 	margin-left: 0;
-}
-
-i.waves-input-wrapper {
-	padding: 0 !important;
 }
 
 i input {
@@ -4011,20 +4017,8 @@ i input {
 	padding:0;
 }
 
-.waves-input-wrapper .waves-button-input {
-	line-height: 1rem;
-}
-
-.cbi-dropdown.waves-effect {
-	display: inline-flex;
-}
-
 cbi-button.cbi-button-neutral {
 	padding: 0.1rem 0.4rem;
-}
-
-#cbi-AdGuardHome-AdGuardHome .waves-input-wrapper>input {
-	color: #fff !important;
 }
 
 input[type=password]+.cbi-button.cbi-button-neutral {
