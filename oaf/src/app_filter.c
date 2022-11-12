@@ -261,7 +261,6 @@ int add_app_feature(int appid, char *name, char *feature)
 	}
 	if (AF_DICT_PARAM_INDEX != param_num && strlen(feature) > MIN_FEATURE_STR_LEN)
 	{
-		AF_ERROR("invalid feature:%s\n", feature);
 		return -1;
 	}
 	strncpy(dict, begin, p - begin);
@@ -348,7 +347,6 @@ void load_feature_buf_from_file(char **config_buf)
 
 	if (IS_ERR(fp))
 	{
-		printk("open feature file failed\n");
 		return;
 	}
 
@@ -393,7 +391,6 @@ int load_feature_config(void)
 	load_feature_buf_from_file(&feature_buf);
 	if (!feature_buf)
 	{
-		AF_ERROR("error, feature buf is null\n");
 		return -1;
 	}
 	p = begin = feature_buf;
@@ -899,14 +896,15 @@ u_int32_t app_filter_hook_bypass_handle(struct sk_buff *skb, struct net_device *
 	if (!skb || !dev)
 		return NF_ACCEPT;
 
-	if (skb->len > MAX_BYPASS_DPI_PKT_LEN)
-		return NF_ACCEPT;	
-
 	memset((char *)&flow, 0x0, sizeof(flow_info_t));
 	if (parse_flow_proto(skb, &flow) < 0)
 		return NF_ACCEPT;
 	if (af_match_bcast_packet(&flow) || af_match_local_packet(&flow))
 		return NF_ACCEPT;
+
+	if (af_lan_ip == flow.src || af_lan_ip == flow.dst){
+		return NF_ACCEPT;
+	}
 
 	af_get_smac(skb, smac);
 

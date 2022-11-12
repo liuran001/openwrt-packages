@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 LUCI_NAME:=luci-app-pcap-dnsproxy
-PKG_VERSION:=0.4.9.13
-PKG_RELEASE:=20210601
+PKG_VERSION:=0.4.9.13-20221024
+#PKG_RELEASE:=20221006
 
 LUCI_TITLE:=LuCI for pcap-dnsproxy
 LUCI_DEPENDS:=+luci-compat +pcap-dnsproxy +bash +curl +unzip +coreutils-stat

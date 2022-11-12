@@ -14,7 +14,6 @@ touch /etc/config/$pkgname
 if [ ."$(uci -q get ${pkgname}.@${type1name}[-1])" != ."${type1name}" ]; then
 	uci -q batch <<-EOF >/dev/null
 		add $pkgname $type1name
-		set ${pkgname}.@${type1name}[-1].enabled='1'
 		commit $pkgname
 	EOF
 fi
@@ -30,6 +29,8 @@ if [ ."$(uci -q get ${pkgname}.@${type3name}[-1])" != ."${type3name}" ]; then
 		commit $pkgname
 	EOF
 fi
+uci set ${pkgname}.@${type1name}[-1].enabled='1'
+uci commit $pkgname
 
 ## master luci-app-pcap-dnsproxy config folder
 mkdir ${pkgdir}/user 2>/dev/null

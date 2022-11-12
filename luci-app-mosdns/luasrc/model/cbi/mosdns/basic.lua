@@ -88,6 +88,14 @@ adblock = s:option(Flag, "adblock", translate("Enable DNS ADblock"))
 adblock:depends( "configfile", "/etc/mosdns/config.yaml")
 adblock.default = false
 
+adblock = s:option(Value, "ad_source", translate("ADblock Source"))
+adblock:depends("adblock", "1")
+adblock.default = "https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-domains.txt"
+adblock:value("geosite.dat", "v2ray-geosite")
+adblock:value("https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-domains.txt", "anti-AD")
+adblock:value("https://raw.githubusercontent.com/sjhgvr/oisd/main/dbl_basic.txt", "oisd (basic)")
+adblock:value("https://raw.githubusercontent.com/QiuSimons/openwrt-mos/master/dat/serverlist.txt", "QiuSimons/openwrt-mos")
+
 reload_service = s:option( Button, "_reload", translate("Reload Service"), translate("Reload service to take effect of new configuration"))
 reload_service.write = function()
   luci.sys.exec("/etc/init.d/mosdns reload")

@@ -31,6 +31,7 @@ function pcap_dnsproxy_action(name)
 	if name == "start" then
 		luci.sys.init.start(packageName)
 		luci.util.exec("/usr/bin/pcap-dnsproxy.sh daemon_oper add")
+		luci.util.exec("/usr/bin/pcap-dnsproxy.sh schedule")
 	elseif name == "action" then
 		luci.util.exec("/etc/init.d/" .. packageName .. " reload >/dev/null 2>&1")
 		luci.util.exec("/etc/init.d/dnsmasq restart >/dev/null 2>&1")
@@ -41,6 +42,7 @@ function pcap_dnsproxy_action(name)
 		luci.sys.init.enable(packageName)
 		--luci.util.exec("uci set " .. packageName .. ".@pcap-dnsproxy[-1].enabled=1; uci commit " .. packageName)
 		luci.util.exec("/usr/bin/pcap-dnsproxy.sh daemon_oper add")
+		luci.util.exec("/usr/bin/pcap-dnsproxy.sh schedule")
 	elseif name == "disable" then
 		luci.sys.init.disable(packageName)
 		--luci.util.exec("uci set " .. packageName .. ".@pcap-dnsproxy[-1].enabled=0; uci commit " .. packageName)

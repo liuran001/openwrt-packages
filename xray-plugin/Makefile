@@ -1,16 +1,16 @@
 # SPDX-License-Identifier: GPL-3.0-only
 #
-# Copyright (C) 2021 ImmortalWrt.org
+# Copyright (C) 2022 ImmortalWrt.org
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=xray-plugin
-PKG_VERSION:=1.6.0
+PKG_VERSION:=1.6.3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/teddysun/xray-plugin/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=2c8c07e9ba7d1cf67913ec57ecea29c752893a1d01f09f1776202bd6062c74d1
+PKG_HASH:=0e4eb348ad66d04998e615ebcf987f93f916dfd2ceeee70451d40183664de0dc
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE

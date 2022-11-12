@@ -638,6 +638,7 @@ update_white() {
 
 local workdir="$(mktemp -d)"
 local main='accelerated-domains.china.conf'
+local main2='accelerated-domains2.china.conf'
 local google='google.china.conf'
 local apple='apple.china.conf'
 
@@ -662,6 +663,7 @@ cat << EOF > "$outfile"
 
 
 EOF
+[ -f "$workdir/$main2" ] && main=$main2
 sed "s|[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+$||; s|^s|S|" "$workdir/$main" >> "$outfile"
 echo -e "\n" >> "$outfile"
 
