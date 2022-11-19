@@ -29,7 +29,11 @@ pcap-dnsproxy 是一个专注于在标准 DNS 协议下，过滤污染拿到正�
    ./scripts/feeds update -a
    ./scripts/feeds install -a
    # 获取 Makefile
-   git clone --depth 1 --branch master --single-branch https://github.com/muink/luci-app-pcap-dnsproxy.git package/luci-app-pcap-dnsproxy
+   git clone --depth 1 --branch master --single-branch --no-checkout https://github.com/muink/luci-app-pcap-dnsproxy.git package/luci-app-pcap-dnsproxy
+   pushd package/luci-app-pcap-dnsproxy
+   umask 022
+   git checkout
+   popd
    # 为两个可执行文件赋权
    pushd package/luci-app-pcap-dnsproxy
    chmod 0755 ./root/etc/uci-defaults/40_luci-pcap-dnsproxy
