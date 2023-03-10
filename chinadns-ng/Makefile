@@ -1,18 +1,16 @@
 # SPDX-License-Identifier: GPL-3.0-only
 #
-# Copyright (C) 2021 ImmortalWrt.org
+# Copyright (C) 2023 ImmortalWrt.org
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=chinadns-ng
-PKG_VERSION:=1.0-beta.25
+PKG_VERSION:=2023.03.08
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/zfl9/chinadns-ng.git
-PKG_SOURCE_DATE:=2021-05-08
-PKG_SOURCE_VERSION:=14cc6348d67b09cae37d9bce554c89c2c0e0b265
-PKG_MIRROR_HASH:=3b66fc0888d9488e3b8e39df3016d51fae1b43325d292381e94aa3c7d2318282
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://codeload.github.com/zfl9/chinadns-ng/tar.gz/$(PKG_VERSION)?
+PKG_HASH:=9404a20c7241f4102dfa3fc197877ddbdb38f87d6044c98f62256078895732df
 
 PKG_LICENSE:=AGPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE

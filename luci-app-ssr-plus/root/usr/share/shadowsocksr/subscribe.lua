@@ -364,8 +364,10 @@ local function processData(szType, content)
 		result.packet_encoding = packet_encoding
 		result.tls = (params.security == "tls") and "1" or "0"
 		result.tls_host = params.sni
+		result.tls_flow = params.flow
 		result.xtls = params.security == "xtls" and "1" or nil
 		result.vless_flow = params.flow
+		result.fingerprint = params.fp
 		if result.transport == "ws" then
 			result.ws_host = (result.tls ~= "1") and (params.host and UrlDecode(params.host)) or nil
 			result.ws_path = params.path and UrlDecode(params.path) or "/"

@@ -277,6 +277,12 @@ yml_servers_set()
    config_get "ports" "$section" "ports" ""
    config_get "hop_interval" "$section" "hop_interval" ""
    config_get "max_open_streams" "$section" "max_open_streams" ""
+   config_get "obfs_password" "$section" "obfs_password" ""
+   config_get "packet_addr" "$section" "packet_addr" ""
+   config_get "client_fingerprint" "$section" "client_fingerprint" ""
+   config_get "ip_version" "$section" "ip_version" ""
+   config_get "tfo" "$section" "tfo" ""
+   config_get "udp_over_tcp" "$section" "udp_over_tcp" ""
    
    if [ "$enabled" = "0" ]; then
       return
@@ -336,6 +342,8 @@ yml_servers_set()
    if [ "$obfs" != "none" ] && [ -n "$obfs" ]; then
       if [ "$obfs" = "websocket" ]; then
          obfss="plugin: v2ray-plugin"
+      elif [ "$obfs" = "shadow-tls" ]; then
+        obfss="plugin: shadow-tls"
       else
          obfss="plugin: obfs"
       fi
@@ -394,16 +402,37 @@ cat >> "$SERVER_FILE" <<-EOF
     udp: $udp
 EOF
      fi
+     if [ ! -z "$udp_over_tcp" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    udp-over-tcp: $udp_over_tcp
+EOF
+     fi
      if [ ! -z "$obfss" ]; then
 cat >> "$SERVER_FILE" <<-EOF
     $obfss
     plugin-opts:
+EOF
+    if [ "$obfs" != "shadow-tls" ]; then
+cat >> "$SERVER_FILE" <<-EOF
       mode: $obfs
 EOF
+    fi
         if [ ! -z "$host" ]; then
 cat >> "$SERVER_FILE" <<-EOF
       host: "$host"
 EOF
+        fi
+        if [  "$obfss" = "plugin: shadow-tls" ]; then
+           if [ ! -z "$obfs_password" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+      password: $obfs_password
+EOF
+           fi
+           if [ ! -z "$fingerprint" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+      fingerprint: "$fingerprint"
+EOF
+           fi
         fi
         if [  "$obfss" = "plugin: v2ray-plugin" ]; then
            if [ ! -z "$tls" ]; then
@@ -430,6 +459,11 @@ EOF
 cat >> "$SERVER_FILE" <<-EOF
       headers:
         custom: $custom
+EOF
+           fi
+           if [ ! -z "$fingerprint" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+      fingerprint: "$fingerprint"
 EOF
            fi
         fi
@@ -509,6 +543,16 @@ EOF
       if [ ! -z "$tls" ]; then
 cat >> "$SERVER_FILE" <<-EOF
     tls: $tls
+EOF
+      fi
+      if [ ! -z "$fingerprint" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    fingerprint: "$fingerprint"
+EOF
+      fi
+      if [ ! -z "$client_fingerprint" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    client-fingerprint: "$client_fingerprint"
 EOF
       fi
       if [ ! -z "$servername" ] && [ "$tls" = "true" ]; then
@@ -636,7 +680,7 @@ EOF
       fi
       if [ -n "$disable_sni" ]; then
 cat >> "$SERVER_FILE" <<-EOF
-    disable-sni: "$disable_sni"
+    disable-sni: $disable_sni
 EOF
       fi
       if [ -n "$reduce_rtt" ]; then
@@ -811,7 +855,7 @@ EOF
       fi
       if [ -n "$fingerprint" ]; then
 cat >> "$SERVER_FILE" <<-EOF
-    fingerprint: $fingerprint
+    fingerprint: "$fingerprint"
 EOF
       fi
       if [ -n "$ports" ]; then
@@ -840,6 +884,21 @@ cat >> "$SERVER_FILE" <<-EOF
     udp: $udp
 EOF
       fi
+      if [ ! -z "$xudp" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    xudp: $xudp
+EOF
+      fi
+      if [ ! -z "$packet_addr" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    packet-addr: $packet_addr
+EOF
+      fi
+      if [ ! -z "$packet_encoding" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    packet-encoding: "$packet_encoding"
+EOF
+      fi
       if [ ! -z "$skip_cert_verify" ]; then
 cat >> "$SERVER_FILE" <<-EOF
     skip-cert-verify: $skip_cert_verify
@@ -848,6 +907,16 @@ EOF
       if [ ! -z "$tls" ]; then
 cat >> "$SERVER_FILE" <<-EOF
     tls: $tls
+EOF
+      fi
+      if [ ! -z "$fingerprint" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    fingerprint: "$fingerprint"
+EOF
+      fi
+      if [ ! -z "$client_fingerprint" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    client-fingerprint: "$client_fingerprint"
 EOF
       fi
       if [ ! -z "$servername" ]; then
@@ -925,6 +994,11 @@ cat >> "$SERVER_FILE" <<-EOF
     tls: $tls
 EOF
       fi
+      if [ ! -z "$fingerprint" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    fingerprint: "$fingerprint"
+EOF
+      fi
    fi
 
 #http
@@ -998,6 +1072,16 @@ cat >> "$SERVER_FILE" <<-EOF
     skip-cert-verify: $skip_cert_verify
 EOF
    fi
+   if [ ! -z "$fingerprint" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+  fingerprint: "$fingerprint"
+EOF
+   fi
+   if [ ! -z "$client_fingerprint" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+  client-fingerprint: "$client_fingerprint"
+EOF
+   fi
    if [ ! -z "$grpc_service_name" ]; then
 cat >> "$SERVER_FILE" <<-EOF
     network: grpc
@@ -1048,18 +1132,32 @@ cat >> "$SERVER_FILE" <<-EOF
 EOF
    fi
    fi
-   
+
+#ip_version
+   if [ ! -z "$ip_version" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    ip-version: "$ip_version"
+EOF
+   fi
+
+#TFO
+   if [ ! -z "$tfo" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    tfo: $tfo
+EOF
+   fi
+
 #interface-name
    if [ -n "$interface_name" ]; then
 cat >> "$SERVER_FILE" <<-EOF
-    interface-name: $interface_name
+    interface-name: "$interface_name"
 EOF
    fi
 
 #routing_mark
    if [ -n "$routing_mark" ]; then
 cat >> "$SERVER_FILE" <<-EOF
-    routing-mark: $routing_mark
+    routing-mark: "$routing_mark"
 EOF
    fi
 }
@@ -1290,11 +1388,39 @@ cat >> "$SERVER_FILE" <<-EOF
       - Proxy
 EOF
 cat >> "$SERVER_FILE" <<-EOF
+  - name: ChatGPT
+    type: select
+    proxies:
+      - Proxy
+      - DIRECT
+EOF
+cat /tmp/Proxy_Server >> $SERVER_FILE 2>/dev/null
+if [ -f "/tmp/Proxy_Provider" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    use:
+EOF
+fi
+cat /tmp/Proxy_Provider >> $SERVER_FILE 2>/dev/null
+cat >> "$SERVER_FILE" <<-EOF
   - name: Apple
     type: select
     proxies:
       - DIRECT
       - Proxy
+EOF
+cat /tmp/Proxy_Server >> $SERVER_FILE 2>/dev/null
+if [ -f "/tmp/Proxy_Provider" ]; then
+cat >> "$SERVER_FILE" <<-EOF
+    use:
+EOF
+fi
+cat /tmp/Proxy_Provider >> $SERVER_FILE 2>/dev/null
+cat >> "$SERVER_FILE" <<-EOF
+  - name: Apple TV
+    type: select
+    proxies:
+      - Proxy
+      - DIRECT
 EOF
 cat /tmp/Proxy_Server >> $SERVER_FILE 2>/dev/null
 if [ -f "/tmp/Proxy_Provider" ]; then
@@ -1622,9 +1748,11 @@ ${uci_set}HBOMax="HBO Max"
 ${uci_set}HBOGo="HBO Go"
 ${uci_set}Pornhub="Pornhub"
 ${uci_set}Apple="Apple"
+${uci_set}AppleTV="Apple TV"
 ${uci_set}GoogleFCM="Google FCM"
 ${uci_set}Scholar="Scholar"
 ${uci_set}Microsoft="Microsoft"
+${uci_set}ChatGPT="ChatGPT"
 ${uci_set}Netflix="Netflix"
 ${uci_set}Discovery="Discovery Plus"
 ${uci_set}DAZN="DAZN"
@@ -1656,17 +1784,19 @@ ${uci_set}Others="Others"
 	${UCI_DEL_LIST}="Netflix" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Netflix" >/dev/null 2>&1
 	${UCI_DEL_LIST}="Discovery Plus" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Discovery Plus" >/dev/null 2>&1
 	${UCI_DEL_LIST}="DAZN" >/dev/null 2>&1 && ${UCI_ADD_LIST}="DAZN" >/dev/null 2>&1
-	${UCI_DEL_LIST}="Apple" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Apple" >/dev/null 2>&1
+  ${UCI_DEL_LIST}="ChatGPT" >/dev/null 2>&1 && ${UCI_ADD_LIST}="ChatGPT" >/dev/null 2>&1
+  ${UCI_DEL_LIST}="Apple TV" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Apple TV" >/dev/null 2>&1
 	${UCI_DEL_LIST}="Google FCM" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Google FCM" >/dev/null 2>&1
 	${UCI_DEL_LIST}="Scholar" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Scholar" >/dev/null 2>&1
 	${UCI_DEL_LIST}="Disney" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Disney" >/dev/null 2>&1
 	${UCI_DEL_LIST}="Spotify" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Spotify" >/dev/null 2>&1
 	${UCI_DEL_LIST}="Steam" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Steam" >/dev/null 2>&1
 	${UCI_DEL_LIST}="Telegram" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Telegram" >/dev/null 2>&1
-   ${UCI_DEL_LIST}="Crypto" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Crypto" >/dev/null 2>&1
-   ${UCI_DEL_LIST}="Discord" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Discord" >/dev/null 2>&1
+  ${UCI_DEL_LIST}="Crypto" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Crypto" >/dev/null 2>&1
+  ${UCI_DEL_LIST}="Discord" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Discord" >/dev/null 2>&1
 	${UCI_DEL_LIST}="PayPal" >/dev/null 2>&1 && ${UCI_ADD_LIST}="PayPal" >/dev/null 2>&1
 	${UCI_DEL_LIST}="Speedtest" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Speedtest" >/dev/null 2>&1
+  ${UCI_DEL_LIST}="Others" >/dev/null 2>&1 && ${UCI_ADD_LIST}="Others" >/dev/null 2>&1
 }
 elif [ "$rule_sources" = "ConnersHua_return" ] && [ "$servers_if_update" != "1" ] && [ -z "$if_game_proxy" ]; then
 LOG_OUT "Creating By Using ConnersHua Return Rules..."
@@ -1752,7 +1882,6 @@ if [ -z "$if_game_proxy" ]; then
    rm -rf $PROXY_PROVIDER_FILE 2>/dev/null
    rm -rf /tmp/yaml_groups.yaml 2>/dev/null
    LOG_OUT "Config File【$CONFIG_NAME】Write Successful!"
-   sleep 3
    SLOG_CLEAN
 fi
 rm -rf /tmp/Proxy_Server 2>/dev/null

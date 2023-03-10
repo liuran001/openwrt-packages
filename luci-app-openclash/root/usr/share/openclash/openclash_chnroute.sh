@@ -2,7 +2,7 @@
 . /usr/share/openclash/openclash_ps.sh
 . /usr/share/openclash/log.sh
 
-   FW4="$(command -v fw4)"
+   FW4=$(command -v fw4)
 
    set_lock() {
       exec 879>"/tmp/lock/openclash_chn.lock" 2>/dev/null
@@ -41,13 +41,13 @@
    LOG_OUT "Start Downloading The Chnroute Cidr List..."
    if [ -z "$CHNR_CUSTOM_URL" ]; then
       if pidof clash >/dev/null; then
-         curl -SsL --connect-timeout 10 -m 30 --speed-time 15 --speed-limit 1 --retry 2 https://ispip.clang.cn/all_cn.txt -o /tmp/china_ip_route.txt 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_ip_route.txt" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
+         curl -SsL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 https://ispip.clang.cn/all_cn.txt -o /tmp/china_ip_route.txt 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_ip_route.txt" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
       fi
       if [ "${PIPESTATUS[0]}" != "0" ] || ! pidof clash >/dev/null; then
-         curl -SsL --connect-timeout 10 -m 30 --speed-time 15 --speed-limit 1 --retry 2 https://ispip.clang.cn/all_cn_cidr.txt -o /tmp/china_ip_route.txt 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_ip_route.txt" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
+         curl -SsL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 https://ispip.clang.cn/all_cn_cidr.txt -o /tmp/china_ip_route.txt 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_ip_route.txt" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
       fi
    else
-      curl -SsL --connect-timeout 10 -m 30 --speed-time 15 --speed-limit 1 --retry 2 "$CHNR_CUSTOM_URL" -o /tmp/china_ip_route.txt 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_ip_route.txt" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
+      curl -SsL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 "$CHNR_CUSTOM_URL" -o /tmp/china_ip_route.txt 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_ip_route.txt" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
    fi
 
    if [ "${PIPESTATUS[0]}" -eq 0 ] && [ -s "/tmp/china_ip_route.txt" ]; then
@@ -73,19 +73,17 @@
          LOG_OUT "Chnroute Cidr List Update Successful!"
       else
          LOG_OUT "Updated Chnroute Cidr List No Change, Do Nothing..."
-         sleep 3
       fi
    else
       LOG_OUT "Chnroute Cidr List Update Error, Please Try Again Later..."
-      sleep 3
    fi
    
    #ipv6
    LOG_OUT "Start Downloading The Chnroute6 Cidr List..."
    if [ -z "$CHNR6_CUSTOM_URL" ]; then
-      curl -SsL --connect-timeout 10 -m 30 --speed-time 15 --speed-limit 1 --retry 2 https://ispip.clang.cn/all_cn_ipv6.txt -o /tmp/china_ip6_route.txt 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_ip6_route.txt" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
+      curl -SsL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 https://ispip.clang.cn/all_cn_ipv6.txt -o /tmp/china_ip6_route.txt 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_ip6_route.txt" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
    else
-      curl -SsL --connect-timeout 10 -m 30 --speed-time 15 --speed-limit 1 --retry 2 "$CHNR6_CUSTOM_URL" -o /tmp/china_ip6_route.txt 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_ip6_route.txt" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
+      curl -SsL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 "$CHNR6_CUSTOM_URL" -o /tmp/china_ip6_route.txt 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_ip6_route.txt" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
    fi
    if [ "${PIPESTATUS[0]}" -eq "0" ] && [ -s "/tmp/china_ip6_route.txt" ]; then
       LOG_OUT "Chnroute6 Cidr List Download Success, Check Updated..."
@@ -110,28 +108,26 @@
          LOG_OUT "Chnroute6 Cidr List Update Successful!"
       else
          LOG_OUT "Updated Chnroute6 Cidr List No Change, Do Nothing..."
-         sleep 3
       fi
    else
       LOG_OUT "Chnroute6 Cidr List Update Error, Please Try Again Later..."
-      sleep 3
    fi
 
    #CN DOMAIN
    LOG_OUT "Start Downloading The CN Domains List..."
    if [ -n "$CNDOMAIN_CUSTOM_URL" ]; then
-      curl -SsL --connect-timeout 10 -m 30 --speed-time 15 --speed-limit 1 --retry 2 "$CNDOMAIN_CUSTOM_URL" -o "/tmp/china_domains.list" 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_domains.list" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
+      curl -SsL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 "$CNDOMAIN_CUSTOM_URL" -o "/tmp/china_domains.list" 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_domains.list" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
    else
       if [ "$github_address_mod" != "0" ]; then
          if [ "$github_address_mod" == "https://cdn.jsdelivr.net/" ] || [ "$github_address_mod" == "https://fastly.jsdelivr.net/" ] || [ "$github_address_mod" == "https://testingcf.jsdelivr.net/" ]; then
-            curl -SsL --connect-timeout 10 -m 30 --speed-time 15 --speed-limit 1 --retry 2 "$github_address_mod"gh/felixonmars/dnsmasq-china-list@master/accelerated-domains.china.conf -o "/tmp/china_domains.list" 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_domains.list" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
+            curl -SsL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 "$github_address_mod"gh/felixonmars/dnsmasq-china-list@master/accelerated-domains.china.conf -o "/tmp/china_domains.list" 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_domains.list" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
          elif [ "$github_address_mod" == "https://raw.fastgit.org/" ]; then
-            curl -SsL --connect-timeout 10 -m 30 --speed-time 15 --speed-limit 1 --retry 2 https://raw.fastgit.org/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf -o "/tmp/china_domains.list" 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_domains.list" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
+            curl -SsL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 https://raw.fastgit.org/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf -o "/tmp/china_domains.list" 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_domains.list" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
          else
-            curl -SsL --connect-timeout 10 -m 30 --speed-time 15 --speed-limit 1 --retry 2 "$github_address_mod"https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf -o "/tmp/china_domains.list" 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_domains.list" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
+            curl -SsL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 "$github_address_mod"https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf -o "/tmp/china_domains.list" 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_domains.list" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
          fi
       else
-         curl -SsL --connect-timeout 10 -m 30 --speed-time 15 --speed-limit 1 --retry 2 https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf -o "/tmp/china_domains.list" 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_domains.list" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
+         curl -SsL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf -o "/tmp/china_domains.list" 2>&1 | awk -v time="$(date "+%Y-%m-%d %H:%M:%S")" -v file="/tmp/china_domains.list" '{print time "【" file "】Download Failed:【"$0"】"}' >> "$LOG_FILE"
       fi
    fi
    
@@ -147,11 +143,9 @@
          LOG_OUT "CN Domains List Update Successful!"
       else
          LOG_OUT "Updated CN Domains List No Change, Do Nothing..."
-         sleep 3
       fi
    else
       LOG_OUT "CN Domains List Update Error, Please Try Again Later..."
-      sleep 3
    fi
 
    if [ "$restart" -eq 1 ] && [ "$(unify_ps_prevent)" -eq 0 ] && [ "$(find /tmp/lock/ |grep -v "openclash.lock" |grep -c "openclash")" -le 1 ]; then

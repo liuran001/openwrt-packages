@@ -74,7 +74,9 @@ local get_smart_info = function(device)
     elseif attrib == "Serial Number" then
       smart_info.sn = val
     elseif attrib == "194" or attrib == "Temperature" then
-      smart_info.temp = val:match("(%d+)") .. "°C"
+      if val ~= "-" then
+        smart_info.temp = (val:match("(%d+)") or "?") .. "°C"
+      end
     elseif attrib == "Rotation Rate" then
       smart_info.rota_rate = val
     elseif attrib == "SATA Version is" then
@@ -225,10 +227,10 @@ local get_parted_info = function(device)
           p["type"] = "logical"
           table.insert(partitions_temp[disk_temp["extended_partition_index"]]["logicals"], i)
         end
-      elseif (p["number"] < 4) and (p["number"] > 0) then
+      elseif (p["number"] <= 4) and (p["number"] > 0) then
         local s = nixio.fs.readfile("/sys/block/"..device.."/"..p["name"].."/size")
         if s then
-          local real_size_sec = tonumber(s) * tonumber(disk_temp.phy_sec)
+          local real_size_sec = tonumber(s) * tonumber(disk_temp.logic_sec)
           -- if size not equal, it's an extended
           if real_size_sec ~= p["size"] then
             disk_temp["extended_partition_index"] = i
@@ -458,10 +460,10 @@ d.get_format_cmd = function()
     ext2 = { cmd = "mkfs.ext2", option = "-F -E lazy_itable_init=1" },
     ext3 = { cmd = "mkfs.ext3", option = "-F -E lazy_itable_init=1" },
     ext4 = { cmd = "mkfs.ext4", option = "-F -E lazy_itable_init=1" },
-    fat32 = { cmd = "mkfs.vfat", option = "-F" },
-    exfat = { cmd = "mkexfat", option = "-f" },
+    fat32 = { cmd = "mkfs.fat", option = "-F 32" },
+    exfat = { cmd = "mkfs.exfat", option = "" },
     hfsplus = { cmd = "mkhfs", option = "-f" },
-    ntfs = { cmd = "mkntfs", option = "-f" },
+    ntfs = { cmd = "mkfs.ntfs", option = "-f" },
     swap = { cmd = "mkswap", option = "" },
     btrfs = { cmd = "mkfs.btrfs", option = "-f" }
   }

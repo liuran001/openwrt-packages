@@ -30,6 +30,7 @@ jobs:
           wget -O /tmp/po2lmo/template_lmo.c https://raw.githubusercontent.com/openwrt/luci/openwrt-18.06/modules/luci-base/src/template_lmo.c && \
           cd /tmp/po2lmo && make po2lmo && \
           ./po2lmo $GITHUB_WORKSPACE/applications/luci-app-diskman/po/zh-cn/diskman.po /tmp/luci-app-diskman/usr/lib/lua/luci/i18n/diskman.zh-cn.lmo && \
+          ./po2lmo $GITHUB_WORKSPACE/applications/luci-app-diskman/po/zh-tw/diskman.po /tmp/luci-app-diskman/usr/lib/lua/luci/i18n/diskman.zh-tw.lmo && \
           ./po2lmo $GITHUB_WORKSPACE/applications/luci-app-diskman/po/pl/diskman.po /tmp/luci-app-diskman/usr/lib/lua/luci/i18n/diskman.pl.lmo
           mkdir -p /tmp/luci-app-diskman/CONTROL
           cat >/tmp/luci-app-diskman/CONTROL/control <<EOF

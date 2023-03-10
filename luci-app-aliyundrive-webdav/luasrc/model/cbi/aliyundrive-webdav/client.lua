@@ -44,10 +44,6 @@ prefer_http_download = e:option(Flag, "prefer_http_download", translate("Prefer 
 prefer_http_download.description = translate("Prefer downloading files using HTTP instead of HTTPS protocol")
 prefer_http_download.rmempty = false
 
-no_redirect = e:option(Flag, "no_redirect", translate("Disable Redirect"))
-no_redirect.description = translate("Disable 302 redirect when using app refresh token")
-no_redirect.rmempty = false
-
 upload_buffer_size = e:option(Value, "upload_buffer_size", translate("Upload Buffer Size"))
 upload_buffer_size.default = "16777216"
 upload_buffer_size.datatype = "uinteger"
@@ -70,9 +66,6 @@ no_trash.rmempty = false
 read_only = e:option(Flag, "read_only", translate("Enable read only mode"))
 read_only.description = translate("Disallow upload, modify and delete file operations")
 read_only.rmempty = false
-
-domain_id = e:option(Value, "domain_id", translate("Domain ID"))
-domain_id.description = translate("Input domain_id option will use <a href=\"https://www.aliyun.com/product/storage/pds\" target=\"_blank\">Aliyun PDS</a> instead of <a href=\"https://www.aliyundrive.com\" target=\"_blank\">AliyunDrive</a>")
 
 debug = e:option(Flag, "debug", translate("Debug Mode"))
 debug.rmempty = false

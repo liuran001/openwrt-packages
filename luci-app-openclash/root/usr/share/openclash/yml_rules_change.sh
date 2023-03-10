@@ -9,6 +9,8 @@ RULE_PROVIDER_FILE="/tmp/yaml_rule_provider.yaml"
 GAME_RULE_FILE="/tmp/yaml_game_rule.yaml"
 github_address_mod=$(uci -q get openclash.config.github_address_mod || echo 0)
 urltest_address_mod=$(uci -q get openclash.config.urltest_address_mod || echo 0)
+tolerance=$(uci -q get openclash.config.tolerance || echo 0)
+urltest_interval_mod=$(uci -q get openclash.config.urltest_interval_mod || echo 0)
 CONFIG_NAME="$5"
 
 #处理自定义规则集
@@ -268,6 +270,7 @@ yml_other_set()
    config_foreach yml_rule_group_get "rule_provider_config" "$3"
    config_foreach yml_rule_group_get "rule_providers" "$3"
    config_foreach yml_rule_group_get "game_config" "$3"
+   local fake_ip="$(echo "${12}" |awk -F '/' '{print $1}')"
    ruby -ryaml -rYAML -I "/usr/share/openclash" -E UTF-8 -e "
    begin
       Value = YAML.load_file('$3');
@@ -361,19 +364,19 @@ yml_other_set()
    
    begin
    Thread.new{
-      if $6 == 0 then
+      if $6 == 0 and ${10} != 2 then
          if Value.has_key?('rules') and not Value['rules'].to_a.empty? then
-            if Value['rules'].to_a.grep(/(?=.*SRC-IP-CIDR,198.18.0.1)/).empty? then
-               Value['rules']=Value['rules'].to_a.insert(0,'SRC-IP-CIDR,198.18.0.1/32,DIRECT');
+            if Value['rules'].to_a.grep(/(?=.*SRC-IP-CIDR,'${fake_ip}')/).empty? then
+               Value['rules']=Value['rules'].to_a.insert(0,'SRC-IP-CIDR,${12},DIRECT');
             end
             if Value['rules'].to_a.grep(/(?=.*SRC-IP-CIDR,'$7')/).empty? and not '$7'.empty? then
                Value['rules']=Value['rules'].to_a.insert(0,'SRC-IP-CIDR,$7/32,DIRECT');
             end;
          else
-            Value['rules']=%w('SRC-IP-CIDR,198.18.0.1/32,DIRECT','SRC-IP-CIDR,$7/32,DIRECT');
+            Value['rules']=%w('SRC-IP-CIDR,${12},DIRECT','SRC-IP-CIDR,$7/32,DIRECT');
          end;
       elsif Value.has_key?('rules') and not Value['rules'].to_a.empty? then
-         Value['rules'].delete('SRC-IP-CIDR,198.18.0.1/32,DIRECT');
+         Value['rules'].delete('SRC-IP-CIDR,${12},DIRECT');
          Value['rules'].delete('SRC-IP-CIDR,$7/32,DIRECT');
       end;
    }.join;
@@ -421,10 +424,10 @@ yml_other_set()
          end;
          if File::exist?('/tmp/yaml_rule_set_top_custom.yaml') then
             Value_1 = YAML.load_file('/tmp/yaml_rule_set_top_custom.yaml');
-            if Value['rules'].to_a.grep(/(?=.*198.18.0)(?=.*REJECT)/).empty? then
+            if Value['rules'].to_a.grep(/(?=.*'${fake_ip}')(?=.*REJECT)/).empty? then
                Value_1['rules'].uniq.reverse.each{|x| Value['rules'].insert(0,x)};
             else
-               ruby_add_index = Value['rules'].index(Value['rules'].grep(/(?=.*198.18.0)(?=.*REJECT)/).first);
+               ruby_add_index = Value['rules'].index(Value['rules'].grep(/(?=.*'${fake_ip}')(?=.*REJECT)/).first);
                Value_1['rules'].uniq.reverse.each{|x| Value['rules'].insert(ruby_add_index + 1,x)};
             end;
          end;
@@ -759,8 +762,8 @@ yml_other_set()
    begin
    Thread.new{
       if Value.has_key?('rules') and not Value['rules'].to_a.empty? then
-         if Value['rules'].to_a.grep(/(?=.*198.18.0)(?=.*REJECT)/).empty? then
-            Value['rules']=Value['rules'].to_a.insert(0,'IP-CIDR,198.18.0.1/16,REJECT,no-resolve');
+         if Value['rules'].to_a.grep(/(?=.*'${fake_ip}')(?=.*REJECT)/).empty? then
+            Value['rules']=Value['rules'].to_a.insert(0,'IP-CIDR,${12},REJECT,no-resolve');
          end;
          if Value['rules'].to_a.grep(/(?=.*DST-PORT,'$8',REJECT)/).empty? then
             Value['rules']=Value['rules'].to_a.insert(0,'DST-PORT,$8,REJECT');
@@ -769,7 +772,7 @@ yml_other_set()
             Value['rules']=Value['rules'].to_a.insert(0,'DST-PORT,$9,REJECT');
          end;
       else
-         Value['rules']=['IP-CIDR,198.18.0.1/16,REJECT,no-resolve','DST-PORT,$8,REJECT','DST-PORT,$9,REJECT'];
+         Value['rules']=['IP-CIDR,${12},REJECT,no-resolve','DST-PORT,$8,REJECT','DST-PORT,$9,REJECT'];
       end;
    }.join;
    rescue Exception => e
@@ -812,6 +815,48 @@ yml_other_set()
       puts '${LOGTIME} Error: Edit Provider Path Failed,【' + e.message + '】';
    end;
 
+   #tolerance
+   begin
+   Thread.new{
+      if '$tolerance' != '0' then
+         Value['proxy-groups'].each{
+            |x|
+               if x['type'] == 'url-test' then
+                  x['tolerance']='${tolerance}';
+               end
+            };
+      end;
+   }.join;
+   rescue Exception => e
+      puts '${LOGTIME} Error: Edit URL-Test Group Tolerance Option Failed,【' + e.message + '】';
+   end;
+
+   #URL-Test interval
+   begin
+   Thread.new{
+      if '$urltest_interval_mod' != '0' then
+         if Value.key?('proxy-groups') then
+            Value['proxy-groups'].each{
+               |x|
+               if x['type'] == 'url-test' or x['type'] == 'fallback' or x['type'] == 'load-balance' then
+                  x['interval']='${urltest_interval_mod}';
+               end
+            };
+         end;
+         if Value.key?('proxy-providers') then
+            Value['proxy-providers'].values.each{
+               |x|
+               if x['health-check'] and x['health-check']['enable'] and x['health-check']['enable'] == 'true' then
+                  x['health-check']['interval']='${urltest_interval_mod}';
+               end;
+            };
+         end;
+      end;
+   }.join;
+   rescue Exception => e
+      puts '${LOGTIME} Error: Edit URL-Test Interval Failed,【' + e.message + '】';
+   end;
+
    #修改测速地址
    begin
    Thread.new{
@@ -819,7 +864,7 @@ yml_other_set()
          if Value.key?('proxy-providers') then
             Value['proxy-providers'].values.each{
             |x|
-            if x['health-check'] and x['health-check']['url'] and x['health-check']['url'] != '$urltest_address_mod' then
+            if x['health-check'] and x['health-check']['enable'] and x['health-check']['enable'] == 'true' then
                x['health-check']['url']='$urltest_address_mod';
             end;
             };
@@ -827,7 +872,7 @@ yml_other_set()
          if Value.key?('proxy-groups') then
             Value['proxy-groups'].each{
             |x|
-            if x['url'] and x['url'] != '$urltest_address_mod' then
+            if x['type'] == 'url-test' or x['type'] == 'fallback' or x['type'] == 'load-balance' then
                x['url']='$urltest_address_mod';
             end;
             };
@@ -835,7 +880,7 @@ yml_other_set()
       end;
    }.join;
    rescue Exception => e
-      puts '${LOGTIME} Error: Edit Speedtest URL Failed,【' + e.message + '】';
+      puts '${LOGTIME} Error: Edit URL-Test URL Failed,【' + e.message + '】';
    ensure
       File.open('$3','w') {|f| YAML.dump(Value, f)};
    end" 2>/dev/null >> $LOG_FILE
@@ -886,6 +931,8 @@ yml_other_rules_get()
    config_get "GoogleFCM" "$section" "GoogleFCM" "DIRECT"
    config_get "Discovery" "$section" "Discovery" "$GlobalTV"
    config_get "DAZN" "$section" "DAZN" "$GlobalTV"
+   config_get "ChatGPT" "$section" "ChatGPT" "$Proxy"
+   config_get "AppleTV" "$section" "AppleTV" "$GlobalTV"
 }
 
 if [ "$1" != "0" ]; then
@@ -897,14 +944,14 @@ if [ "$1" != "0" ]; then
    config_load "openclash"
    config_foreach yml_other_rules_get "other_rules" "$5"
    if [ -z "$rule_name" ]; then
-      yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}"
+      yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}" "${11}" "${12}"
       exit 0
    #判断策略组是否存在
    elif [ "$rule_name" = "ConnersHua_return" ]; then
        if [ -z "$(grep -F "$Proxy" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$Others" /tmp/Proxy_Group)" ];then
          LOG_OUT "Warning: Because of The Different Porxy-Group's Name, Stop Setting The Other Rules!"
-         yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}"
+         yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}" "${11}" "${12}"
          exit 0
        fi
    elif [ "$rule_name" = "ConnersHua" ]; then
@@ -914,7 +961,7 @@ if [ "$1" != "0" ]; then
     || [ -z "$(grep -F "$Others" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$Domestic" /tmp/Proxy_Group)" ]; then
          LOG_OUT "Warning: Because of The Different Porxy-Group's Name, Stop Setting The Other Rules!"
-         yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}"
+         yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}"  "${11}" "${12}"
          exit 0
        fi
    elif [ "$rule_name" = "lhie1" ]; then
@@ -928,11 +975,13 @@ if [ "$1" != "0" ]; then
     || [ -z "$(grep -F "$HBOGo" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$Pornhub" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$Apple" /tmp/Proxy_Group)" ]\
+    || [ -z "$(grep -F "$AppleTV" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$Scholar" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$Netflix" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$Disney" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$Discovery" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$DAZN" /tmp/Proxy_Group)" ]\
+    || [ -z "$(grep -F "$ChatGPT" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$Spotify" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$Steam" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$AdBlock" /tmp/Proxy_Group)" ]\
@@ -946,13 +995,13 @@ if [ "$1" != "0" ]; then
     || [ -z "$(grep -F "$GoogleFCM" /tmp/Proxy_Group)" ]\
     || [ -z "$(grep -F "$Domestic" /tmp/Proxy_Group)" ]; then
          LOG_OUT "Warning: Because of The Different Porxy-Group's Name, Stop Setting The Other Rules!"
-         yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}"
+         yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}" "${11}" "${12}"
          exit 0
        fi
    fi
    if [ -z "$Proxy" ]; then
       LOG_OUT "Error: Missing Porxy-Group's Name, Stop Setting The Other Rules!"
-      yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}"
+      yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}" "${11}" "${12}"
       exit 0
    else
       if [ "$rule_name" = "lhie1" ]; then
@@ -988,10 +1037,12 @@ if [ "$1" != "0" ]; then
             .gsub(/,Proxy$/, ',$Proxy#delete_')
             .gsub(/,YouTube$/, ',$Youtube#delete_')
             .gsub(/,Apple$/, ',$Apple#delete_')
+            .gsub(/,Apple TV$/, ',$AppleTV#delete_')
             .gsub(/,Scholar$/, ',$Scholar#delete_')
             .gsub(/,Netflix$/, ',$Netflix#delete_')
             .gsub(/,Disney$/, ',$Disney#delete_')
             .gsub(/,Spotify$/, ',$Spotify#delete_')
+            .gsub(/,ChatGPT$/, ',$ChatGPT#delete_')
             .gsub(/,Steam$/, ',$Steam#delete_')
             .gsub(/,AdBlock$/, ',$AdBlock#delete_')
             .gsub(/,Speedtest$/, ',$Speedtest#delete_')
@@ -1017,10 +1068,12 @@ if [ "$1" != "0" ]; then
             .gsub!(/: \"Proxy\"/,': \"$Proxy#delete_\"')
             .gsub!(/: \"YouTube\"/,': \"$Youtube#delete_\"')
             .gsub!(/: \"Apple\"/,': \"$Apple#delete_\"')
+            .gsub!(/: \"Apple TV\"/,': \"$AppleTV#delete_\"')
             .gsub!(/: \"Scholar\"/,': \"$Scholar#delete_\"')
             .gsub!(/: \"Netflix\"/,': \"$Netflix#delete_\"')
             .gsub!(/: \"Disney\"/,': \"$Disney#delete_\"')
             .gsub!(/: \"Spotify\"/,': \"$Spotify#delete_\"')
+            .gsub!(/: \"ChatGPT\"/,': \"$ChatGPT#delete_\"')
             .gsub!(/: \"Steam\"/,': \"$Steam#delete_\"')
             .gsub!(/: \"AdBlock\"/,': \"$AdBlock#delete_\"')
             .gsub!(/: \"Speedtest\"/,': \"$Speedtest#delete_\"')
@@ -1096,4 +1149,4 @@ if [ "$1" != "0" ]; then
    fi
 fi
 
-yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}"
+yml_other_set "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" "${10}" "${11}" "${12}"

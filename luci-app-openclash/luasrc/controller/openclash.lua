@@ -30,7 +30,6 @@ function index()
 	entry({"admin", "services", "openclash", "update_ma"},call("action_update_ma"))
 	entry({"admin", "services", "openclash", "opupdate"},call("action_opupdate"))
 	entry({"admin", "services", "openclash", "coreupdate"},call("action_coreupdate"))
-	entry({"admin", "services", "openclash", "ping"}, call("act_ping"))
 	entry({"admin", "services", "openclash", "flush_fakeip_cache"}, call("action_flush_fakeip_cache"))
 	entry({"admin", "services", "openclash", "download_rule"}, call("action_download_rule"))
 	entry({"admin", "services", "openclash", "download_netflix_domains"}, call("action_download_netflix_domains"))
@@ -60,6 +59,7 @@ function index()
 	entry({"admin", "services", "openclash", "toolbar_show"}, call("action_toolbar_show"))
 	entry({"admin", "services", "openclash", "toolbar_show_sys"}, call("action_toolbar_show_sys"))
 	entry({"admin", "services", "openclash", "diag_connection"}, call("action_diag_connection"))
+	entry({"admin", "services", "openclash", "diag_dns"}, call("action_diag_dns"))
 	entry({"admin", "services", "openclash", "gen_debug_logs"}, call("action_gen_debug_logs"))
 	entry({"admin", "services", "openclash", "log_level"}, call("action_log_level"))
 	entry({"admin", "services", "openclash", "switch_log"}, call("action_switch_log"))
@@ -73,25 +73,27 @@ function index()
 	entry({"admin", "services", "openclash", "rename_file"}, call("rename_file"))
 	entry({"admin", "services", "openclash", "manual_stream_unlock_test"}, call("manual_stream_unlock_test"))
 	entry({"admin", "services", "openclash", "all_proxies_stream_test"}, call("all_proxies_stream_test"))
-	entry({"admin", "services", "openclash", "settings"},cbi("openclash/settings"),_("Global Settings"), 30).leaf = true
-	entry({"admin", "services", "openclash", "servers"},cbi("openclash/servers"),_("Servers and Groups"), 40).leaf = true
+	entry({"admin", "services", "openclash", "set_subinfo_url"}, call("set_subinfo_url"))
+	entry({"admin", "services", "openclash", "settings"},cbi("openclash/settings"),_("Plugin Settings"), 30).leaf = true
+	entry({"admin", "services", "openclash", "config-overwrite"},cbi("openclash/config-overwrite"),_("Overwrite Settings"), 40).leaf = true
+	entry({"admin", "services", "openclash", "servers"},cbi("openclash/servers"),_("Onekey Create"), 50).leaf = true
 	entry({"admin", "services", "openclash", "other-rules-edit"},cbi("openclash/other-rules-edit"), nil).leaf = true
 	entry({"admin", "services", "openclash", "custom-dns-edit"},cbi("openclash/custom-dns-edit"), nil).leaf = true
 	entry({"admin", "services", "openclash", "other-file-edit"},cbi("openclash/other-file-edit"), nil).leaf = true
-	entry({"admin", "services", "openclash", "rule-providers-settings"},cbi("openclash/rule-providers-settings"),_("Rule Providers and Groups"), 50).leaf = true
+	entry({"admin", "services", "openclash", "rule-providers-settings"},cbi("openclash/rule-providers-settings"),_("Rule Providers Append"), 60).leaf = true
 	entry({"admin", "services", "openclash", "game-rules-manage"},form("openclash/game-rules-manage"), nil).leaf = true
 	entry({"admin", "services", "openclash", "rule-providers-manage"},form("openclash/rule-providers-manage"), nil).leaf = true
 	entry({"admin", "services", "openclash", "proxy-provider-file-manage"},form("openclash/proxy-provider-file-manage"), nil).leaf = true
 	entry({"admin", "services", "openclash", "rule-providers-file-manage"},form("openclash/rule-providers-file-manage"), nil).leaf = true
 	entry({"admin", "services", "openclash", "game-rules-file-manage"},form("openclash/game-rules-file-manage"), nil).leaf = true
-	entry({"admin", "services", "openclash", "config-subscribe"},cbi("openclash/config-subscribe"),_("Config Update"), 60).leaf = true
+	entry({"admin", "services", "openclash", "config-subscribe"},cbi("openclash/config-subscribe"),_("Config Subscribe"), 70).leaf = true
 	entry({"admin", "services", "openclash", "config-subscribe-edit"},cbi("openclash/config-subscribe-edit"), nil).leaf = true
 	entry({"admin", "services", "openclash", "servers-config"},cbi("openclash/servers-config"), nil).leaf = true
 	entry({"admin", "services", "openclash", "groups-config"},cbi("openclash/groups-config"), nil).leaf = true
 	entry({"admin", "services", "openclash", "proxy-provider-config"},cbi("openclash/proxy-provider-config"), nil).leaf = true
 	entry({"admin", "services", "openclash", "rule-providers-config"},cbi("openclash/rule-providers-config"), nil).leaf = true
-	entry({"admin", "services", "openclash", "config"},form("openclash/config"),_("Config Manage"), 70).leaf = true
-	entry({"admin", "services", "openclash", "log"},cbi("openclash/log"),_("Server Logs"), 80).leaf = true
+	entry({"admin", "services", "openclash", "config"},form("openclash/config"),_("Config Manage"), 80).leaf = true
+	entry({"admin", "services", "openclash", "log"},cbi("openclash/log"),_("Server Logs"), 90).leaf = true
 
 end
 local fs = require "luci.openclash"
@@ -369,6 +371,9 @@ function action_restore_config()
 	luci.sys.call("/etc/init.d/openclash stop >/dev/null 2>&1")
 	luci.sys.call("cp '/usr/share/openclash/backup/openclash' '/etc/config/openclash' >/dev/null 2>&1 &")
 	luci.sys.call("cp /usr/share/openclash/backup/openclash_custom* /etc/openclash/custom/ >/dev/null 2>&1 &")
+	luci.sys.call("cp /usr/share/openclash/backup/openclash_force_sniffing* /etc/openclash/custom/ >/dev/null 2>&1 &")
+	luci.sys.call("cp /usr/share/openclash/backup/openclash_sniffing* /etc/openclash/custom/ >/dev/null 2>&1 &")
+	luci.sys.call("cp /usr/share/openclash/backup/yml_change.sh /usr/share/openclash/yml_change.sh >/dev/null 2>&1 &")
 	luci.sys.call("rm -rf /etc/openclash/history/* >/dev/null 2>&1 &")
 	luci.http.redirect(luci.dispatcher.build_url('admin/services/openclash/settings'))
 end
@@ -579,63 +584,116 @@ function action_switch_config()
 	uci:commit("openclash")
 end
 
-function sub_info_get()
-	local filename, sub_url, sub_info, info, upload, download, total, expire, http_code, len, percent, day_left, day_expire
+function set_subinfo_url()
+	local filename, url, info
 	filename = luci.http.formvalue("filename")
-	sub_info = ""
-	if filename and not is_start() then
-		uci:foreach("openclash", "config_subscribe",
+	url = luci.http.formvalue("url")
+	if not filename then
+		info = "Oops: The config file name seems to be incorrect"
+	end
+	if url ~= "" and not string.find(url, "http") then
+		info = "Oops: The url link format seems to be incorrect"
+	end
+	if not info then
+		uci:foreach("openclash", "subscribe_info",
 			function(s)
-				if s.name == filename and s.address and string.find(s.address, "http") then
-					_, len = string.gsub(s.address, '[^\n]+', "")
-					if len and len > 1 then return end
-					sub_url = s.address
-					info = luci.sys.exec(string.format("curl -sLI -X GET -m 10 -w 'http_code='%%{http_code} -H 'User-Agent: Clash' '%s'", sub_url))
-					if not info or tonumber(string.sub(string.match(info, "http_code=%d+"), 11, -1)) ~= 200 then
-						info = luci.sys.exec(string.format("curl -sLI -X GET -m 10 -w 'http_code='%%{http_code} -H 'User-Agent: Quantumultx' '%s'", sub_url))
-					end
-					if info then
-						http_code=string.sub(string.match(info, "http_code=%d+"), 11, -1)
-						if tonumber(http_code) == 200 then
-							info = string.lower(info)
-							if string.find(info, "subscription%-userinfo") then
-								info = luci.sys.exec("echo '%s' |grep 'subscription-userinfo'" %info)
-								upload = string.sub(string.match(info, "upload=%d+"), 8, -1) or nil
-								download = string.sub(string.match(info, "download=%d+"), 10, -1) or nil
-								total = tonumber(string.format("%.1f",string.sub(string.match(info, "total=%d+"), 7, -1))) or nil
-								used = tonumber(string.format("%.1f",(upload + download))) or nil
-								if string.match(info, "expire=%d+") then
-									day_expire = tonumber(string.sub(string.match(info, "expire=%d+"), 8, -1)) or nil
-								end
-								expire = os.date("%Y-%m-%d", day_expire) or "null"
-								if day_expire and os.time() <= day_expire then
-									day_left = math.ceil((day_expire - os.time()) / (3600*24))
-								elseif day_expire == nil then
-									day_left = "null"
-								else
-									day_left = 0
-								end
-								
-								if used and total and used < total then
-									percent = string.format("%.1f",((total-used)/total)*100) or nil
-								elseif used == nil or total == nil or total == 0 then
-									percent = 100
-								else
-									percent = 0
-								end
-								total = fs.filesize(total) or "null"
-								used = fs.filesize(used) or "null"
-								sub_info = "Successful"
-							else
-								sub_info = "No Sub Info Found"
-							end
-						end
+				if s.name == filename then
+					if url == "" then
+						uci:delete("openclash", s[".name"])
+						uci:commit("openclash")
+						info = "Delete success"
+					else
+						uci:set("openclash", s[".name"], "url", url)
+						uci:commit("openclash")
+						info = "Success"
 					end
 				end
 			end
 		)
+		if not info then
+			if url == "" then
+				info = "Delete success"
+			else
+				uci:section("openclash", "subscribe_info", nil, {name = filename, url = url})
+				uci:commit("openclash")
+				info = "Success"
+			end
+		end
+	end
+	luci.http.prepare_content("application/json")
+	luci.http.write_json({
+		info = info;
+	})
+end
+
+function sub_info_get()
+	local filepath, filename, sub_url, sub_info, info, upload, download, total, expire, http_code, len, percent, day_left, day_expire
+	local info_tb = {}
+	filename = luci.http.formvalue("filename")
+	sub_info = ""
+	if filename and not is_start() then
+		uci:foreach("openclash", "subscribe_info",
+			function(s)
+				if s.name == filename and s.url and string.find(s.url, "http") then
+					string.gsub(s.url, '[^\n]+', function(w) table.insert(info_tb, w) end)
+					sub_url = info_tb[1]
+				end
+			end
+		)
+		if not sub_url then
+			uci:foreach("openclash", "config_subscribe",
+				function(s)
+					if s.name == filename and s.address and string.find(s.address, "http") then
+						string.gsub(s.address, '[^\n]+', function(w) table.insert(info_tb, w) end)
+						sub_url = info_tb[1]
+					end
+				end
+			)
+		end
 		if not sub_url then
 			sub_info = "No Sub Info Found"
+		else
+			info = luci.sys.exec(string.format("curl -sLI -X GET -m 10 -w 'http_code='%%{http_code} -H 'User-Agent: Clash' '%s'", sub_url))
+			if not info or tonumber(string.sub(string.match(info, "http_code=%d+"), 11, -1)) ~= 200 then
+				info = luci.sys.exec(string.format("curl -sLI -X GET -m 10 -w 'http_code='%%{http_code} -H 'User-Agent: Quantumultx' '%s'", sub_url))
+			end
+			if info then
+				http_code=string.sub(string.match(info, "http_code=%d+"), 11, -1)
+				if tonumber(http_code) == 200 then
+					info = string.lower(info)
+					if string.find(info, "subscription%-userinfo") then
+						info = luci.sys.exec("echo '%s' |grep 'subscription-userinfo'" %info)
+						upload = string.sub(string.match(info, "upload=%d+"), 8, -1) or nil
+						download = string.sub(string.match(info, "download=%d+"), 10, -1) or nil
+						total = tonumber(string.format("%.1f",string.sub(string.match(info, "total=%d+"), 7, -1))) or nil
+						used = tonumber(string.format("%.1f",(upload + download))) or nil
+						if string.match(info, "expire=%d+") then
+							day_expire = tonumber(string.sub(string.match(info, "expire=%d+"), 8, -1)) or nil
+						end
+						expire = os.date("%Y-%m-%d", day_expire) or "null"
+						if day_expire and os.time() <= day_expire then
+							day_left = math.ceil((day_expire - os.time()) / (3600*24))
+						elseif day_expire == nil then
+							day_left = "null"
+						else
+							day_left = 0
+						end
+						
+						if used and total and used < total then
+							percent = string.format("%.1f",((total-used)/total)*100) or nil
+						elseif used == nil or total == nil or total == 0 then
+							percent = 100
+						else
+							percent = 0
+						end
+						total = fs.filesize(total) or "null"
+						used = fs.filesize(used) or "null"
+						sub_info = "Successful"
+					else
+						sub_info = "No Sub Info Found"
+					end
+				end
+			end
 		end
 	end
 	luci.http.prepare_content("application/json")
@@ -1088,14 +1146,6 @@ function action_update_geosite()
 	return luci.sys.call("/usr/share/openclash/openclash_geosite.sh >/dev/null 2>&1")
 end
 
-function act_ping()
-	local e={}
-	e.index=luci.http.formvalue("index")
-	e.ping=luci.sys.exec("ping -c 1 -W 1 %q 2>&1 | grep -o 'time=[0-9]*.[0-9]' | awk -F '=' '{print$2}'"%luci.http.formvalue("domain"))
-	luci.http.prepare_content("application/json")
-	luci.http.write_json(e)
-end
-
 function action_download_rule()
 	luci.http.prepare_content("application/json")
 	luci.http.write_json({
@@ -1267,6 +1317,26 @@ function action_diag_connection()
 	local addr = luci.http.formvalue("addr")
 	if addr and (datatype.hostname(addr) or datatype.ipaddr(addr)) then
 		local cmd = string.format("/usr/share/openclash/openclash_debug_getcon.lua %s", addr)
+		luci.http.prepare_content("text/plain")
+		local util = io.popen(cmd)
+		if util and util ~= "" then
+			while true do
+				local ln = util:read("*l")
+				if not ln then break end
+				luci.http.write(ln)
+				luci.http.write("\n")
+			end
+			util:close()
+		end
+		return
+	end
+	luci.http.status(500, "Bad address")
+end
+
+function action_diag_dns()
+	local addr = luci.http.formvalue("addr")
+	if addr and datatype.hostname(addr)then
+		local cmd = string.format("/usr/share/openclash/openclash_debug_dns.lua %s", addr)
 		luci.http.prepare_content("text/plain")
 		local util = io.popen(cmd)
 		if util and util ~= "" then

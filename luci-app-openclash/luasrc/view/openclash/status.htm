@@ -39,11 +39,11 @@
 				<%
 					if uci:get("openclash", "config", "enable_meta_core") ~= '1' then
 				%>
-	      				<img id="_logo" src="/luci-static/resources/openclash/img/logo.png?<%=random%>" loading="lazy" onload="return logo_check(this,this.src,'https://ftp.jaist.ac.jp/pub/sourceforge.jp/storage/g/o/op/openclash/<%=RELEASE_BRANCH%>/img/logo.png')" onerror="return imgerrorfuns(this,'https://ftp.jaist.ac.jp/pub/sourceforge.jp/storage/g/o/op/openclash/<%=RELEASE_BRANCH%>/img/logo.png')" title="Hello, World!" alt="OpenClash" onclick="return homepage()" />
+	      				<img id="_logo" src="/luci-static/resources/openclash/img/logo.png?<%=random%>" loading="lazy" onload="return logo_check(this,this.src,'https://ftp.jaist.ac.jp/pub/sourceforge.jp/storage/g/o/op/openclash/<%=RELEASE_BRANCH%>/img/logo.png')" onerror="return logo_error(this,'/luci-static/resources/openclash/img/logo.png?<%=random%>')" title="Hello, World!" alt="OpenClash" onclick="return homepage()" />
 				<%
 					else
 				%>
-						<img id="_logo" src="/luci-static/resources/openclash/img/meta.png?<%=random%>" loading="lazy" onload="return logo_check(this,this.src,'https://ftp.jaist.ac.jp/pub/sourceforge.jp/storage/g/o/op/openclash/<%=RELEASE_BRANCH%>/img/meta.png')" onerror="return imgerrorfuns(this,'https://ftp.jaist.ac.jp/pub/sourceforge.jp/storage/g/o/op/openclash/<%=RELEASE_BRANCH%>/img/meta.png')" title="Hello, World!" alt="OpenClash" onclick="return homepage()" />
+						<img id="_logo" src="/luci-static/resources/openclash/img/meta.png?<%=random%>" loading="lazy" onload="return logo_check(this,this.src,'https://ftp.jaist.ac.jp/pub/sourceforge.jp/storage/g/o/op/openclash/<%=RELEASE_BRANCH%>/img/meta.png')" onerror="return logo_error(this,'/luci-static/resources/openclash/img/meta.png?<%=random%>')" title="Hello, World!" alt="OpenClash" onclick="return homepage()" />
 				<%
 					end
 				%>
@@ -66,9 +66,9 @@
         	</p>
         </td></tr>
 	    <tr><td width="100%" colspan="4">
-	  		<p style="margin: 10px 0; text-align: center" id="_clashstart">
+	  		<div style="margin: 10px 0; text-align: center" id="_clashstart">
 	  			<b><%:Tip: after started, please wait patiently until the connection is normal%></b>
-	  		</p>
+			</div>
 	    </td></tr>
 		<tr><td width="25%"><%:Main Program%></td><td  width="25%" align="left"><span id="_clash"><%:Collecting data...%></span><span id="_watchdog"></span></td><td width="25%"><%:Control Panel Login IP%></td><td width="25%" align="left" id="_daip"><%:Collecting data...%></td></tr>
 		<tr><td width="20%"><%:Running Mode%></td><td  width="30%" align="left"><span id="_mode"><%:Collecting data...%></span><span id="radio-ru-mode" class="radio-button">
@@ -88,7 +88,7 @@
 				<label for="direct">Direct</label>
 				</span></td><td width="25%"><%:Control Panel Login Secret%></td><td width="25%" align="left" id="_dase"><%:Collecting data...%></td></tr>
 		<tr><td width="25%"><%:Yacd Control Panel%></td><td width="25%" align="left" id="_web"><%:Collecting data...%></td><td width="25%"><%:Dashboard Control Panel%></td><td width="25%" align="left" id="_webo"><%:Collecting data...%></td></tr>
-		<tr id="tool_label2"><td colspan="4"><p style="margin: 10px 0; text-align: center">
+		<tr id="tool_label2"><td colspan="4"><div style="margin: 10px 0; text-align: center">
 <span>
 &nbsp;&nbsp;<%:Up:%>&nbsp;
 	<span id="upload_">
@@ -152,7 +152,7 @@
 	</span>
 	&nbsp;&nbsp;
 </span>
-</p></td></tr>
+</div></td></tr>
 		<tr height="50px">
 			<td width="100%" colspan="4">
 				<div id="hid_btn" style="height: 25px;width: 100px;margin: 0 auto;" onclick="hid_btn_action()">
@@ -245,7 +245,7 @@
 	hid_3.style.display = "none";
 	state.style.display="none";
 
-	XHR.poll(2, '<%=luci.dispatcher.build_url("admin", "services", "openclash", "status")%>', null, function(x, status) {
+	XHR.poll(3, '<%=luci.dispatcher.build_url("admin", "services", "openclash", "status")%>', null, function(x, status) {
 		if ( x && x.status == 200 ) {
 			if ( status.restricted_mode != "1" )
 			{
@@ -340,7 +340,7 @@
 		};
 	});
 
-	XHR.poll(1, '<%=luci.dispatcher.build_url("admin", "services", "openclash", "startlog")%>', null, function(x, status) {
+	XHR.poll(3, '<%=luci.dispatcher.build_url("admin", "services", "openclash", "startlog")%>', null, function(x, status) {
 	  if ( x && x.status == 200 ) {
 	  	if ( status.startlog.match("level=fatal") || status.startlog.indexOf("FTL [Config]") != "-1" ) {
 	    	XHR.get('<%=luci.dispatcher.build_url("admin", "services", "openclash", "del_start_log")%>', null, function(x) {});
@@ -485,12 +485,12 @@
 			if (x && x.status == 200 && status.mode) {
 				if (status.mode == "fake-ip" || status.mode == "fake-ip-tun" || status.mode == "fake-ip-mix")
 				{
-					mode.innerHTML = status.clash && status.watchdog ? "<b style=color:green><%:Fake-IP%></b>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;" : '<b style=color:red><%:Not Running%></b>';
+					mode.innerHTML = status.clash && status.watchdog ? "<b style=color:green><%:Fake-IP%></b>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;" : '<b style=color:red><%:Not Running%></b>&nbsp;&nbsp;&nbsp;';
 					radio_run_normal.innerHTML = "<%:Enhance%>"
 				}
 				else if (status.mode == "redir-host" || status.mode == "redir-host-tun" ||  status.mode == "redir-host-mix")
 				{
-					mode.innerHTML = status.clash && status.watchdog ? "<b style=color:green><%:Redir-Host%></b>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;" : '<b style=color:red><%:Not Running%></b>';
+					mode.innerHTML = status.clash && status.watchdog ? "<b style=color:green><%:Redir-Host%></b>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;" : '<b style=color:red><%:Not Running%></b>&nbsp;&nbsp;&nbsp;';
 					radio_run_normal.innerHTML = "<%:Compatible%>"
 				};
 				for (i=0; i<radio_ru.length; i++) {
@@ -906,6 +906,11 @@
     function clashversion_error()
     {
         clashversion.innerHTML = '<img id="clashversion" src="/luci-static/resources/openclash/img/version.svg?<%=random%>" alt="currentversion" height="21px" onerror="return imgerrorfuns(this,\'https://ftp.jaist.ac.jp/pub/sourceforge.jp/storage/g/o/op/openclash/<%=RELEASE_BRANCH%>/img/version.png\')" onclick="return go_update()">';
+    };
+
+	function logo_error(imgobj,imgSrc)
+    {
+		imgobj.src=imgSrc;
     };
     
     function imgerrorfuns(imgobj,imgSrc){
