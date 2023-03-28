@@ -2,6 +2,11 @@ log:
   level: log_level
   file: "log_file"
 
+api:
+  http: "0.0.0.0:api_port"
+
+include: []
+
 plugins:
   - tag: geosite_cn
     type: domain_set
@@ -78,12 +83,14 @@ plugins:
   - tag: forward_local
     type: forward
     args:
+      concurrent: concurrent_num
       upstreams:
         - addr: local_dns
 
   - tag: forward_remote
     type: forward
     args:
+      concurrent: concurrent_num
       upstreams:
         - addr: remote_dns
 
@@ -101,6 +108,7 @@ plugins:
     type: sequence
     args:
       - exec: prefer_ipv4
+      - exec: ecs_remote
       - exec: $forward_remote
 
   - tag: has_resp_sequence

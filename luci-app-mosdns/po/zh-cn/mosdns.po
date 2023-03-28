@@ -1,6 +1,12 @@
 msgid "Basic Setting"
 msgstr "基本设置"
 
+msgid "Basic Options"
+msgstr "基本选项"
+
+msgid "Advanced Options"
+msgstr "高级选项"
+
 msgid "MosDNS is a 'programmable' DNS forwarder."
 msgstr "MosDNS 是一个插件化的 DNS 转发/分流器。"
 
@@ -13,11 +19,20 @@ msgstr "未运行"
 msgid "Collecting data..."
 msgstr "获取数据中..."
 
-msgid "Enable"
+msgid "Enabled"
 msgstr "启用"
 
 msgid "Listen port"
 msgstr "监听端口"
+
+msgid "API Setting"
+msgstr "API 设置"
+
+msgid "Enabled API"
+msgstr "启用 API"
+
+msgid "API Listen port"
+msgstr "API 监听端口"
 
 msgid "Log Level"
 msgstr "日志等级"
@@ -33,6 +48,9 @@ msgstr "启用 DNS 广告过滤"
 
 msgid "ADblock Source"
 msgstr "广告过滤规则来源"
+
+msgid "When using custom rule sources, use the rule types supported by MosDNS"
+msgstr "使用自定义规则来源时，请使用 MosDNS 支持的规则类型"
 
 msgid "Reload Service"
 msgstr "重载服务"
@@ -127,11 +145,53 @@ msgstr "Bootstrap DNS 服务器用于解析您指定为上游的 DoH / DoT 解�
 msgid "Remote DNS"
 msgstr "远程 DNS"
 
+msgid "Concurrent"
+msgstr "DNS 服务器并发数（默认 1）"
+
+msgid "DNS query request concurrency, The number of upstream DNS servers that are allowed to initiate requests at the same time"
+msgstr "DNS 查询请求并发数，允许同时发起请求的上游 DNS 服务器数量"
+
+msgid "Maximum Connections"
+msgstr "最大连接数（默认 2）"
+
+msgid "Set the Maximum connections for DoH and pipeline's TCP/DoT, Except for the HTTP/3 protocol"
+msgstr "设置 DoH 和已启用 Query Pipelining 连接复用模式的 TCP/DoT 最大连接数，HTTP/3 协议除外"
+
+msgid "Idle Timeout"
+msgstr "空闲超时"
+
+msgid "DoH/TCP/DoT Connection Multiplexing idle timeout (default 30 seconds)"
+msgstr "DoH/TCP/DoT 连接复用空闲保持时间（默认 30 秒）"
+
 msgid "TCP/DoT Connection Multiplexing"
 msgstr "TCP/DoT 连接复用"
 
 msgid "Enable TCP/DoT RFC 7766 new Query Pipelining connection multiplexing mode"
 msgstr "启用 TCP/DoT RFC 7766 新型 Query Pipelining 连接复用模式"
+
+msgid "Disable TLS Certificate"
+msgstr "禁用 TLS 证书"
+
+msgid "Disable TLS Servers certificate validation, Can be useful if system CA certificate expires or the system time is out of order"
+msgstr "禁用 TLS 服务器证书验证，当系统 CA 证书过期或系统时间错乱时，本选项可能会有用"
+
+msgid "Enable HTTP/3"
+msgstr "启用 HTTP/3"
+
+msgid "Enable DoH HTTP/3 protocol support for remote DNS, Upstream DNS server support is required (Experimental)"
+msgstr "为远程 DNS 启用 DoH HTTP/3 协议支持，需要上游 DNS 服务器支持（实验性，谨慎启用该功能）"
+
+msgid "Enable EDNS client subnet"
+msgstr "启用 EDNS 客户端子网"
+
+msgid "Add the EDNS Client Subnet option (ECS) to Remote DNS"
+msgstr "在远程 DNS 请求中加入 EDNS 客户端子网（即 ECS）选项（需要上游 DNS 服务器支持）"
+
+msgid "MosDNS will auto identify the IP address subnet segment of your remote connection (.0/24)"
+msgstr "MosDNS 将会自动获取您访问远程连接时使用的 IP 子网段（.0/24）"
+
+msgid "If your remote access network changes, May need restart MosDNS to update the ECS request address"
+msgstr "如果您的远程访问网络发生改变时可能需要重启 MosDNS 以更新 ECS 请求地址"
 
 msgid "DNS Cache Size"
 msgstr "DNS 缓存大小（条）"
@@ -151,8 +211,14 @@ msgstr "自动保存缓存间隔（秒）"
 msgid "Minimum TTL"
 msgstr "覆盖最小 TTL 值（默认 0）"
 
+msgid "Modify the Minimum TTL value (seconds) for DNS answer results, 0 indicating no modification"
+msgstr "修改 DNS 应答结果的最小 TTL 值 (秒)，0 表示不修改"
+
 msgid "Maximum TTL"
 msgstr "覆盖最大 TTL 值（默认 0）"
+
+msgid "Modify the Maximum TTL value (seconds) for DNS answer results, 0 indicating no modification"
+msgstr "修改 DNS 应答结果的最大 TTL 值（秒），0 表示不修改"
 
 msgid "Logs"
 msgstr "日志"
