@@ -34,6 +34,21 @@ msgstr "启用 API"
 msgid "API Listen port"
 msgstr "API 监听端口"
 
+msgid "Flush Cache"
+msgstr "刷新缓存"
+
+msgid "Flushing Cache will clear any IP addresses or DNS records from MosDNS cache"
+msgstr "刷新缓存会清空 MosDNS 所有 IP 地址和 DNS 解析缓存"
+
+msgid "Flushing..."
+msgstr "正在刷新..."
+
+msgid "Flushing Success"
+msgstr "刷新成功"
+
+msgid "Flushing Failed, Please check if the API is enabled"
+msgstr "刷新失败，请检查 API 是否已启用"
+
 msgid "Log Level"
 msgstr "日志等级"
 
@@ -252,6 +267,12 @@ msgstr "灰名单"
 
 msgid "These domains are always resolved using remote DNS. Please input the domain names of websites, every line can input only one website domain. For example: google.com."
 msgstr "加入的域名始终使用 “远程 DNS” 进行解析（每个域名一行，支持域名匹配规则）"
+
+msgid "DDNS Lists"
+msgstr "DDNS 域名"
+
+msgid "These domains are always resolved using local DNS. And force TTL 5 seconds, DNS resolution results will not enter the cache. For example: myddns.example.com."
+msgstr "加入的域名始终使用 “本地 DNS” 进行解析，并且强制 TTL 5 秒，解析结果不会进入缓存（每个域名一行，支持域名匹配规则）"
 
 msgid "Hosts For example: baidu.com 10.0.0.1"
 msgstr "自定义 Hosts 重写，如：baidu.com 10.0.0.1（每个规则一行）"
