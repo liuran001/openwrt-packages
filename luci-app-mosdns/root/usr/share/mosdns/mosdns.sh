@@ -95,7 +95,7 @@ ecs_remote() {
 }
 
 flush_cache() {
-    curl -s 127.0.0.1:$(uci -q get mosdns.config.listen_port_api)/plugins/cache/flush || exit 1
+    curl -s 127.0.0.1:$(uci -q get mosdns.config.listen_port_api)/plugins/lazy_cache/flush || exit 1
 }
 
 v2dat_dump() {
@@ -117,8 +117,8 @@ v2dat_dump() {
         v2dat unpack geosite -o /var/mosdns -f cn -f 'geolocation-!cn' $v2dat_dir/geosite.dat
         geoip_tags=$(uci -q get mosdns.config.geoip_tags)
         geosite_tags=$(uci -q get mosdns.config.geosite_tags)
-        [ -n "$geoip_tags" ] && v2dat unpack geoip -o /var/mosdns $(echo $geoip_tags | sed -r 's/\w+/-f &/g') $v2dat_dir/geoip.dat
-        [ -n "$geosite_tags" ] && v2dat unpack geosite -o /var/mosdns $(echo $geosite_tags | sed -r 's/\w+/-f &/g') $v2dat_dir/geosite.dat
+        [ -n "$geoip_tags" ] && v2dat unpack geoip -o /var/mosdns $(echo $geoip_tags | sed -r 's/\S+/-f &/g') $v2dat_dir/geoip.dat
+        [ -n "$geosite_tags" ] && v2dat unpack geosite -o /var/mosdns $(echo $geosite_tags | sed -r 's/\S+/-f &/g') $v2dat_dir/geosite.dat
     fi
 }
 
