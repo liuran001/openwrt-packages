@@ -62,6 +62,48 @@ e.cfgvalue = function()
 end
 end
 
+a = s:option(Flag, "gateway_info_enable", translate("从光猫获取主机名等信息"))
+a.default = 0
+a.rmempty = true
+a.description = translate("适用于 OpenWrt 作为透明网关，无法获取设备主机名及完整的局域网设备列表时<br/>仅测试通过 HG5143F 天翼网关，不保证通用性")
+
+a = s:option(Value, "gateway_host_url", translate('光猫登录地址 URL'))
+a.rmempty = true
+a.default = "http://192.168.1.1/cgi-bin/luci"
+a:depends({gateway_info_enable = "1"})
+
+a = s:option(Value, "gateway_info_url", translate('设备列表 JSON URL'))
+a.rmempty = true
+a.default = "http://192.168.1.1/cgi-bin/luci/admin/allInfo"
+a:depends({gateway_info_enable = "1"})
+
+a = s:option(Value, "gateway_logout_url", translate('光猫注销登录 URL'))
+a.rmempty = true
+a.default = "http://192.168.1.1/cgi-bin/luci/admin/logout"
+a.description = translate("使用 F12 控制台自行抓取")
+a:depends({gateway_info_enable = "1"})
+
+a = s:option(Value, "gateway_username_id", translate('登录页面帐号输入框 ID'))
+a.rmempty = true
+a.default = "username"
+a:depends({gateway_info_enable = "1"})
+
+a = s:option(Value, "gateway_password_id", translate('登录页面密码输入框 ID'))
+a.rmempty = true
+a.default = "psd"
+a.description = translate("浏览器右键-检查元素")
+a:depends({gateway_info_enable = "1"})
+
+a = s:option(Value, "gateway_username", translate('光猫登录帐号'))
+a.rmempty = true
+a.default = "useradmin"
+a:depends({gateway_info_enable = "1"})
+
+a = s:option(Value, "gateway_password", translate('光猫登录密码'))
+a.rmempty = true
+a.description = translate("使用普通账号即可，不需要超密")
+a:depends({gateway_info_enable = "1"})
+
 a = s:option(Flag, "err_enable", translate("无人值守任务"))
 a.default = 0
 a.rmempty = true
