@@ -27,6 +27,7 @@ a.description = translate("若无二级路由设备，信号强度良好，可�
 a = s:option(Value, "thread_num", translate('最大并发进程数'))
 a.default = "3"
 a.datatype = "uinteger"
+a.description = translate("低性能设备请勿更改设置值，或酌情减少参数")
 
 a = s:option(Value, "soc_code", "自定义温度读取命令")
 a.rmempty = true 
@@ -65,7 +66,7 @@ end
 a = s:option(Flag, "gateway_info_enable", translate("从光猫获取主机名等信息"))
 a.default = 0
 a.rmempty = true
-a.description = translate("适用于 OpenWrt 作为透明网关，无法获取设备主机名及完整的局域网设备列表时<br/>仅测试通过 HG5143F 天翼网关，不保证通用性")
+a.description = translate("适用于 OpenWrt 作为透明网关，无法获取设备主机名及完整的局域网设备列表时<br/>仅测试通过 HG5143F/HN8145V 天翼网关，不保证通用性")
 
 a = s:option(Value, "gateway_host_url", translate('光猫登录地址 URL'))
 a.rmempty = true
@@ -75,12 +76,13 @@ a:depends({gateway_info_enable = "1"})
 a = s:option(Value, "gateway_info_url", translate('设备列表 JSON URL'))
 a.rmempty = true
 a.default = "http://192.168.1.1/cgi-bin/luci/admin/allInfo"
+a.description = translate('使用 F12 控制台自行抓取<br/>ip、devName、model 为必须项，JSON 文件信息范例：<br/>{"pc1":{"brand":"","devName":"RouterOS","onlineTime":45,"model":"","upSpeed":229376,"downSpeed":7707033,"type":"pc","ip":"192.168.1.7"}}')
 a:depends({gateway_info_enable = "1"})
 
 a = s:option(Value, "gateway_logout_url", translate('光猫注销登录 URL'))
 a.rmempty = true
 a.default = "http://192.168.1.1/cgi-bin/luci/admin/logout"
-a.description = translate("使用 F12 控制台自行抓取")
+a.description = translate("非必须项，但可能会影响其他用户登录 Web 管理页面，如 HG5143F")
 a:depends({gateway_info_enable = "1"})
 
 a = s:option(Value, "gateway_username_id", translate('登录页面帐号输入框 ID'))
