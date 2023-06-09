@@ -18,8 +18,8 @@ jobs:
         cp -rf ./luasrc ./po ./root ./Makefile ./bin/luci-app-argon-config
     - name: Docker Build
       run: |
-        docker pull openwrtorg/sdk:x86-64-21.02-SNAPSHOT
-        docker run --rm -u root -v "$(pwd)"/bin/:/home/build/openwrt/bin -v ${{ github.workspace }}/.github/workflows:/home/build/workflows openwrtorg/sdk:x86-64-21.02-SNAPSHOT /bin/sh /home/build/workflows/build.sh
+        docker pull openwrt/sdk
+        docker run --rm -u root -v "$(pwd)"/bin/:/home/build/openwrt/bin -v ${{ github.workspace }}/.github/workflows:/home/build/workflows openwrt/sdk /bin/sh /home/build/workflows/build.sh
     - name: Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,7 +33,7 @@ jobs:
         hub release create -p "${assets[@]}" -m "$tag_name" "$tag_name"
     - name: Upload Log
       if: ${{ always() }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: buildlog
         path: bin/logs.tar.xz
